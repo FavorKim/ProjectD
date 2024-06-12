@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-06-12T09:11:10.495Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" etag="YwiZUpmKGIlHQMrSpdlA" version="24.5.3" type="github">
+<mxfile host="app.diagrams.net" modified="2024-06-12T09:13:59.928Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" etag="g6Io-liK_SlRhbYSEO1k" version="24.5.3" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="858" dy="613" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -13,7 +13,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-6" value="&lt;i&gt;&amp;lt;&amp;lt;abstract&amp;gt;&amp;gt;&lt;/i&gt;&lt;div&gt;&lt;i&gt;PlayableCharacter&lt;/i&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="400" y="150" width="240" height="580" as="geometry" />
+          <mxGeometry x="400" y="150" width="240" height="480" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-7" value="#float 이동속도" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-6">
           <mxGeometry y="30" width="240" height="30" as="geometry" />
@@ -33,23 +33,23 @@
         <mxCell id="-PeAhjP7F3xSacSw7bgF-124" value="&lt;span style=&quot;font-style: normal;&quot;&gt;#OnInteract() =&amp;gt; 상호작용 가능여부에 따라 InteractObject() 호출&lt;/span&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-6">
           <mxGeometry y="180" width="240" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="-PeAhjP7F3xSacSw7bgF-92" value="&lt;span style=&quot;font-style: normal;&quot;&gt;InteractObject(IInteractableObject) =&amp;gt;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-style: normal;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-style: normal;&quot;&gt;switch(IInteractableObject obj)&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-style: normal;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-style: normal;&quot;&gt;case Window : InteractWindow(obj)&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-style: normal;&quot;&gt;case Palete : InteractPalete(obj)&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-style: normal;&quot;&gt;case Generator : InteractGenerator(obj)&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-6">
-          <mxGeometry y="210" width="240" height="130" as="geometry" />
-        </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-127" value="OnTriggerStay(Collision other) =&amp;gt;&amp;nbsp;&lt;div&gt;{&amp;nbsp;&lt;div&gt;if(발전기, 판자, 갈고리의 상호작용 가능 범위 내에 있으면)&amp;nbsp; if(TryGetComponent&amp;lt;IInteractableObject&amp;gt;(out obj))&amp;nbsp;&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-6">
-          <mxGeometry y="340" width="240" height="110" as="geometry" />
+          <mxGeometry y="210" width="240" height="110" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-129" value="abstract IndicateInteract(IInteractableObject)&lt;div&gt;=&amp;gt; 물체에 맞는 상호작용 UI 출력&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-6">
-          <mxGeometry y="450" width="240" height="50" as="geometry" />
+          <mxGeometry y="320" width="240" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="-PeAhjP7F3xSacSw7bgF-107" value="abstract InteractWindow(Window)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-6">
-          <mxGeometry y="500" width="240" height="30" as="geometry" />
+        <mxCell id="-PeAhjP7F3xSacSw7bgF-107" value="&lt;span style=&quot;font-style: normal;&quot;&gt;abstract Interact(IInteractable obj)&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-style: normal;&quot;&gt;InteractObject(obj)&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-6">
+          <mxGeometry y="370" width="240" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-PeAhjP7F3xSacSw7bgF-139" value="abstract InteractWindow(Window)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-6">
+          <mxGeometry y="400" width="240" height="30" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-108" value="abstract InteractPalete(Palete)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-6">
-          <mxGeometry y="530" width="240" height="20" as="geometry" />
+          <mxGeometry y="430" width="240" height="20" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-109" value="abstract InteractGenerator(Generator)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=2" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-6">
-          <mxGeometry y="550" width="240" height="30" as="geometry" />
+          <mxGeometry y="450" width="240" height="30" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-69" value="Killer" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=60;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;swimlaneLine=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="10" y="710" width="310" height="340" as="geometry" />
@@ -73,7 +73,7 @@
           <mxGeometry y="210" width="310" height="130" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-101" value="&amp;lt;&amp;lt;abstract&amp;gt;&amp;gt;&lt;div&gt;IInteractableObject&lt;/div&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="650" y="180" width="290" height="90" as="geometry" />
+          <mxGeometry x="700" y="70" width="290" height="90" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-102" value="(BoxCollider)상호작용 가능 범위 충돌체 (isTrigger)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-101">
           <mxGeometry y="30" width="290" height="30" as="geometry" />
@@ -82,19 +82,22 @@
           <mxGeometry y="60" width="290" height="30" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-130" value="Interactor" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="10" y="150" width="350" height="180" as="geometry" />
+          <mxGeometry x="10" y="150" width="350" height="200" as="geometry" />
         </mxCell>
-        <mxCell id="-PeAhjP7F3xSacSw7bgF-131" value="#InteractObject (IInteractableObject obj) GetInteractable(obj)&lt;div&gt;&lt;br&gt;&lt;div&gt;GetInteractableObj(IInteractableObject) 창틀, 판자, 발전기를 구분하여 as 반환&lt;/div&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-130">
-          <mxGeometry y="30" width="350" height="60" as="geometry" />
+        <mxCell id="-PeAhjP7F3xSacSw7bgF-131" value="#InteractObject (IInteractableObject obj)&amp;nbsp;&lt;div&gt;InteractObject( GetInteractable(obj))&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-130">
+          <mxGeometry y="30" width="350" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-PeAhjP7F3xSacSw7bgF-140" value="GetInteractableObj(IInteractableObject) 창틀, 판자, 발전기를 구분하여 as 반환" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-130">
+          <mxGeometry y="70" width="350" height="40" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-133" value="abstract void InteractObject(Window window) 창틀과 상호작용" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-130">
-          <mxGeometry y="90" width="350" height="30" as="geometry" />
+          <mxGeometry y="110" width="350" height="30" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-134" value="abstract void InteractObject(Palete palete) 판자와 상호작용" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-130">
-          <mxGeometry y="120" width="350" height="30" as="geometry" />
+          <mxGeometry y="140" width="350" height="30" as="geometry" />
         </mxCell>
         <mxCell id="-PeAhjP7F3xSacSw7bgF-135" value="abstract void InteractObject(Generator generator) 발전기와 상호작용" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="-PeAhjP7F3xSacSw7bgF-130">
-          <mxGeometry y="150" width="350" height="30" as="geometry" />
+          <mxGeometry y="170" width="350" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
