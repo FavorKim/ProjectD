@@ -23,4 +23,17 @@ public class PlayableCharactor : Interactor
     {
         InteractObject(obj);
     }
+
+    public override void InteractObject(Generator generator)
+    {
+        
+    }
+    public override void InteractObject(Palete palete)
+    {
+        
+    }
+    public override void InteractObject(Window window)
+    {
+        
+    }
 }

@@ -29,4 +29,3 @@ public abstract class Interactor : MonoBehaviour
         }
     }
 }
-/*턴제에서 얻을 수 있는 이득과 리얼타임에서 얻을 수 있는 이득*/
