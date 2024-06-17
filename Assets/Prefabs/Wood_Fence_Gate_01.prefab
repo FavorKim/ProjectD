@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 2604780603831781953}
   - component: {fileID: 2604780603831781954}
   - component: {fileID: 3909107687517250243}
+  - component: {fileID: 960335277}
   m_Layer: 0
   m_Name: Wood_Fence_Gate_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2604780603832176833
 Transform:
@@ -26,9 +27,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2604780603831815393}
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 9, y: 0, z: 6}
-  m_LocalScale: {x: 0.8999999, y: 0.9, z: 0.8999999}
+  m_LocalScale: {x: 0.89999986, y: 0.9, z: 0.89999986}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 77964605912550923}
@@ -36,7 +37,7 @@ Transform:
   - {fileID: 2604780603832176839}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!114 &2604780603831781953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52,7 +53,7 @@ MonoBehaviour:
   NodeId: 83ed37b5-583d-4376-b734-5ec6f82e6e9e
   dungeon: {fileID: 0}
   affectsNavigation: 0
-  userData: 43
+  userData: 52
   externallyManaged: 0
 --- !u!114 &2604780603831781954
 MonoBehaviour:
@@ -66,8 +67,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3225e5c5b25be364fa2daaab7a0d3951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellA: 43
-  cellB: 36
+  cellA: 52
+  cellB: 39
 --- !u!65 &3909107687517250243
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -81,6 +82,23 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.2557987, y: 1.0603044, z: 2.2268853}
   m_Center: {x: -0.24910295, y: 0.50506943, z: -1.5251828}
+--- !u!114 &960335277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2604780603831815393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24dcf6805ba2c44f69a5c394d31a3392, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeId: 83ed37b5-583d-4376-b734-5ec6f82e6e9e
+  dungeon: {fileID: 0}
+  affectsNavigation: 0
+  userData: -1
+  externallyManaged: 0
 --- !u!1 &2604780603831815397
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,7 +116,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2604780603832176837
 Transform:
@@ -195,7 +213,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2604780603832176839
 Transform:
@@ -292,7 +310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.69
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -300,19 +318,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.49916402
+      value: 0.46797612
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.50083464
+      value: 0.53028315
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.49916402
+      value: -0.52851427
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.50083464
+      value: -0.4695432
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -320,7 +338,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
+      value: -96.953
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z

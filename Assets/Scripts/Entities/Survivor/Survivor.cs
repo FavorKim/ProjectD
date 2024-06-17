@@ -88,14 +88,18 @@ public class Survivor : PlayableCharactor
     }
     public override void Interact(Palete palete)
     {
-        // 발전기 내리기 혹은 발전기 넘기
-        if (palete.isUsed)
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            // 발전기 넘기
-        }
-        else
-        {
-            // 발전기 내리기
+            if (palete.isUsed)
+            {
+                // 판자 내리기 애니메이션
+                palete.Interact();
+            }
+            else
+            {
+                // 판자 넘고, 넘는 애니메이션
+                palete.Interact();
+            }
         }
     }
 

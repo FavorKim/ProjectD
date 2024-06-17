@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4514466517583722522}
   - component: {fileID: 2156309147124805212}
   - component: {fileID: 7927615788585854631}
+  - component: {fileID: 7340861885338113323}
   m_Layer: 0
   m_Name: Palete
   m_TagString: Untagged
@@ -111,8 +112,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.01, y: 1.0999998, z: 1.1945229}
-  m_Center: {x: -0.9999989, y: 0.77798194, z: -0.020209705}
+  m_Size: {x: 2, y: 5.87, z: 1.1945229}
+  m_Center: {x: -0.9999989, y: -2.99, z: -0.020209705}
 --- !u!95 &7927615788585854631
 Animator:
   serializedVersion: 5
@@ -134,6 +135,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7340861885338113323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3545900645502940635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fce7ffa4cb448c478611a1d05a90ab3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isUsed: 0
 --- !u!1 &8964763792668105288
 GameObject:
   m_ObjectHideFlags: 0

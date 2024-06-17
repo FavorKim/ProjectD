@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Palete : IInteractableObject
+public class Palete : MonoBehaviour,IInteractableObject
 {
     Animator m_anim;
-    public bool isUsed;
+    public bool isUsed = false;
+    private void Awake()
+    {
+        m_anim = GetComponent<Animator>();
+    }
     public void Interact()
     {
         if (isUsed)
@@ -15,7 +19,8 @@ public class Palete : IInteractableObject
         }
         else
         {
-            //내려지기
+            m_anim.SetTrigger("Fall");
+            isUsed = true;
         }
     }
 }
