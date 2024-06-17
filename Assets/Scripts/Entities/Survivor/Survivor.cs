@@ -7,30 +7,61 @@ public class Survivor : PlayableCharactor
 {
     CharacterController m_CharacterController;
     [SerializeField] Animator Animator;
+    SurvivorStateMachine m_StateMachine;
 
-    Vector3 m_MoveDir;
+    Vector3 MoveDir;
+    Vector2 dir;
 
-    [SerializeField] float m_moveSpeed;
+    [SerializeField] float moveSpeed;
+    public float MoveSpeed {  get { return moveSpeed; } set {  moveSpeed = value; } }
+    [SerializeField] float rotateSpeed;
+
+    public Vector3 GetMoveDir() { return MoveDir; }
+
+    public Animator GetAnimator() { return Animator; }
+
     // Start is called before the first frame update
     void Start()
     {
         m_CharacterController = GetComponent<CharacterController>();
+        m_StateMachine = new SurvivorStateMachine(this);
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_CharacterController.Move(m_MoveDir);
-
+        PlayerMove();
+        m_StateMachine.Transition();
     }
 
-    public void OnMove(InputValue val)
-    {
-        Vector2 dir = val.Get<Vector2>();
-        m_MoveDir = new Vector3(dir.x, 0, dir.y);
-        m_MoveDir *= Time.deltaTime * m_moveSpeed;
-        //if (!val.isPressed) m_MoveDir = Vector3.zero;
 
+    void OnMove(InputValue val)
+    {
+        //if (isDead) return;
+
+        dir = val.Get<Vector2>();
+        MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
+        MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
+        MoveDir.Normalize();
+        MoveDir *= moveSpeed * Time.deltaTime;
+
+        if (MoveDir != Vector3.zero) Animator.SetBool("isWalk", true);
+        else Animator.SetBool("isWalk", false);
+    }
+
+
+    void PlayerMove()
+    {
+        MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
+        MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
+        MoveDir.Normalize();
+        MoveDir *= moveSpeed * Time.deltaTime;
+
+        if (MoveDir != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(MoveDir), rotateSpeed * Time.deltaTime);
+        }
+        m_CharacterController.SimpleMove(MoveDir);
     }
 
 
