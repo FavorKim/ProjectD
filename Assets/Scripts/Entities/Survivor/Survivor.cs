@@ -90,7 +90,7 @@ public class Survivor : PlayableCharactor
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (palete.isUsed)
+            if (!palete.isUsed)
             {
                 // 판자 내리기 애니메이션
                 palete.Interact();
@@ -98,6 +98,8 @@ public class Survivor : PlayableCharactor
             else
             {
                 // 판자 넘고, 넘는 애니메이션
+                Animator.SetTrigger("JumpFence");
+                
                 palete.Interact();
             }
         }
@@ -105,6 +107,7 @@ public class Survivor : PlayableCharactor
 
     public override void Interact(JumpFence fence)
     {
+        Animator.SetTrigger("JumpFence");
         // 창틀 뛰어넘기
     }
 
