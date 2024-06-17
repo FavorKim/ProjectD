@@ -1,3 +1,4 @@
+using kcp2k;
 using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class ServerMatchingManager : NetworkBehaviour
                 if(instance == null)
                 {
                     var obj = new GameObject(nameof(ServerMatchingManager));
-                    obj.AddComponent<NetworkIdentity>();
+                    //obj.AddComponent<NetworkIdentity>();
                     instance = obj.AddComponent<ServerMatchingManager>();
                 }
             }
@@ -39,11 +40,12 @@ public class ServerMatchingManager : NetworkBehaviour
     
 
     [Command(requiresAuthority =false)]
-    public void OnCreateRoom()
+    public void Cmd_OnCreateRoom(LoginPlayer client)
     {
         roomCount++;
         Debug.Log(roomCount);
         portsAvailable.Add(roomCount);
+        //client.RpcOnCreateRoom(roomCount);
         //return roomCount;
     }
     
@@ -60,6 +62,17 @@ public class ServerMatchingManager : NetworkBehaviour
         if (roomCount <= 0) return default;
         var randomRoom = Random.Range(0, roomCount + 1);
         return portsAvailable[randomRoom];
+    }
+
+    [Command(requiresAuthority =false)]
+    public void Cmd_JoinRoom(LoginPlayer client)
+    {
+        //var randomPort = GetRoomAvailable();
+        ////client.GetPort().Port = portsAvailable[randomRoom];
+        //if (randomPort != default)
+        //    client.RpcOnJoinRoom(randomPort);
+        //else
+        //    Debug.Log("¹æ¾øÀ½");
     }
 
 

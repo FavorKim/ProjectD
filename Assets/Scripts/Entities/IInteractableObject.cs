@@ -14,10 +14,22 @@ public class Window : IInteractableObject
 
 public class Palete : IInteractableObject
 {
-    public void Interact() { }
+    public bool isUsed;
+    public void Interact() 
+    {
+        if(isUsed)
+        {
+            //부서지기
+        }
+    }
 }
 
 public class Generator : IInteractableObject
 {
-    public void Interact() { }
+    float curGauge;
+    float maxGauge;
+    public void Interact() 
+    {
+        // 발전게이지 올리기
+    }
 }
