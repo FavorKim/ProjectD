@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class SurvivorStateMachine
 {
-    public enum StateName 
+    public enum StateName
     {
         Walk, Run, Crouch, Idle
     }
 
     SurvivorMoveState curState;
     Survivor owner;
-    Dictionary<StateName,SurvivorMoveState> states = new Dictionary<StateName, SurvivorMoveState>();
+    Dictionary<StateName, SurvivorMoveState> states = new Dictionary<StateName, SurvivorMoveState>();
     public SurvivorStateMachine(Survivor owner)
     {
         this.owner = owner;
@@ -31,21 +31,36 @@ public class SurvivorStateMachine
 
     public void Transition()
     {
-        if (owner.GetMoveDir() == Vector3.zero) 
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-                ChangeState(StateName.Crouch);
-            else
-                ChangeState(StateName.Idle);
-        }
-        else ChangeState(StateName.Walk);
+        //if (owner.GetMoveDir() == Vector3.zero) 
+        //{
+        //    if (Input.GetKey(KeyCode.LeftShift))
+        //        ChangeState(StateName.Crouch);
+        //    else
+        //    ChangeState(StateName.Idle);
+        //}
+        //else ChangeState(StateName.Walk);
 
-        
+
         if (Input.GetKey(KeyCode.LeftShift))
             ChangeState(StateName.Run);
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            if (owner.GetMoveDir() == Vector3.zero)
+                ChangeState(StateName.Idle);
+            else
+                ChangeState(StateName.Walk);
+        }
 
-        else if(Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.LeftControl))
             ChangeState(StateName.Crouch);
+        else if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            if (owner.GetMoveDir() == Vector3.zero)
+                ChangeState(StateName.Idle);
+            else
+                ChangeState(StateName.Walk);
+        }
+
 
 
     }
@@ -72,12 +87,12 @@ public class SurvivorWalk : SurvivorMoveState
 {
     public SurvivorWalk(Survivor owner) : base(owner) { }
 
-    public override void Enter() 
+    public override void Enter()
     {
         owner.MoveSpeed = walkSpeed;
     }
     public override void Excute() { }
-    public override void Exit() 
+    public override void Exit()
     {
 
     }
@@ -94,7 +109,7 @@ public class SurvivorRun : SurvivorMoveState
 
     public override void Excute() { }
 
-    public override void Exit() 
+    public override void Exit()
     {
         Animator.SetBool("isRun", false);
     }
@@ -109,9 +124,9 @@ public class SurvivorCrouch : SurvivorMoveState
         owner.MoveSpeed = crouchSpeed;
     }
 
-    public override void Excute() 
+    public override void Excute()
     {
-            
+
     }
 
     public override void Exit()
@@ -123,15 +138,15 @@ public class SurvivorCrouch : SurvivorMoveState
 public class SurvivorIdle : SurvivorMoveState
 {
     public SurvivorIdle(Survivor owner) : base(owner) { }
-    public override void Enter() 
+    public override void Enter()
     {
         Animator.Rebind();
     }
-    public override void Excute() 
+    public override void Excute()
     {
 
     }
-    public override void Exit() 
+    public override void Exit()
     {
 
     }

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3545900645504871195}
   - component: {fileID: 4514466517583722522}
   - component: {fileID: 2156309147124805212}
+  - component: {fileID: 7927615788585854631}
   m_Layer: 0
   m_Name: Palete
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3545900645502940635}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: -36.5, y: 0, z: -8}
   m_LocalScale: {x: 1.3818521, y: 0.2977576, z: 1}
   m_ConstrainProportionsScale: 0
@@ -35,7 +36,7 @@ Transform:
   - {fileID: 5622530711045560986}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!33 &3545900645505837531
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -112,6 +113,27 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.01, y: 1.0999998, z: 1.1945229}
   m_Center: {x: -0.9999989, y: 0.77798194, z: -0.020209705}
+--- !u!95 &7927615788585854631
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3545900645502940635}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 703e97a2b9466e840a19c90126014cf8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8964763792668105288
 GameObject:
   m_ObjectHideFlags: 0

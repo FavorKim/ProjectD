@@ -8,6 +8,7 @@ public class Survivor : PlayableCharactor
     CharacterController m_CharacterController;
     [SerializeField] Animator Animator;
     SurvivorStateMachine m_StateMachine;
+    IInteractableObject m_interactDest;
 
     Vector3 MoveDir;
     Vector2 dir;
@@ -15,6 +16,8 @@ public class Survivor : PlayableCharactor
     [SerializeField] float moveSpeed;
     public float MoveSpeed {  get { return moveSpeed; } set {  moveSpeed = value; } }
     [SerializeField] float rotateSpeed;
+
+    bool isFreeze = false;
 
     public Vector3 GetMoveDir() { return MoveDir; }
 
@@ -37,7 +40,7 @@ public class Survivor : PlayableCharactor
 
     void OnMove(InputValue val)
     {
-        //if (isDead) return;
+        if (isFreeze) return;
 
         dir = val.Get<Vector2>();
         MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
@@ -65,11 +68,25 @@ public class Survivor : PlayableCharactor
     }
 
 
-    public override void InteractObject(Generator generator)
+    public override void Interact(Generator generator)
     {
-        // 발전기 작동 애니메이션 출력
+        if(Input.GetMouseButtonDown(0))
+        {
+            Animator.SetTrigger("Generate");
+            Animator.SetBool("isGenerating", true);
+        }
+        if (Input.GetMouseButton(0))
+        {
+            isFreeze = true;
+            generator.Interact();
+        }
+        if(Input.GetMouseButtonUp(0))
+        {
+            Animator.SetBool("isGenerating", false);
+            isFreeze = false;
+        }
     }
-    public override void InteractObject(Palete palete)
+    public override void Interact(Palete palete)
     {
         // 발전기 내리기 혹은 발전기 넘기
         if (palete.isUsed)
@@ -82,8 +99,15 @@ public class Survivor : PlayableCharactor
         }
     }
 
-    public override void InteractObject(Window window)
+    public override void Interact(JumpFence fence)
     {
         // 창틀 뛰어넘기
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.GetComponent<IInteractableObject>() != null)
+            InteractObject(other.GetComponent<IInteractableObject>());
+    }
+
 }

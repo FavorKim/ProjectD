@@ -10,7 +10,7 @@ public abstract class PlayableCharactor : Interactor
         InteractObject(obj);
     }
 
-    public override abstract void InteractObject(Generator generator);
-    public override abstract void InteractObject(Palete palete);
-    public override abstract void InteractObject(Window window);
+    public override abstract void Interact(Generator generator);
+    public override abstract void Interact(Palete palete);
+    public override abstract void Interact(JumpFence jumpFence);
 }
