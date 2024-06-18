@@ -75,6 +75,8 @@ public class Survivor : PlayableCharactor
 
     public override void Interact(Generator generator)
     {
+        if (generator.IsCompleted) return;
+
         if(Input.GetMouseButtonDown(0))
         {
             Animator.SetTrigger("Generate");
@@ -103,7 +105,7 @@ public class Survivor : PlayableCharactor
             else
             {
                 // 판자 넘고, 넘는 애니메이션
-                OnJumpFence();
+                OnJumpFence(palete.transform);
                 //palete.Interact();
             }
         }
@@ -111,15 +113,14 @@ public class Survivor : PlayableCharactor
 
     public override void Interact(JumpFence fence)
     {
-        OnJumpFence();
+        OnJumpFence(fence.transform);
         // 창틀 뛰어넘기
     }
 
-    void OnJumpFence()
+    void OnJumpFence(Transform dest)
     {
         Animator.SetTrigger("JumpFence");
         m_DOTween.DORestart();
-        Debug.Log("Do");
     }
 
     private void OnTriggerStay(Collider other)

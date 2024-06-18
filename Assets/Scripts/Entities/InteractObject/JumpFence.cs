@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
-public class JumpFence : IInteractableObject
+public class JumpFence : MonoBehaviour,IInteractableObject
 {
     public void Interact() { }
 }
