@@ -1,7 +1,7 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,18 +10,50 @@ public class Survivor : PlayableCharactor
 {
     CharacterController m_CharacterController;
     [SerializeField] Animator Animator;
-    SurvivorStateMachine m_StateMachine;
     DOTweenAnimation m_DOTween;
+
     [SerializeField] GameObject VFX_FootPrintPref;
+    [SerializeField] GameObject VFX_Bleeding;
+
+    SurvivorStateMachine m_StateMachine;
+    SurvivorHealthStateMachine m_healthStateMachine;
 
     Vector3 MoveDir;
     Vector2 dir;
 
     [SerializeField] float moveSpeed;
     public float MoveSpeed {  get { return moveSpeed; } set {  moveSpeed = value; } }
+
+    private float walkSpeed = 200.0f;
+    public float GetWalkSpeed() {  return walkSpeed; }
+    private float runSpeed = 500.0f;
+    public float GetRunSpeed() {  return runSpeed; }
+    private float crouchSpeed = 100.0f;
+    public float GetCrouchSpeed() {  return crouchSpeed; }
+
+
     [SerializeField] float rotateSpeed;
 
     bool isFreeze = false;
+    private bool isBleeding = false;
+    public bool IsBleeding
+    {
+        get { return isBleeding; }
+        set
+        {
+            if(isBleeding != value)
+                isBleeding = value;
+            if (isBleeding)
+            {
+                VFX_Bleeding.SetActive(true);
+            }
+            else
+            {
+                VFX_Bleeding.SetActive(false);
+            }
+        }
+    }
+
 
     public Vector3 GetMoveDir() { return MoveDir; }
 
@@ -32,6 +64,7 @@ public class Survivor : PlayableCharactor
     {
         m_CharacterController = GetComponent<CharacterController>();
         m_StateMachine = new SurvivorStateMachine(this);
+        m_healthStateMachine = new SurvivorHealthStateMachine(this);
         DOTween.Init();
         m_DOTween = GetComponent<DOTweenAnimation>();   
     }
@@ -42,8 +75,8 @@ public class Survivor : PlayableCharactor
         // 로컬체크
         base.Update();
         PlayerMove();
-        m_StateMachine.Transition();
-        m_StateMachine.Excute();
+        m_StateMachine.StateUpdate();
+        m_healthStateMachine.StateUpdate();
     }
 
 
@@ -90,6 +123,17 @@ public class Survivor : PlayableCharactor
         //서버 작업 필
         var obj = Instantiate(VFX_FootPrintPref, new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
+    
+
+    public void GetHit()
+    {
+        if (m_healthStateMachine.GetCurState() != HealthStates.Down)
+        {
+            OnHitted();
+            StartCoroutine(CorSprint());
+        }
+    }
+
 
     public override void Interact(Generator generator)
     {
@@ -149,6 +193,15 @@ public class Survivor : PlayableCharactor
             yield return new WaitForSeconds(1.0f);
         }
     }
+    IEnumerator CorSprint()
+    {
+        runSpeed += 200.0f;
+        yield return new WaitForSeconds(1.5f);
+        runSpeed -= 200.0f;
+    }
+    
+
+    public event Action OnHitted;
 
     //private void OnTriggerStay(Collider other)
     //{

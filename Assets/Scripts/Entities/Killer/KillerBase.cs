@@ -14,8 +14,10 @@ public class KillerBase : PlayableCharactor
 
     [SerializeField] float m_moveSpeed;
     [SerializeField] float m_rotateSpeed;
+    [SerializeField] float m_attackCool;
     bool isFreeze = false;
     bool isAttacking = false;
+    bool canAttack = true;
 
 
     public bool IsAttacking
@@ -48,7 +50,7 @@ public class KillerBase : PlayableCharactor
     {
         m_controller = GetComponent<CharacterController>();
         Animator = GetComponentInChildren<Animator>();
-        m_AttackCollider = GetComponentInChildren<BoxCollider>();
+        m_AttackCollider = GetComponent<BoxCollider>();
     }
 
     // Update is called once per frame
@@ -68,19 +70,12 @@ public class KillerBase : PlayableCharactor
 
     void KillerMove()
     {
-        //transform.InverseTransformDirection(m_moveDir);
-
-        //m_moveDir = transform.forward * m_moveDir.z + transform.right * m_moveDir.x;
         Vector3 goDriection = transform.TransformDirection(m_moveDir);
-        //m_moveDir = transform.rotation * m_moveDir;
-        //m_moveDir.Normalize();
-        //transform.TransformDirection(m_moveDir);
-
         m_controller.SimpleMove(goDriection * Time.deltaTime*m_moveSpeed);
     }
     void KillerAttack()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && canAttack)
         {
             IsAttacking = true;
             m_controller.SimpleMove(transform.forward * Time.deltaTime * m_moveSpeed * 1.3f);
@@ -108,11 +103,26 @@ public class KillerBase : PlayableCharactor
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Animator.SetTrigger("Break");
-            palete.Break();
+            if (palete.isUsed)
+            {
+                Animator.SetTrigger("Break");
+                palete.Break();
+            }
+            else
+            {
+
+            }
         }
     }
 
+
+
+    IEnumerator CorKillColl()
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(m_attackCool);
+        canAttack = true;
+    }
 
     protected override void OnTriggerEnter(Collider collision)
     {
@@ -125,8 +135,10 @@ public class KillerBase : PlayableCharactor
         var player = collision.GetComponent<Survivor>();
         if (player != null && isAttacking)
         {
-            // Player.GetHit();
+            Debug.Log("hi");
+            player.GetHit();
             IsAttacking = false;
+            StartCoroutine(CorKillColl());
         }
 
 

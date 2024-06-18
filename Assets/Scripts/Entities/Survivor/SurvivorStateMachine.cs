@@ -17,8 +17,8 @@ public class SurvivorStateMachine
     public SurvivorStateMachine(Survivor owner)
     {
         this.owner = owner;
-        states.Add(StateName.Walk, new SurvivorWalk(owner,this));
-        states.Add(StateName.Run, new SurvivorRun(owner,this));
+        states.Add(StateName.Walk, new SurvivorWalk(owner, this));
+        states.Add(StateName.Run, new SurvivorRun(owner, this));
         states.Add(StateName.Crouch, new SurvivorCrouch(owner, this));
         states.Add(StateName.Idle, new SurvivorIdle(owner, this));
         curState = states[StateName.Idle];
@@ -31,18 +31,14 @@ public class SurvivorStateMachine
         curState.Enter();
     }
 
-    public void Transition()
-    {
-        
-    }
-    public void Excute() { curState.Excute(); }
+    public void StateUpdate() { curState.Excute(); }
 }
 
 public class SurvivorMoveState
 {
-    protected readonly float walkSpeed = 200.0f;
-    protected readonly float runSpeed = 500.0f;
-    protected readonly float crouchSpeed = 100.0f;
+    protected float walkSpeed => owner.GetWalkSpeed();
+    protected float runSpeed => owner.GetRunSpeed();
+    protected float crouchSpeed => owner.GetCrouchSpeed();
     protected Animator Animator => owner.GetAnimator();
     protected Survivor owner;
     protected SurvivorStateMachine state;
@@ -54,22 +50,22 @@ public class SurvivorMoveState
     }
 
     public virtual void Enter() { }
-    public virtual void Excute() 
+    public virtual void Excute()
     {
-        if(owner.GetMoveDir()==Vector3.zero) state.ChangeState(SurvivorStateMachine.StateName.Idle);
+        if (owner.GetMoveDir() == Vector3.zero) state.ChangeState(SurvivorStateMachine.StateName.Idle);
     }
     public virtual void Exit() { }
 }
 
 public class SurvivorWalk : SurvivorMoveState
 {
-    public SurvivorWalk(Survivor owner,SurvivorStateMachine state) : base(owner,state) { }
+    public SurvivorWalk(Survivor owner, SurvivorStateMachine state) : base(owner, state) { }
 
     public override void Enter()
     {
         owner.MoveSpeed = walkSpeed;
     }
-    public override void Excute() 
+    public override void Excute()
     {
         base.Excute();
         if (Input.GetKey(KeyCode.LeftShift)) state.ChangeState(SurvivorStateMachine.StateName.Run);
@@ -83,7 +79,7 @@ public class SurvivorWalk : SurvivorMoveState
 
 public class SurvivorRun : SurvivorMoveState
 {
-    public SurvivorRun(Survivor owner,SurvivorStateMachine state) : base(owner, state) { }
+    public SurvivorRun(Survivor owner, SurvivorStateMachine state) : base(owner, state) { }
     public override void Enter()
     {
         owner.MoveSpeed = runSpeed;
@@ -91,7 +87,7 @@ public class SurvivorRun : SurvivorMoveState
         owner.StartCoroutine(owner.CorPrintFoot());
     }
 
-    public override void Excute() 
+    public override void Excute()
     {
         base.Excute();
 
@@ -113,7 +109,7 @@ public class SurvivorCrouch : SurvivorMoveState
     public SurvivorCrouch(Survivor owner, SurvivorStateMachine state) : base(owner, state) { }
     public override void Enter()
     {
-        
+
         Animator.SetBool("isCrouch", true);
         owner.MoveSpeed = crouchSpeed;
     }
@@ -134,7 +130,7 @@ public class SurvivorCrouch : SurvivorMoveState
 
 public class SurvivorIdle : SurvivorMoveState
 {
-    public SurvivorIdle(Survivor owner,SurvivorStateMachine state) : base(owner, state) { }
+    public SurvivorIdle(Survivor owner, SurvivorStateMachine state) : base(owner, state) { }
     public override void Enter()
     {
         Animator.Rebind();

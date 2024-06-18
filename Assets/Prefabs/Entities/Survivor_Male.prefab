@@ -83,6 +83,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Animator: {fileID: 5836066503731449531}
   VFX_FootPrintPref: {fileID: 5777709028976728957, guid: b45ca06ea95f27643876bd539917063f, type: 3}
+  VFX_Bleeding: {fileID: 1914211452894954558}
   moveSpeed: 200
   rotateSpeed: 10
 --- !u!114 &1914211452663740889
@@ -324,6 +325,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BloodFlowing
       objectReference: {fileID: 0}
+    - target: {fileID: 128724, guid: ece958bbba812cd4ca52c389ccc91c24, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 491170, guid: ece958bbba812cd4ca52c389ccc91c24, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -382,6 +387,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ece958bbba812cd4ca52c389ccc91c24, type: 3}
+--- !u!1 &1914211452894954558 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 128724, guid: ece958bbba812cd4ca52c389ccc91c24, type: 3}
+  m_PrefabInstance: {fileID: 1914211452894851818}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1914211452895317064 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 491170, guid: ece958bbba812cd4ca52c389ccc91c24, type: 3}
