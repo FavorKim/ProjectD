@@ -12,7 +12,7 @@ public class Survivor : PlayableCharactor
     [SerializeField] Animator Animator;
     SurvivorStateMachine m_StateMachine;
     DOTweenAnimation m_DOTween;
-    IInteractableObject m_interactDest;
+    [SerializeField] GameObject VFX_FootPrintPref;
 
     Vector3 MoveDir;
     Vector2 dir;
@@ -37,11 +37,12 @@ public class Survivor : PlayableCharactor
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         PlayerMove();
         m_StateMachine.Transition();
-        OnInteract();
+        m_StateMachine.Excute();
     }
 
 
@@ -59,11 +60,6 @@ public class Survivor : PlayableCharactor
         else Animator.SetBool("isWalk", false);
     }
 
-    void OnInteract()
-    {
-        if (m_interactDest!=null)
-            InteractObject(m_interactDest);
-    }
 
     void PlayerMove()
     {
@@ -78,11 +74,27 @@ public class Survivor : PlayableCharactor
         }
         m_CharacterController.SimpleMove(MoveDir);
     }
-
+    void OnJumpFence(Transform dest)
+    {
+        m_StateMachine.ChangeState(SurvivorStateMachine.StateName.Walk);
+        isFreeze = true;
+        Animator.SetTrigger("JumpFence");
+        m_CharacterController.Move(transform.up * 1.5f);
+        isFreeze = false;
+    }
+    void PrintFoot()
+    {
+        var obj = Instantiate(VFX_FootPrintPref, new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
+    }
 
     public override void Interact(Generator generator)
     {
-        if (generator.IsCompleted) return;
+        if (generator.IsCompleted) 
+        {
+            isFreeze = false;
+            Animator.SetBool("isGenerating", false);
+            return; 
+        }
 
         if(Input.GetMouseButtonDown(0))
         {
@@ -117,20 +129,21 @@ public class Survivor : PlayableCharactor
             }
         }
     }
-
     public override void Interact(JumpFence fence)
     {
         if (Input.GetKeyDown(KeyCode.E))
             OnJumpFence(fence.transform);
         // 창틀 뛰어넘기
     }
+    
 
-    void OnJumpFence(Transform dest)
+    public IEnumerator CorPrintFoot()
     {
-        isFreeze = true;
-        Animator.SetTrigger("JumpFence");
-        m_CharacterController.Move(transform.up * 1.5f);
-        isFreeze = false;
+        while (m_StateMachine.CurStateIs(SurvivorStateMachine.StateName.Run))
+        {
+            PrintFoot();
+            yield return new WaitForSeconds(1.0f);
+        }
     }
 
     //private void OnTriggerStay(Collider other)
@@ -138,15 +151,6 @@ public class Survivor : PlayableCharactor
     //    if (other.GetComponent<IInteractableObject>() != null)
     //        InteractObject(other.GetComponent<IInteractableObject>());
     //}
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.GetComponent<IInteractableObject>() != null)
-            m_interactDest = other.GetComponent<IInteractableObject>();
-
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        m_interactDest = null;
-    }
+    
 
 }
