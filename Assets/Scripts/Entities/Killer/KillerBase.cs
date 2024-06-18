@@ -15,7 +15,19 @@ public class KillerBase : PlayableCharactor
     [SerializeField] float m_moveSpeed;
     [SerializeField] float m_rotateSpeed;
     [SerializeField] float m_attackCool;
+    float m_lungeLength;
     bool isFreeze = false;
+    bool IsFreeze
+    {
+        get { return isFreeze; }
+        set
+        {
+            if (isFreeze != value)
+            {
+                isFreeze = value;
+            }
+        }
+    }
     bool isAttacking = false;
     bool canAttack = true;
 
@@ -31,13 +43,15 @@ public class KillerBase : PlayableCharactor
                 m_AttackCollider.enabled = value;
                 if (isAttacking == true)
                 {
-                    isFreeze = true;
+                    IsFreeze = true;
                     Animator.SetTrigger("Attack");
                 }
                 else
                 {
-                    isFreeze = false;
+                    IsFreeze = false;
                     Animator.SetTrigger("AttackSuccess");
+                    StartCoroutine(CorAttackCool());
+                    m_lungeLength = 0;
                 }
             }
         }
@@ -70,17 +84,21 @@ public class KillerBase : PlayableCharactor
 
     void KillerMove()
     {
-        Vector3 goDriection = transform.TransformDirection(m_moveDir);
-        m_controller.SimpleMove(goDriection * Time.deltaTime*m_moveSpeed);
+        if (!isFreeze)
+        {
+            Vector3 goDriection = transform.TransformDirection(m_moveDir);
+            m_controller.SimpleMove(goDriection * Time.deltaTime * m_moveSpeed);
+        }
     }
     void KillerAttack()
     {
-        if (Input.GetMouseButton(0) && canAttack)
+        if (Input.GetMouseButton(0) && canAttack && m_lungeLength < 1.2f)
         {
             IsAttacking = true;
             m_controller.SimpleMove(transform.forward * Time.deltaTime * m_moveSpeed * 1.3f);
+            m_lungeLength += Time.deltaTime;
         }
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) || m_lungeLength >=1.2f)
         {
             IsAttacking = false;
         }
@@ -117,11 +135,14 @@ public class KillerBase : PlayableCharactor
 
 
 
-    IEnumerator CorKillColl()
+    IEnumerator CorAttackCool()
     {
+        m_attackCool = m_lungeLength;
         canAttack = false;
+        IsFreeze = true;
         yield return new WaitForSeconds(m_attackCool);
         canAttack = true;
+        IsFreeze = false;
     }
 
     protected override void OnTriggerEnter(Collider collision)
@@ -137,7 +158,6 @@ public class KillerBase : PlayableCharactor
         {
             player.GetHit();
             IsAttacking = false;
-            StartCoroutine(CorKillColl());
         }
 
 
@@ -147,17 +167,11 @@ public class KillerBase : PlayableCharactor
     void OnStun_GetHit()
     {
         Animator.SetTrigger("GetHit");
-        //isFreeze = true;
+        //IsFreeze = true;
     }
 
     public void OnMove(InputValue val)
     {
-        if (isFreeze)
-        {
-            m_moveDir = Vector3.zero;
-            return;
-        }
-
         Vector2 dir = val.Get<Vector2>();
         m_moveDir = new Vector3(dir.x, 0, dir.y);
 
