@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2604780603831781954}
   - component: {fileID: 3909107687517250243}
   - component: {fileID: 960335277}
+  - component: {fileID: 736711328809913217}
   m_Layer: 0
   m_Name: Wood_Fence_Gate_01
   m_TagString: Untagged
@@ -99,6 +100,21 @@ MonoBehaviour:
   affectsNavigation: 0
   userData: -1
   externallyManaged: 0
+--- !u!114 &736711328809913217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2604780603831815393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 40306178, guid: aa0b1eebb5db27a419fa4564bbe5c9c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  preset: 0
+  onEnableBehaviour: 0
+  onDisableBehaviour: 0
 --- !u!1 &2604780603831815397
 GameObject:
   m_ObjectHideFlags: 0

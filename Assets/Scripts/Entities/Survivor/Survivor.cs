@@ -1,13 +1,16 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 
 public class Survivor : PlayableCharactor
 {
     CharacterController m_CharacterController;
     [SerializeField] Animator Animator;
     SurvivorStateMachine m_StateMachine;
+    DOTweenAnimation m_DOTween;
     IInteractableObject m_interactDest;
 
     Vector3 MoveDir;
@@ -28,6 +31,8 @@ public class Survivor : PlayableCharactor
     {
         m_CharacterController = GetComponent<CharacterController>();
         m_StateMachine = new SurvivorStateMachine(this);
+        DOTween.Init();
+        m_DOTween = GetComponent<DOTweenAnimation>();   
     }
 
     // Update is called once per frame
@@ -98,17 +103,23 @@ public class Survivor : PlayableCharactor
             else
             {
                 // 판자 넘고, 넘는 애니메이션
-                Animator.SetTrigger("JumpFence");
-                
-                palete.Interact();
+                OnJumpFence();
+                //palete.Interact();
             }
         }
     }
 
     public override void Interact(JumpFence fence)
     {
-        Animator.SetTrigger("JumpFence");
+        OnJumpFence();
         // 창틀 뛰어넘기
+    }
+
+    void OnJumpFence()
+    {
+        Animator.SetTrigger("JumpFence");
+        m_DOTween.DORestart();
+        Debug.Log("Do");
     }
 
     private void OnTriggerStay(Collider other)
