@@ -147,6 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fce7ffa4cb448c478611a1d05a90ab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  VFX_GibletPref: {fileID: 2084820093207374130, guid: b29779dae237de9419a55d57ebc4f4b7, type: 3}
   isUsed: 0
 --- !u!1 &8964763792668105288
 GameObject:

@@ -39,6 +39,7 @@ public class Survivor : PlayableCharactor
     // Update is called once per frame
     protected override void Update()
     {
+        // 로컬체크
         base.Update();
         PlayerMove();
         m_StateMachine.Transition();
@@ -48,6 +49,8 @@ public class Survivor : PlayableCharactor
 
     void OnMove(InputValue val)
     {
+        // 로컬체크
+
         if (isFreeze) return;
 
         dir = val.Get<Vector2>();
@@ -84,6 +87,7 @@ public class Survivor : PlayableCharactor
     }
     void PrintFoot()
     {
+        //서버 작업 필
         var obj = Instantiate(VFX_FootPrintPref, new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
 

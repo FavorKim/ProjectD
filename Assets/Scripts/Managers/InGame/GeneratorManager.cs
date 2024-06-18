@@ -20,7 +20,7 @@ public class GeneratorManager : MonoBehaviour
         Text_GenCount.text = m_GeneratorsRemaining.ToString();
     }
 
-    void OnGeneratorComplete()
+    void OnGeneratorComplete()//서버 작업 필
     {
         m_GeneratorsRemaining--;
         Text_GenCount.text = m_GeneratorsRemaining.ToString();
