@@ -2,25 +2,86 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class KillerBase : PlayableCharactor
 {
     CharacterController m_controller;
     Animator Animator;
+    BoxCollider m_AttackCollider;
+
+    Vector3 m_moveDir;
+
+    [SerializeField] float m_moveSpeed;
+    [SerializeField] float m_rotateSpeed;
+    bool isFreeze = false;
+    bool isAttacking = false;
+
+
+    public bool IsAttacking
+    {
+        get { return IsAttacking; }
+        set
+        {
+            if (value != isAttacking)
+            {
+                isAttacking = value;
+                m_AttackCollider.enabled = value;
+                if (isAttacking == true)
+                {
+                    isFreeze = true;
+                    Animator.SetTrigger("Attack");
+                }
+                else
+                {
+                    isFreeze = false;
+                    Animator.SetTrigger("AttackSuccess");
+                }
+            }
+        }
+    }
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         m_controller = GetComponent<CharacterController>();
-        Animator = GetComponent<Animator>();
+        Animator = GetComponentInChildren<Animator>();
+        m_AttackCollider = GetComponentInChildren<BoxCollider>();
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
+        KillerMove();
+        KillerAttack();
+        Look();
     }
 
+    void Look()
+    {
+        transform.LookAt(Camera.main.transform.forward*5000f);
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+    }
+
+    void KillerMove()
+    {
+        m_controller.SimpleMove(m_moveDir);
+    }
+    void KillerAttack()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            IsAttacking = true;
+            m_controller.SimpleMove(transform.forward * Time.deltaTime * m_moveSpeed * 1.3f);
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            IsAttacking = false;
+        }
+    }
 
 
     public override void Interact(Generator generator)
@@ -34,8 +95,6 @@ public class KillerBase : PlayableCharactor
         {
 
         }
-
-
     }
     public override void Interact(Palete palete)
     {
@@ -54,7 +113,49 @@ public class KillerBase : PlayableCharactor
         {
             OnStun();
         }
+
+        var player = collision.GetComponent<Survivor>();
+        if (player != null && isAttacking)
+        {
+            // Player.GetHit();
+            IsAttacking = false;
+        }
+
+
     }
 
     private event Action OnStun;
+    void OnStun_GetHit()
+    {
+        Animator.SetTrigger("GetHit");
+        //isFreeze = true;
+    }
+
+    public void OnMove(InputValue val)
+    {
+        if (isFreeze)
+        {
+            m_moveDir = Vector3.zero;
+            return;
+        }
+
+        Vector2 dir = val.Get<Vector2>();
+        m_moveDir = new Vector3(dir.x, 0, dir.y);
+        m_moveDir += Camera.main.transform.forward;
+        m_moveDir.Normalize();
+        
+        if (m_moveDir != Vector3.zero)
+        {
+            Animator.SetBool("isMoving", true);
+            m_moveDir *= Time.deltaTime * m_moveSpeed;
+        }
+        else
+        {
+            Animator.SetBool("isMoving", false);
+        }
+        Animator.SetFloat("inputX", m_moveDir.x);
+        Animator.SetFloat("inputY", m_moveDir.z);
+
+    }
+
 }
