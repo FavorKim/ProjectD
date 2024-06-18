@@ -62,13 +62,21 @@ public class KillerBase : PlayableCharactor
 
     void Look()
     {
-        transform.LookAt(Camera.main.transform.forward*5000f);
+        transform.LookAt(Camera.main.transform.forward * 5000f);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
     void KillerMove()
     {
-        m_controller.SimpleMove(m_moveDir);
+        //transform.InverseTransformDirection(m_moveDir);
+
+        //m_moveDir = transform.forward * m_moveDir.z + transform.right * m_moveDir.x;
+        Vector3 goDriection = transform.TransformDirection(m_moveDir);
+        //m_moveDir = transform.rotation * m_moveDir;
+        //m_moveDir.Normalize();
+        //transform.TransformDirection(m_moveDir);
+
+        m_controller.SimpleMove(goDriection * Time.deltaTime*m_moveSpeed);
     }
     void KillerAttack()
     {
@@ -141,13 +149,10 @@ public class KillerBase : PlayableCharactor
 
         Vector2 dir = val.Get<Vector2>();
         m_moveDir = new Vector3(dir.x, 0, dir.y);
-        m_moveDir += Camera.main.transform.forward;
-        m_moveDir.Normalize();
-        
+
         if (m_moveDir != Vector3.zero)
         {
             Animator.SetBool("isMoving", true);
-            m_moveDir *= Time.deltaTime * m_moveSpeed;
         }
         else
         {
