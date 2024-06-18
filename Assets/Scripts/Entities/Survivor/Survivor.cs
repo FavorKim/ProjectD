@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -40,6 +41,7 @@ public class Survivor : PlayableCharactor
     {
         PlayerMove();
         m_StateMachine.Transition();
+        OnInteract();
     }
 
 
@@ -57,6 +59,11 @@ public class Survivor : PlayableCharactor
         else Animator.SetBool("isWalk", false);
     }
 
+    void OnInteract()
+    {
+        if (m_interactDest!=null)
+            InteractObject(m_interactDest);
+    }
 
     void PlayerMove()
     {
@@ -113,20 +120,33 @@ public class Survivor : PlayableCharactor
 
     public override void Interact(JumpFence fence)
     {
-        OnJumpFence(fence.transform);
+        if (Input.GetKeyDown(KeyCode.E))
+            OnJumpFence(fence.transform);
         // 창틀 뛰어넘기
     }
 
     void OnJumpFence(Transform dest)
     {
+        isFreeze = true;
         Animator.SetTrigger("JumpFence");
-        m_DOTween.DORestart();
+        m_CharacterController.Move(transform.up * 1.5f);
+        isFreeze = false;
     }
 
-    private void OnTriggerStay(Collider other)
+    //private void OnTriggerStay(Collider other)
+    //{
+    //    if (other.GetComponent<IInteractableObject>() != null)
+    //        InteractObject(other.GetComponent<IInteractableObject>());
+    //}
+    private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<IInteractableObject>() != null)
-            InteractObject(other.GetComponent<IInteractableObject>());
+            m_interactDest = other.GetComponent<IInteractableObject>();
+
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        m_interactDest = null;
     }
 
 }

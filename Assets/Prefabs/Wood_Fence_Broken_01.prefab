@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 404256}
   - component: {fileID: 6568668}
   - component: {fileID: 3492521902329954427}
+  - component: {fileID: 4589610465455477680}
   m_Layer: 0
   m_Name: Wood_Fence_Broken_01
   m_TagString: Untagged
@@ -130,8 +131,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 1, z: 3}
-  m_Center: {x: -0.25, y: 0.6, z: -1.5}
+  m_Size: {x: 0.5, y: 0.94, z: 3}
+  m_Center: {x: -0.25, y: 0.7, z: -1.5}
 --- !u!65 &3492521902329954427
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -143,8 +144,20 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.0322043, y: 1.2028775, z: 2.677048}
-  m_Center: {x: -0.13528131, y: 0.6006007, z: -1.4644556}
+  m_Size: {x: 1.3, y: 1.28, z: 2.83}
+  m_Center: {x: -0.26, y: 0.6006007, z: -1.4644556}
+--- !u!114 &4589610465455477680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da392c2eb3356a84f94196128b85cebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &184420
 GameObject:
   m_ObjectHideFlags: 0
