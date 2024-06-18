@@ -21,8 +21,9 @@ public class Survivor : PlayableCharactor
     Vector3 MoveDir;
     Vector2 dir;
 
-    [SerializeField] float moveSpeed;
-    public float MoveSpeed {  get { return moveSpeed; } set {  moveSpeed = value; } }
+    [SerializeField] float m_invincibleTime;
+    [SerializeField] float m_moveSpeed;
+    public float MoveSpeed {  get { return m_moveSpeed; } set {  m_moveSpeed = value; } }
 
     private float walkSpeed = 200.0f;
     public float GetWalkSpeed() {  return walkSpeed; }
@@ -53,6 +54,8 @@ public class Survivor : PlayableCharactor
             }
         }
     }
+    bool isInvincible = false;
+
 
 
     public Vector3 GetMoveDir() { return MoveDir; }
@@ -90,7 +93,7 @@ public class Survivor : PlayableCharactor
         MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
         MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
         MoveDir.Normalize();
-        MoveDir *= moveSpeed * Time.deltaTime;
+        MoveDir *= m_moveSpeed * Time.deltaTime;
 
         if (MoveDir != Vector3.zero) Animator.SetBool("isWalk", true);
         else Animator.SetBool("isWalk", false);
@@ -102,7 +105,7 @@ public class Survivor : PlayableCharactor
         MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
         MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
         MoveDir.Normalize();
-        MoveDir *= moveSpeed * Time.deltaTime;
+        MoveDir *= m_moveSpeed * Time.deltaTime;
 
         if (MoveDir != Vector3.zero)
         {
@@ -127,10 +130,11 @@ public class Survivor : PlayableCharactor
 
     public void GetHit()
     {
-        if (m_healthStateMachine.GetCurState() != HealthStates.Down)
+        if (m_healthStateMachine.GetCurState() != HealthStates.Down && !isInvincible)
         {
             OnHitted();
             StartCoroutine(CorSprint());
+            StartCoroutine(CorInvincibleTime());
         }
     }
 
@@ -198,6 +202,12 @@ public class Survivor : PlayableCharactor
         runSpeed += 200.0f;
         yield return new WaitForSeconds(1.5f);
         runSpeed -= 200.0f;
+    }
+    IEnumerator CorInvincibleTime()
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(m_invincibleTime);
+        isInvincible = false;
     }
     
 

@@ -135,7 +135,6 @@ public class KillerBase : PlayableCharactor
         var player = collision.GetComponent<Survivor>();
         if (player != null && isAttacking)
         {
-            Debug.Log("hi");
             player.GetHit();
             IsAttacking = false;
             StartCoroutine(CorKillColl());

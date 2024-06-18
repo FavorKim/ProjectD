@@ -15,15 +15,16 @@ public class SurvivorHealthStateMachine
     private SurvivorHealthBaseState curState;
 
     Dictionary<HealthStates, SurvivorHealthBaseState> states = new Dictionary<HealthStates, SurvivorHealthBaseState>();
-
-    //public Dictionary<HealthStates,SurvivorHealthBaseState> GetStateDict() {  return states; }
+    private Survivor owner;
 
     public SurvivorHealthStateMachine(Survivor owner)
     {
+        this.owner = owner;
         states.Add(HealthStates.Healthy, new Healthy(owner, this));
         states.Add(HealthStates.Injured, new Injured(owner, this));
         states.Add(HealthStates.Down, new Down(owner, this));
         curState = states[HealthStates.Healthy];
+        owner.OnHitted += GetHit;
     }
 
     public void ChangeState(HealthStates toChangeStateEnum)
@@ -43,6 +44,10 @@ public class SurvivorHealthStateMachine
     {
         curState.Excute();
     }
+    void GetHit()
+    {
+        ChangeState(curState.GetStateEnum()-1);
+    }
 }
 
 public class SurvivorHealthBaseState
@@ -55,22 +60,16 @@ public class SurvivorHealthBaseState
     {
         this.owner = owner;
         this.fsm = fsm;
-        owner.OnHitted += GetHit;
 
     }
 
-    public virtual void Enter() { }
+    public virtual void Enter() { /*Debug.Log(myEnum.ToString());*/ }
     public virtual void Excute()
     {
 
     }
     public virtual void Exit() { }
 
-    protected void GetHit()
-    {
-        var lowerState = (HealthStates)((int)myEnum - 1);
-        fsm.ChangeState(lowerState);
-    }
     public HealthStates GetStateEnum() { return myEnum; }
 }
 

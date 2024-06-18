@@ -84,7 +84,8 @@ MonoBehaviour:
   Animator: {fileID: 5836066503731449531}
   VFX_FootPrintPref: {fileID: 5777709028976728957, guid: b45ca06ea95f27643876bd539917063f, type: 3}
   VFX_Bleeding: {fileID: 1914211452894954558}
-  moveSpeed: 200
+  m_invincibleTime: 2
+  m_moveSpeed: 0
   rotateSpeed: 10
 --- !u!114 &1914211452663740889
 MonoBehaviour:
