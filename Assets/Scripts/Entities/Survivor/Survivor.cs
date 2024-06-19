@@ -270,14 +270,13 @@ public class Survivor : PlayableCharactor
                 return;
             }
             isFreeze = true;
-            generator.SurvivorInteract();
         }
         if (Input.GetMouseButtonUp(0))
         {
-            generator.SurvivorInteract();
             Animator.SetBool("isGenerating", false);
             isFreeze = false;
         }
+        generator.SurvivorInteract();
     }
     public override void Interact(Palete palete)
     {
@@ -314,6 +313,20 @@ public class Survivor : PlayableCharactor
             if (hanger.HangedSurvivor != null)
                 hanger.SurvivorInteract();
         }
+    }
+    public override void Interact(Lever lever)
+    {
+        if (!lever.IsAvailable) return;
+
+        if (Input.GetMouseButtonDown(0)) 
+        {
+            Animator.SetTrigger("Pull");
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            Animator.SetTrigger("PullOver");
+        }
+        lever.SurvivorInteract();
     }
 
 

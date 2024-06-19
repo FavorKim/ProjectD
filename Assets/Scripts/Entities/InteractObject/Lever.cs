@@ -1,18 +1,78 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Lever : MonoBehaviour
+public class Lever : MonoBehaviour, IInteractableObject
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] float m_speed;
+    [SerializeField] Animator Animator_Door;
+    Animator Animator;
+    const float m_maxGauge = 100;
+    float curGauge;
+    public float CurrentGauge
     {
-        
+        get
+        {
+            return curGauge;
+        }
+        set
+        {
+            if (curGauge >= m_maxGauge)
+            {
+                OnOpenDoor();
+                return;
+            }
+            if (CurrentGauge != value && CurrentGauge < m_maxGauge)
+            {
+                curGauge = value;
+                Slider_Gauge.value = CurrentGauge / m_maxGauge;
+            }
+        }
+    }
+    [SerializeField] Slider Slider_Gauge;
+
+    private void Start()
+    {
+        Animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool IsAvailable { get; set; }
+
+    public void SurvivorInteract()
     {
-        
+        if (!IsAvailable && CurrentGauge >= m_maxGauge) 
+        {
+            Slider_Gauge.gameObject.SetActive(false);
+            Animator.SetBool("isUsing", false);
+            return; 
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            if (!Slider_Gauge.gameObject.activeSelf)
+                Slider_Gauge.gameObject.SetActive(true);
+            CurrentGauge += Time.deltaTime * m_speed;
+            Animator.SetBool("isUsing", true);
+        }
+        else
+        {
+            Slider_Gauge.gameObject.SetActive(false);
+            Animator.SetBool("isUsing", false);
+        }
+    }
+    public void KillerInteract()
+    {
+
+    }
+
+    void OnOpenDoor()
+    {
+        OpenDoor();
+    }
+
+    void OpenDoor()
+    {
+        Animator_Door.SetTrigger("Open");
     }
 }

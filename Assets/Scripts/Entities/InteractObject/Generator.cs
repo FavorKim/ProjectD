@@ -19,7 +19,7 @@ public class Generator : MonoBehaviour, IInteractableObject
             curGauge = value;
             if (curGauge >= maxGauge)
             {
-                OnCompleteHandler();
+                IsCompleted = true;
             }
         }
     }
@@ -31,8 +31,22 @@ public class Generator : MonoBehaviour, IInteractableObject
     [SerializeField] ParticleSystem VFX_Smoke;
     [SerializeField] ParticleSystem VFX_Steam;
 
-
-    public bool IsCompleted { get; private set; }
+    bool isCompleted = false;
+    public bool IsCompleted 
+    {
+        get { return isCompleted; }
+        private set 
+        {
+            if (isCompleted != value)
+            {
+                isCompleted = value;
+                if(value == true)
+                {
+                    OnCompleteHandler();
+                }
+            }
+        } 
+    }
     bool isSabotaging;
     public bool IsSabotaging
     {
@@ -59,7 +73,6 @@ public class Generator : MonoBehaviour, IInteractableObject
 
     private void OnEnable()
     {
-        OnCompleteHandler += SetComplete;
         OnCompleteHandler += TurnOnLight;
 
         OnSabotage += DecreaseGauge;
@@ -76,12 +89,17 @@ public class Generator : MonoBehaviour, IInteractableObject
         OnSabotage -= DecreaseGauge;
 
         OnCompleteHandler -= TurnOnLight;
-        OnCompleteHandler -= SetComplete;
+
+        OnCompleteHandler = null;
     }
 
     public void SurvivorInteract()
     {
-        if (IsCompleted) return;
+        if (IsCompleted)
+        {
+            Slider_Gauge.gameObject.SetActive(false);
+            return;
+        }
 
         if (Input.GetMouseButton(0))
         {
@@ -124,10 +142,7 @@ public class Generator : MonoBehaviour, IInteractableObject
         VFX_Smoke.Stop();
     }
 
-    void SetComplete()
-    {
-        IsCompleted = true;//서버 작업 필
-    }
+    
     void TurnOnLight()
     {
         Light.gameObject.SetActive(true);

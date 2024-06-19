@@ -19,6 +19,7 @@ public class KillerBase : PlayableCharactor
     [SerializeField] float m_moveSpeed;
     [SerializeField] float m_rotateSpeed;
     [SerializeField] float m_attackCool;
+    [SerializeField] float m_stunCool;
     float m_lungeLength;
     bool isFreeze = false;
     bool IsFreeze
@@ -34,6 +35,7 @@ public class KillerBase : PlayableCharactor
     }
     bool isAttacking = false;
     bool canAttack = true;
+    bool isStunable = true;
 
 
     public bool IsAttacking
@@ -144,6 +146,7 @@ public class KillerBase : PlayableCharactor
     }
     public override void Interact(Palete palete)
     {
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (palete.isUsed)
@@ -167,6 +170,10 @@ public class KillerBase : PlayableCharactor
             m_holdSurvivor.BeingHanged(hanger);
             hanger.KillerInteract();
         }
+    }
+    public override void Interact(Lever lever)
+    {
+        
     }
 
 
@@ -198,16 +205,18 @@ public class KillerBase : PlayableCharactor
         yield return new WaitForSeconds(time);
         IsFreeze = false;
     }
+    IEnumerator CorStunCool()
+    {
+        isStunable = false;
+        yield return new WaitForSeconds(m_stunCool);
+        isStunable = true;
+    }
 
     protected override void OnTriggerEnter(Collider collision)
     {
         base.OnTriggerEnter(collision);
-        var palete = collision.GetComponent<Palete>();
-        if (palete != null && palete.IsAttack)
-        {
-            OnStun();
-        }
 
+        
         var survivor = collision.GetComponent<Survivor>();
         if (survivor != null)
         {
@@ -222,7 +231,6 @@ public class KillerBase : PlayableCharactor
     }
     private void OnTriggerStay(Collider other)
     {
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             var survivor = other.GetComponent<Survivor>();
@@ -237,13 +245,18 @@ public class KillerBase : PlayableCharactor
             }
         }
     }
+    
 
     private event Action OnStun;
-
+    public void OnStunCall() { OnStun(); }
     void OnStun_GetHit()
     {
+        
+        if (!isStunable) return;
+        Debug.Log("GetHit");
         Animator.SetTrigger("GetHit");
         StartCoroutine(CorFreezeWhileSec(1.5f));
+        StartCoroutine(CorStunCool());
     }
     public void OnMove(InputValue val)
     {

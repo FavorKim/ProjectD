@@ -8,7 +8,7 @@ public class Palete : MonoBehaviour,IInteractableObject
     [SerializeField] GameObject VFX_GibletPref;
     Animator m_anim;
     public bool isUsed = false;
-    bool isAttack = false;
+    [SerializeField]bool isAttack = false;
     public bool IsAttack { get { return isAttack; } private set { isAttack = value; } }
     private void Awake()
     {
@@ -44,5 +44,11 @@ public class Palete : MonoBehaviour,IInteractableObject
     public void SetAttackFalse()
     {
         isAttack = false;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (!IsAttack) return;
+        other.GetComponent<KillerBase>()?.OnStunCall();
     }
 }
