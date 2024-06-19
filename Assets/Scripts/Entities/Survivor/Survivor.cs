@@ -36,6 +36,7 @@ public class Survivor : PlayableCharactor
     [SerializeField] float rotateSpeed;
 
     bool isFreeze = false;
+    public bool IsFreeze { get { return isFreeze; } set { isFreeze = value; } }
     private bool isBleeding = false;
     public bool IsBleeding
     {

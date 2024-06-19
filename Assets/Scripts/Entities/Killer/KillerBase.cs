@@ -192,12 +192,20 @@ public class KillerBase : PlayableCharactor
             OnStun();
         }
 
-        var player = collision.GetComponent<Survivor>();
-        if (player != null && isAttacking)
+        var survivor = collision.GetComponent<Survivor>();
+        if (survivor != null)
         {
-            player.GetHit();
-            IsAttacking = false;
+            if (IsAttacking)
+            {
+                survivor.GetHit();
+                IsAttacking = false;
+            }
+            else if (Input.GetKeyDown(KeyCode.Space))
+            {
+
+            }
         }
+        
 
 
     }

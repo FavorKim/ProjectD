@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-    public enum HealthStates
-    {
-        Down,
-        Injured,
-        Healthy,
-    }
+public enum HealthStates
+{
+    Hanged,
+    Held,
+    Down,
+    Injured,
+    Healthy,
+}
 
 public class SurvivorHealthStateMachine
 {
@@ -46,7 +48,7 @@ public class SurvivorHealthStateMachine
     }
     void GetHit()
     {
-        if (curState.GetStateEnum() != HealthStates.Down)
+        if (curState.GetStateEnum() > HealthStates.Down)
             ChangeState(curState.GetStateEnum() - 1);
     }
 }
@@ -132,4 +134,45 @@ public class Down : SurvivorHealthBaseState
         owner.GetAnimator().SetBool("isDown", false);
     }
 }
+public class Held : SurvivorHealthBaseState
+{
+    public Held(Survivor owner, SurvivorHealthStateMachine fsm) : base(owner, fsm) {myEnum = HealthStates.Held; } 
+
+    public override void Enter() 
+    {
+        base.Enter();
+        owner.IsBleeding = false;
+        owner.IsFreeze = true;
+    }
+    public override void Excute()
+    {
+        base.Excute();
+    }
+    public override void Exit()
+    {
+        base.Exit();
+        owner.IsFreeze = false;
+    }
+}
+public class Hanged : SurvivorHealthBaseState
+{
+    public Hanged(Survivor owner, SurvivorHealthStateMachine fsm) : base(owner, fsm) { myEnum = HealthStates.Hanged; }
+
+    public override void Enter()
+    {
+        base.Enter();
+        owner.IsBleeding = false;
+        owner.IsFreeze = true;
+    }
+    public override void Excute()
+    {
+        base.Excute();
+    }
+    public override void Exit()
+    {
+        base.Exit();
+        owner.IsFreeze = false;
+    }
+}
+
 
