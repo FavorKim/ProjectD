@@ -23,14 +23,14 @@ public class Survivor : PlayableCharactor
 
     [SerializeField] float m_invincibleTime;
     [SerializeField] float m_moveSpeed;
-    public float MoveSpeed {  get { return m_moveSpeed; } set {  m_moveSpeed = value; } }
+    public float MoveSpeed { get { return m_moveSpeed; } set { m_moveSpeed = value; } }
 
     private float walkSpeed = 200.0f;
-    public float GetWalkSpeed() {  return walkSpeed; }
+    public float GetWalkSpeed() { return walkSpeed; }
     private float runSpeed = 500.0f;
-    public float GetRunSpeed() {  return runSpeed; }
+    public float GetRunSpeed() { return runSpeed; }
     private float crouchSpeed = 100.0f;
-    public float GetCrouchSpeed() {  return crouchSpeed; }
+    public float GetCrouchSpeed() { return crouchSpeed; }
 
 
     [SerializeField] float rotateSpeed;
@@ -42,7 +42,7 @@ public class Survivor : PlayableCharactor
         get { return isBleeding; }
         set
         {
-            if(isBleeding != value)
+            if (isBleeding != value)
                 isBleeding = value;
             if (isBleeding)
             {
@@ -69,7 +69,7 @@ public class Survivor : PlayableCharactor
         m_StateMachine = new SurvivorStateMachine(this);
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
         DOTween.Init();
-        m_DOTween = GetComponent<DOTweenAnimation>();   
+        m_DOTween = GetComponent<DOTweenAnimation>();
     }
 
     // Update is called once per frame
@@ -89,13 +89,15 @@ public class Survivor : PlayableCharactor
     {
         // 로컬체크
 
-        if (isFreeze) return;
+        //if (isFreeze) return;
+
 
         dir = val.Get<Vector2>();
         MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
         MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
         MoveDir.Normalize();
         MoveDir *= m_moveSpeed * Time.deltaTime;
+
 
         if (MoveDir != Vector3.zero) Animator.SetBool("isWalk", true);
         else Animator.SetBool("isWalk", false);
@@ -104,31 +106,44 @@ public class Survivor : PlayableCharactor
 
     void PlayerMove()
     {
-        MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
-        MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
-        MoveDir.Normalize();
-        MoveDir *= m_moveSpeed * Time.deltaTime;
+        if (isFreeze) return;
+
 
         if (MoveDir != Vector3.zero)
         {
+            MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
+            MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
+            MoveDir.Normalize();
+            MoveDir *= m_moveSpeed * Time.deltaTime;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(MoveDir), rotateSpeed * Time.deltaTime);
+            m_CharacterController.SimpleMove(MoveDir);
         }
-        m_CharacterController.SimpleMove(MoveDir);
     }
-    void OnJumpFence(Transform dest)
+
+    void OnJumpFence(Vector3 dest)
     {
+        RotateTransformToDest(dest);
+
         m_StateMachine.ChangeState(SurvivorStateMachine.StateName.Walk);
-        isFreeze = true;
         Animator.SetTrigger("JumpFence");
-        m_CharacterController.Move(transform.up * 1.5f);
-        isFreeze = false;
+        StartCoroutine(CorJumpFence());
     }
     void PrintFoot()
     {
         //서버 작업 필
         var obj = Instantiate(VFX_FootPrintPref, new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
-    
+    void RotateTransformToDest(Transform dest)
+    {
+        transform.LookAt(dest);
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+    }
+    void RotateTransformToDest(Vector3 look)
+    {
+        transform.rotation.SetLookRotation(look);
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+    }
+
 
     public void GetHit()
     {
@@ -143,14 +158,14 @@ public class Survivor : PlayableCharactor
 
     public override void Interact(Generator generator)
     {
-        if (generator.IsCompleted) 
+        if (generator.IsCompleted)
         {
             isFreeze = false;
             Animator.SetBool("isGenerating", false);
-            return; 
+            return;
         }
 
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Animator.SetTrigger("Generate");
             Animator.SetBool("isGenerating", true);
@@ -160,7 +175,7 @@ public class Survivor : PlayableCharactor
             isFreeze = true;
             generator.Interact();
         }
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             Animator.SetBool("isGenerating", false);
             isFreeze = false;
@@ -178,7 +193,9 @@ public class Survivor : PlayableCharactor
             else
             {
                 // 판자 넘고, 넘는 애니메이션
-                OnJumpFence(palete.transform);
+                var center = palete.transform.position + palete.transform.right * -1.0f;
+
+                OnJumpFence(center);
                 //palete.Interact();
             }
         }
@@ -186,10 +203,13 @@ public class Survivor : PlayableCharactor
     public override void Interact(JumpFence fence)
     {
         if (Input.GetKeyDown(KeyCode.E))
-            OnJumpFence(fence.transform);
+        {
+            var center = fence.transform.position + fence.transform.right ;
+            OnJumpFence(center);
+        }
         // 창틀 뛰어넘기
     }
-    
+
 
     public IEnumerator CorPrintFoot()
     {
@@ -211,7 +231,21 @@ public class Survivor : PlayableCharactor
         yield return new WaitForSeconds(m_invincibleTime);
         isInvincible = false;
     }
-    
+    IEnumerator CorJumpFence()
+    {
+        float time = 0;
+        isFreeze = true;
+        while (time < 0.5f)
+        {
+            time += Time.deltaTime;
+            m_CharacterController.Move(transform.up * 3.0f * Time.deltaTime);
+            m_CharacterController.Move(transform.forward * 6.0f * Time.deltaTime);
+            yield return null;
+        }
+        m_CharacterController.Move(-transform.up * 10f);
+        isFreeze = false;
+    }
+
 
     public event Action OnHitted;
 
@@ -220,6 +254,6 @@ public class Survivor : PlayableCharactor
     //    if (other.GetComponent<IInteractableObject>() != null)
     //        InteractObject(other.GetComponent<IInteractableObject>());
     //}
-    
+
 
 }
