@@ -14,7 +14,7 @@ public class Palete : MonoBehaviour,IInteractableObject
     {
         m_anim = GetComponent<Animator>();
     }
-    public void Interact()
+    public void SurvivorInteract()
     {
         if(!isUsed)
         {
@@ -24,7 +24,7 @@ public class Palete : MonoBehaviour,IInteractableObject
     }
 
 
-    public void Break()
+    public void KillerInteract()
     {
         if(isUsed)
         m_anim.SetTrigger("Break");

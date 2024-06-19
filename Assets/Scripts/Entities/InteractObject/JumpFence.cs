@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class JumpFence : MonoBehaviour,IInteractableObject
 {
-    public void Interact() { }
+    public void SurvivorInteract() { }
+    public void KillerInteract() { }
 }
 
 

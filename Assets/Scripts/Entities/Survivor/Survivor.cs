@@ -20,6 +20,7 @@ public class Survivor : PlayableCharactor
 
     Vector3 MoveDir;
     Vector2 dir;
+    public Vector3 HeldPosition {  get; private set; }
 
     [SerializeField] float m_invincibleTime;
     [SerializeField] float m_moveSpeed;
@@ -63,6 +64,7 @@ public class Survivor : PlayableCharactor
 
     public Animator GetAnimator() { return Animator; }
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -71,6 +73,24 @@ public class Survivor : PlayableCharactor
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
         DOTween.Init();
         m_DOTween = GetComponent<DOTweenAnimation>();
+    }
+
+    private void OnEnable()
+    {
+        OnBeingHeld += OnBeingHeld_SetState;
+        OnBeingHeld += OnBeingHeld_SetPosition;
+
+        OnBeingHanged += OnBeingHanged_SetState;
+        OnBeingHanged += OnBeingHanged_SetPosition;
+
+    }
+    private void OnDisable()
+    {
+        m_healthStateMachine.UnRegisterEvent();
+        OnHitted = null;
+
+        OnBeingHanged -= OnBeingHanged_SetState;
+        OnBeingHeld -= OnBeingHeld_SetState;
     }
 
     // Update is called once per frame
@@ -99,12 +119,10 @@ public class Survivor : PlayableCharactor
         MoveDir.Normalize();
         MoveDir *= m_moveSpeed * Time.deltaTime;
 
-
+        if (isFreeze) return;
         if (MoveDir != Vector3.zero) Animator.SetBool("isWalk", true);
         else Animator.SetBool("isWalk", false);
     }
-
-
     void PlayerMove()
     {
         if (isFreeze) return;
@@ -121,6 +139,8 @@ public class Survivor : PlayableCharactor
         }
     }
 
+
+
     void OnJumpFence(Vector3 dest)
     {
         RotateTransformToDest(dest);
@@ -134,6 +154,40 @@ public class Survivor : PlayableCharactor
         //서버 작업 필
         var obj = Instantiate(VFX_FootPrintPref, new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
+    void ResqueSurvivor(Survivor survivor)
+    {
+        survivor.OnResqued();
+    }
+    
+    void OnBeingHeld_SetState(KillerBase killer)
+    {
+        if (m_healthStateMachine.GetCurState() == HealthStates.Down)
+            m_healthStateMachine.ChangeState(HealthStates.Held);
+    }
+    void OnBeingHeld_SetPosition(KillerBase killer)
+    {
+        transform.parent = killer.GetHoldPosition();
+        transform.localPosition = Vector3.zero;
+    }
+
+
+    // command와 rpc는 참조형이 아닌 NetworkBehaviour를 상속받은 객체와 구조체만을 매개변수로 사용할 수 있음
+    void OnBeingHanged_SetState(Hanger hanger)
+    {
+        if (m_healthStateMachine.GetCurState() == HealthStates.Held)
+            m_healthStateMachine.ChangeState(HealthStates.Hanged);
+    }
+    void OnBeingHanged_SetPosition(Hanger hanger)
+    {
+        transform.parent = null;
+        transform.position = hanger.GetHangedPos().position;
+    }
+    
+    void OnResqued()
+    {
+        
+    }
+
     void RotateTransformToDest(Transform dest)
     {
         transform.LookAt(dest);
@@ -145,6 +199,15 @@ public class Survivor : PlayableCharactor
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
+    public void BeingHeld(KillerBase holdPos)
+    {
+        OnBeingHeld(holdPos);
+        
+    }
+    public void BeingHanged(Hanger hangerPos)
+    {
+        OnBeingHanged(hangerPos);
+    }
 
     public void GetHit()
     {
@@ -175,11 +238,11 @@ public class Survivor : PlayableCharactor
                 return;
             }
             isFreeze = true;
-            generator.Interact();
+            generator.SurvivorInteract();
         }
         if (Input.GetMouseButtonUp(0))
         {
-            generator.Interact();
+            generator.SurvivorInteract();
             Animator.SetBool("isGenerating", false);
             isFreeze = false;
         }
@@ -191,7 +254,7 @@ public class Survivor : PlayableCharactor
             if (!palete.isUsed)
             {
                 // 판자 내리기 애니메이션
-                palete.Interact();
+                palete.SurvivorInteract();
             }
             else
             {
@@ -199,7 +262,7 @@ public class Survivor : PlayableCharactor
                 var center = palete.transform.position + palete.transform.right * -1.0f;
 
                 OnJumpFence(center);
-                //palete.Interact();
+                //palete.SurvivorInteract();
             }
         }
     }
@@ -211,6 +274,10 @@ public class Survivor : PlayableCharactor
             OnJumpFence(center);
         }
         // 창틀 뛰어넘기
+    }
+    public override void Interact(Hanger hanger)
+    {
+        ResqueSurvivor(hanger.HangedSurvivor);
     }
 
 
@@ -251,6 +318,9 @@ public class Survivor : PlayableCharactor
 
 
     public event Action OnHitted;
+    public event Action<KillerBase> OnBeingHeld;
+    public event Action<Hanger> OnBeingHanged;
+
 
     //private void OnTriggerStay(Collider other)
     //{

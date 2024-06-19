@@ -1,7 +1,8 @@
 
 public interface IInteractableObject
 {
-    void Interact();
+    void SurvivorInteract();
+    void KillerInteract();
     //void QuitInteract(Interactor interactor);
 }
 

@@ -9,6 +9,7 @@ public abstract class Interactor : MonoBehaviour
     abstract public void Interact(JumpFence window);
     abstract public void Interact(Palete palete);
     abstract public void Interact(Generator generator);
+    abstract public void Interact(Hanger hanger);
 
     protected void InteractObject(IInteractableObject obj)
     {
@@ -22,6 +23,9 @@ public abstract class Interactor : MonoBehaviour
                 break;
             case Palete:
                 Interact((Palete)obj);
+                break;
+            case Hanger:
+                Interact((Hanger)obj);
                 break;
             default:
                 break;

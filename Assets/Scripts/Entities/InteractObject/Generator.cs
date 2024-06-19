@@ -79,7 +79,7 @@ public class Generator : MonoBehaviour, IInteractableObject
         OnCompleteHandler -= SetComplete;
     }
 
-    public void Interact()
+    public void SurvivorInteract()
     {
         if (IsCompleted) return;
 
@@ -95,6 +95,11 @@ public class Generator : MonoBehaviour, IInteractableObject
             Slider_Gauge.gameObject.SetActive(false);
         }
     }
+    
+    public void KillerInteract()
+    {
+        IsSabotaging = true;//서버 작업 필
+    }
 
     void SetSteam()
     {
@@ -103,10 +108,6 @@ public class Generator : MonoBehaviour, IInteractableObject
     }
 
 
-    public void Sabotage()
-    {
-        IsSabotaging = true;//서버 작업 필
-    }
     void DecreaseGauge()
     {
         curGauge *= 0.95f;

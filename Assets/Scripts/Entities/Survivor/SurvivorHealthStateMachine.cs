@@ -17,6 +17,7 @@ public class SurvivorHealthStateMachine
     private SurvivorHealthBaseState curState;
 
     Dictionary<HealthStates, SurvivorHealthBaseState> states = new Dictionary<HealthStates, SurvivorHealthBaseState>();
+    public HealthStates GetCurState() { return curState.GetStateEnum(); }
     private Survivor owner;
 
     public SurvivorHealthStateMachine(Survivor owner)
@@ -25,6 +26,8 @@ public class SurvivorHealthStateMachine
         states.Add(HealthStates.Healthy, new Healthy(owner, this));
         states.Add(HealthStates.Injured, new Injured(owner, this));
         states.Add(HealthStates.Down, new Down(owner, this));
+        states.Add(HealthStates.Held, new Held(owner, this));
+        states.Add(HealthStates.Hanged, new Hanged(owner, this));
         curState = states[HealthStates.Healthy];
         owner.OnHitted += GetHit;
     }
@@ -41,10 +44,15 @@ public class SurvivorHealthStateMachine
         curState = toChangeState;
         curState.Enter();
     }
-    public HealthStates GetCurState() { return curState.GetStateEnum(); }
+
     public void StateUpdate()
     {
         curState.Excute();
+    }
+
+    public void UnRegisterEvent()
+    {
+        owner.OnHitted -= GetHit;
     }
     void GetHit()
     {
@@ -147,6 +155,7 @@ public class Held : SurvivorHealthBaseState
     public override void Excute()
     {
         base.Excute();
+        //owner.transform.position = owner.HeldPosition;
     }
     public override void Exit()
     {
