@@ -98,7 +98,7 @@ public class KillerBase : PlayableCharactor
             m_controller.SimpleMove(transform.forward * Time.deltaTime * m_moveSpeed * 1.3f);
             m_lungeLength += Time.deltaTime;
         }
-        if (Input.GetMouseButtonUp(0) || m_lungeLength >=1.2f)
+        if (Input.GetMouseButtonUp(0) || m_lungeLength >= 1.2f)
         {
             IsAttacking = false;
         }
@@ -114,7 +114,7 @@ public class KillerBase : PlayableCharactor
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
+            StartCoroutine(CorJumpFence());
         }
     }
     public override void Interact(Palete palete)
@@ -143,6 +143,21 @@ public class KillerBase : PlayableCharactor
         yield return new WaitForSeconds(m_attackCool);
         canAttack = true;
         IsFreeze = false;
+    }
+
+    IEnumerator CorJumpFence()
+    {
+        float time = 0;
+        IsFreeze = true;
+        while (time < 1.0f)
+        {
+            time += Time.deltaTime;
+            m_controller.Move(transform.up * 1.5f * Time.deltaTime);
+            m_controller.Move(transform.forward *2.5f * Time.deltaTime);
+            yield return null;
+        }
+        m_controller.Move(-transform.up * 10f);
+        isFreeze = false;
     }
 
     protected override void OnTriggerEnter(Collider collision)
