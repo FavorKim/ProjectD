@@ -151,6 +151,7 @@ public class Held : SurvivorHealthBaseState
         base.Enter();
         owner.IsBleeding = false;
         owner.IsFreeze = true;
+        owner.GetAnimator().SetTrigger("Held");
     }
     public override void Excute()
     {
@@ -172,6 +173,7 @@ public class Hanged : SurvivorHealthBaseState
         base.Enter();
         owner.IsBleeding = false;
         owner.IsFreeze = true;
+        owner.GetAnimator().SetTrigger("Hang");
     }
     public override void Excute()
     {

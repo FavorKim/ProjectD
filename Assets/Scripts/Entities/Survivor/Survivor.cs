@@ -5,7 +5,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/*
+ 서버에 전달할 요소들 (서버 내의 모든 플레이어가 알아야할 정보 및 순간들)
+발전기
+ 발전기 진척도
+ 발전기 진척도에 따른 이펙트
+ 발전기 사보타지 여부
+ 발전기 완료(에 걸려있는 이벤트들)
 
+판자
+ 판자 사용됨
+ 판자 파괴됨
+
+갈고리
+ 생존자 매달림
+ 생존자 구출됨
+ 
+ 
+생존자
+ 생존자의 부상 여부 (부상/빈사)
+ 생존자 발자국 (Spawn, 풀링 해야)
+ 생존자 혈흔 이펙트
+ 생존자 피격
+ 생존자 치료됨
+ 생존자 탈락함
+ 생존자 탈출함
+
+살인마
+ 살인마가 생존자를 들어올림
+ 살인마 타격 -> X. 살인마의 역할은 애니메이션 재생일 뿐, 생존자가 피격되었는지만 판단하면 됨.
+ 
+
+ 
+ 
+ */
 public class Survivor : PlayableCharactor
 {
     CharacterController m_CharacterController;
@@ -154,10 +187,7 @@ public class Survivor : PlayableCharactor
         //서버 작업 필
         var obj = Instantiate(VFX_FootPrintPref, new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
-    void ResqueSurvivor(Survivor survivor)
-    {
-        survivor.OnResqued();
-    }
+    
     
     void OnBeingHeld_SetState(KillerBase killer)
     {
@@ -183,9 +213,11 @@ public class Survivor : PlayableCharactor
         transform.position = hanger.GetHangedPos().position;
     }
     
-    void OnResqued()
+    public void OnResqued()
     {
-        
+        m_healthStateMachine.ChangeState(HealthStates.Injured);
+        IsFreeze = false;
+        m_CharacterController.SimpleMove(-transform.up);
     }
 
     void RotateTransformToDest(Transform dest)
@@ -277,7 +309,11 @@ public class Survivor : PlayableCharactor
     }
     public override void Interact(Hanger hanger)
     {
-        ResqueSurvivor(hanger.HangedSurvivor);
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (hanger.HangedSurvivor != null)
+                hanger.SurvivorInteract();
+        }
     }
 
 

@@ -96,7 +96,6 @@ public class KillerBase : PlayableCharactor
         transform.LookAt(Camera.main.transform.forward * 5000f);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
-
     void KillerMove()
     {
         if (!isFreeze)
@@ -118,7 +117,11 @@ public class KillerBase : PlayableCharactor
             IsAttacking = false;
         }
     }
-
+    void SetAnimator_HangOrHold()
+    {
+        StartCoroutine(CorFreezeWhileSec(1.0f));
+        Animator.SetTrigger("HangHold");
+    }
 
     public override void Interact(Generator generator)
     {
@@ -159,6 +162,7 @@ public class KillerBase : PlayableCharactor
     {
         if (Input.GetKeyDown(KeyCode.Space) && m_holdSurvivor != null)
         {
+            SetAnimator_HangOrHold();
             hanger.HangedSurvivor = m_holdSurvivor;
             m_holdSurvivor.BeingHanged(hanger);
             hanger.KillerInteract();
@@ -176,7 +180,6 @@ public class KillerBase : PlayableCharactor
         canAttack = true;
         IsFreeze = false;
     }
-
     IEnumerator CorJumpFence()
     {
         float time = 0;
@@ -189,7 +192,6 @@ public class KillerBase : PlayableCharactor
         }
         m_controller.Move(-transform.up * 10f);
     }
-
     IEnumerator CorFreezeWhileSec(float time)
     {
         IsFreeze = true;
@@ -228,7 +230,7 @@ public class KillerBase : PlayableCharactor
             {
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    Debug.Log("killerSpace");
+                    SetAnimator_HangOrHold();
                     m_holdSurvivor = survivor;
                     m_holdSurvivor.BeingHeld(this);
                 }
@@ -237,12 +239,12 @@ public class KillerBase : PlayableCharactor
     }
 
     private event Action OnStun;
+
     void OnStun_GetHit()
     {
         Animator.SetTrigger("GetHit");
         StartCoroutine(CorFreezeWhileSec(1.5f));
     }
-
     public void OnMove(InputValue val)
     {
         Vector2 dir = val.Get<Vector2>();

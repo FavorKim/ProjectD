@@ -19,7 +19,7 @@ public class Hanger : MonoBehaviour, IInteractableObject
 
     public void SurvivorInteract() 
     {
-
+        hangedSurvivor.OnResqued();
     }
 
     public void KillerInteract()
