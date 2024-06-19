@@ -8,7 +8,12 @@ public class Generator : MonoBehaviour, IInteractableObject
     private float curGauge;
     public float CurGauge
     {
-        get { return curGauge; }
+        get
+        {
+            if (curGauge % 5 <= 0.2f)
+                SetSteam();
+            return curGauge;
+        }
         private set
         {
             curGauge = value;
@@ -22,6 +27,11 @@ public class Generator : MonoBehaviour, IInteractableObject
     [SerializeField] float Multi_Gauge = 1;
     [SerializeField] Slider Slider_Gauge;
     [SerializeField] GameObject Light;
+    [SerializeField] ParticleSystem VFX_Spark;
+    [SerializeField] ParticleSystem VFX_Smoke;
+    [SerializeField] ParticleSystem VFX_Steam;
+
+
     public bool IsCompleted { get; private set; }
     bool isSabotaging;
     public bool IsSabotaging
@@ -32,10 +42,15 @@ public class Generator : MonoBehaviour, IInteractableObject
             if (isSabotaging != value)
             {
                 isSabotaging = value;
-                if (value == false)
+                if (value == true)
                 {
                     OnSabotage();
                     StartCoroutine(CorSabotage());
+                }
+                else
+                {
+                    OnEndSabotage();
+                    StopCoroutine(CorSabotage());
                 }
 
             }
@@ -46,15 +61,22 @@ public class Generator : MonoBehaviour, IInteractableObject
     {
         OnCompleteHandler += SetComplete;
         OnCompleteHandler += TurnOnLight;
+
         OnSabotage += DecreaseGauge;
+        OnSabotage += PlaySabotageVFX;
+
+        OnEndSabotage += StopSabotageVFX;
     }
 
     private void OnDisable()
     {
+        OnEndSabotage -= StopSabotageVFX;
+
+        OnSabotage -= PlaySabotageVFX;
         OnSabotage -= DecreaseGauge;
+
         OnCompleteHandler -= TurnOnLight;
         OnCompleteHandler -= SetComplete;
-        OnCompleteHandler = null;
     }
 
     public void Interact()
@@ -72,6 +94,14 @@ public class Generator : MonoBehaviour, IInteractableObject
             Slider_Gauge.gameObject.SetActive(false);
     }
 
+    void SetSteam()
+    {
+        Debug.Log('s');
+        var emission = VFX_Steam.emission;
+        emission.rateOverTime = curGauge * 0.1f;
+    }
+
+
     public void Sabotage()
     {
         IsSabotaging = true;//서버 작업 필
@@ -79,6 +109,17 @@ public class Generator : MonoBehaviour, IInteractableObject
     void DecreaseGauge()
     {
         curGauge *= 0.95f;
+    }
+    void PlaySabotageVFX()
+    {
+        VFX_Spark.Play();
+        VFX_Smoke.Play();
+    }
+
+    void StopSabotageVFX()
+    {
+        VFX_Spark.Stop();
+        VFX_Smoke.Stop();
     }
 
     void SetComplete()
@@ -91,6 +132,7 @@ public class Generator : MonoBehaviour, IInteractableObject
     }
 
     private event Action OnSabotage;
+    private event Action OnEndSabotage;
     public event Action OnCompleteHandler;
 
     IEnumerator CorSabotage()

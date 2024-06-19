@@ -67,6 +67,16 @@ public class KillerBase : PlayableCharactor
         m_AttackCollider = GetComponent<BoxCollider>();
     }
 
+    private void OnEnable()
+    {
+        OnStun += OnStun_GetHit;
+    }
+    private void OnDisable()
+    {
+        OnStun -= OnStun_GetHit;
+        OnStun = null;
+    }
+
     // Update is called once per frame
     protected override void Update()
     {
@@ -108,13 +118,20 @@ public class KillerBase : PlayableCharactor
     public override void Interact(Generator generator)
     {
         if (Input.GetKeyDown(KeyCode.Space))
-            generator.Sabotage();
+        {
+            if (!generator.IsSabotaging)
+            {
+                Animator.SetTrigger("Break");
+                generator.Sabotage();
+            }
+        }
     }
     public override void Interact(JumpFence jumpFence)
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             StartCoroutine(CorJumpFence());
+            StartCoroutine(CorFreezeWhileSec(1.0f));
         }
     }
     public override void Interact(Palete palete)
@@ -123,6 +140,7 @@ public class KillerBase : PlayableCharactor
         {
             if (palete.isUsed)
             {
+                StartCoroutine(CorFreezeWhileSec(1.5f));
                 Animator.SetTrigger("Break");
                 palete.Break();
             }
@@ -148,7 +166,6 @@ public class KillerBase : PlayableCharactor
     IEnumerator CorJumpFence()
     {
         float time = 0;
-        IsFreeze = true;
         while (time < 1.0f)
         {
             time += Time.deltaTime;
@@ -157,7 +174,13 @@ public class KillerBase : PlayableCharactor
             yield return null;
         }
         m_controller.Move(-transform.up * 10f);
-        isFreeze = false;
+    }
+
+    IEnumerator CorFreezeWhileSec(float time)
+    {
+        IsFreeze = true;
+        yield return new WaitForSeconds(time);
+        IsFreeze = false;
     }
 
     protected override void OnTriggerEnter(Collider collision)
@@ -183,7 +206,7 @@ public class KillerBase : PlayableCharactor
     void OnStun_GetHit()
     {
         Animator.SetTrigger("GetHit");
-        //IsFreeze = true;
+        StartCoroutine(CorFreezeWhileSec(1.5f));
     }
 
     public void OnMove(InputValue val)
