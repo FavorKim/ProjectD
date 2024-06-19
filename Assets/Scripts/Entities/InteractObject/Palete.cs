@@ -32,6 +32,7 @@ public class Palete : MonoBehaviour,IInteractableObject
 
     public void OnBreak()
     {
+        Debug.Log("OnBreak");
         Instantiate(VFX_GibletPref,transform.position,Quaternion.identity);
         Destroy(gameObject); //서버 작업 필
     }

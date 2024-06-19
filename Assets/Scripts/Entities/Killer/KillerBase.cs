@@ -147,6 +147,7 @@ public class KillerBase : PlayableCharactor
 
     protected override void OnTriggerEnter(Collider collision)
     {
+        base.OnTriggerEnter(collision);
         var palete = collision.GetComponent<Palete>();
         if (palete != null && palete.IsAttack)
         {
