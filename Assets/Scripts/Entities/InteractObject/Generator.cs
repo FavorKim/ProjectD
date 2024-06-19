@@ -90,15 +90,16 @@ public class Generator : MonoBehaviour, IInteractableObject
             CurGauge += Time.deltaTime * Multi_Gauge;
             Slider_Gauge.value = CurGauge / maxGauge;
         }
-        if (Input.GetMouseButtonUp(0))
+        else
+        {
             Slider_Gauge.gameObject.SetActive(false);
+        }
     }
 
     void SetSteam()
     {
-        Debug.Log('s');
         var emission = VFX_Steam.emission;
-        emission.rateOverTime = curGauge * 0.1f;
+        emission.rateOverTime = curGauge * 0.05f;
     }
 
 
@@ -137,10 +138,10 @@ public class Generator : MonoBehaviour, IInteractableObject
 
     IEnumerator CorSabotage()
     {
-        while (IsSabotaging || curGauge <= 0.0f)
+        while (IsSabotaging && CurGauge >= 0.0f)
         {
+            CurGauge -= Time.deltaTime * Multi_Gauge * 0.5f;
             yield return null;
-            curGauge -= Time.deltaTime * Multi_Gauge * 0.5f;
         }
     }
 }

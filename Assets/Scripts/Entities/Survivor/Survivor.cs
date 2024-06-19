@@ -158,12 +158,7 @@ public class Survivor : PlayableCharactor
 
     public override void Interact(Generator generator)
     {
-        if (generator.IsCompleted)
-        {
-            isFreeze = false;
-            Animator.SetBool("isGenerating", false);
-            return;
-        }
+        
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -172,11 +167,18 @@ public class Survivor : PlayableCharactor
         }
         if (Input.GetMouseButton(0))
         {
+            if (generator.IsCompleted)
+            {
+                isFreeze = false;
+                Animator.SetBool("isGenerating", false);
+                return;
+            }
             isFreeze = true;
             generator.Interact();
         }
         if (Input.GetMouseButtonUp(0))
         {
+            generator.Interact();
             Animator.SetBool("isGenerating", false);
             isFreeze = false;
         }
