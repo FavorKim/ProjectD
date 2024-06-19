@@ -26,6 +26,9 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-819885325-0
         - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-1793588738-0
         - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-1015796136-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-568855440-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-1033393044-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-1962363082106113041-1963347692972562174
         values:
         - colorIndex: 2
           iconNameOrGuid: AvatarMask On Icon
@@ -43,3 +46,9 @@ MonoBehaviour:
           iconNameOrGuid: PreMatQuad
         - colorIndex: 5
           iconNameOrGuid: StandaloneInputModule Icon
+        - colorIndex: 3
+          iconNameOrGuid: 
+        - colorIndex: 2
+          iconNameOrGuid: 
+        - colorIndex: 8
+          iconNameOrGuid: 
