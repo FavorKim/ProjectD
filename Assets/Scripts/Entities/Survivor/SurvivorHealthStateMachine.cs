@@ -46,7 +46,8 @@ public class SurvivorHealthStateMachine
     }
     void GetHit()
     {
-        ChangeState(curState.GetStateEnum()-1);
+        if (curState.GetStateEnum() != HealthStates.Down)
+            ChangeState(curState.GetStateEnum() - 1);
     }
 }
 
@@ -119,6 +120,7 @@ public class Down : SurvivorHealthBaseState
         owner.IsBleeding = true;
         owner.MoveSpeed = 100;
         owner.GetAnimator().SetBool("isDown", true);
+        owner.GetAnimator().SetTrigger("Down");
     }
     public override void Excute()
     {

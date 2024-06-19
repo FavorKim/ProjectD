@@ -78,8 +78,10 @@ public class Survivor : PlayableCharactor
         // 로컬체크
         base.Update();
         PlayerMove();
-        m_StateMachine.StateUpdate();
         m_healthStateMachine.StateUpdate();
+
+        if (m_healthStateMachine.GetCurState() != HealthStates.Down)
+            m_StateMachine.StateUpdate();
     }
 
 

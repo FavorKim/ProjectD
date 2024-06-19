@@ -133,7 +133,10 @@ public class SurvivorIdle : SurvivorMoveState
     public SurvivorIdle(Survivor owner, SurvivorStateMachine state) : base(owner, state) { }
     public override void Enter()
     {
-        Animator.Rebind();
+        Animator.SetBool("isCrouch", false);
+        Animator.SetBool("isWalk", false);
+        Animator.SetBool("isRun", false);
+
     }
     public override void Excute()
     {
