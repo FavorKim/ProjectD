@@ -53,19 +53,21 @@ public class Survivor : PlayableCharactor
 
     Vector3 MoveDir;
     Vector2 dir;
-    public Vector3 HeldPosition {  get; private set; }
+    public Vector3 HeldPosition { get; private set; }
 
     [SerializeField] float m_invincibleTime;
     [SerializeField] float m_moveSpeed;
     public float MoveSpeed { get { return m_moveSpeed; } set { m_moveSpeed = value; } }
 
     private float walkSpeed = 200.0f;
-    public float GetWalkSpeed() { return walkSpeed; }
     private float runSpeed = 500.0f;
-    public float GetRunSpeed() { return runSpeed; }
     private float crouchSpeed = 100.0f;
-    public float GetCrouchSpeed() { return crouchSpeed; }
 
+    [SerializeField] float m_corruptTime = 120;
+
+    public float GetWalkSpeed() { return walkSpeed; }
+    public float GetRunSpeed() { return runSpeed; }
+    public float GetCrouchSpeed() { return crouchSpeed; }
 
     [SerializeField] float rotateSpeed;
 
@@ -91,6 +93,42 @@ public class Survivor : PlayableCharactor
     }
     bool isInvincible = false;
 
+    public bool isCorrupted = false;
+    public bool IsCorrupted
+    {
+        get
+        {
+            return isCorrupted;
+        }
+        set
+        {
+            if (isCorrupted != value)
+            {
+                isCorrupted = value;
+                if(value == true)
+                {
+                    m_corruptTime = 60.0f;
+                }
+            }
+        }
+    }
+
+    int hangedCount = 0;
+    public int HangedCount
+    {
+        get { return hangedCount; }
+        private set
+        {
+            if(hangedCount != value)
+            {
+                hangedCount = value;
+                if(value == 2)
+                {
+                    IsCorrupted = true;
+                }
+            }
+        }
+    }
 
 
     public Vector3 GetMoveDir() { return MoveDir; }
@@ -187,8 +225,8 @@ public class Survivor : PlayableCharactor
         //서버 작업 필
         var obj = Instantiate(VFX_FootPrintPref, new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
-    
-    
+
+    // 들렸을 때
     void OnBeingHeld_SetState(KillerBase killer)
     {
         if (m_healthStateMachine.GetCurState() == HealthStates.Down)
@@ -200,8 +238,7 @@ public class Survivor : PlayableCharactor
         transform.localPosition = Vector3.zero;
     }
 
-
-    // command와 rpc는 참조형이 아닌 NetworkBehaviour를 상속받은 객체와 구조체만을 매개변수로 사용할 수 있음
+    // 걸렸을 때
     void OnBeingHanged_SetState(Hanger hanger)
     {
         if (m_healthStateMachine.GetCurState() == HealthStates.Held)
@@ -212,7 +249,12 @@ public class Survivor : PlayableCharactor
         transform.parent = null;
         transform.position = hanger.GetHangedPos().position;
     }
-    
+    void OnBeingHanged_SetCorrupt(Hanger hanger)
+    {
+        HangedCount++;
+        StartCoroutine(CorCorrupt());
+    }
+
     public void OnResqued()
     {
         m_healthStateMachine.ChangeState(HealthStates.Injured);
@@ -220,21 +262,12 @@ public class Survivor : PlayableCharactor
         m_CharacterController.SimpleMove(-transform.up);
     }
 
-    void RotateTransformToDest(Transform dest)
-    {
-        transform.LookAt(dest);
-        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-    }
-    void RotateTransformToDest(Vector3 look)
-    {
-        transform.rotation.SetLookRotation(look);
-        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-    }
+    // command와 rpc는 참조형이 아닌 NetworkBehaviour를 상속받은 객체와 구조체만을 매개변수로 사용할 수 있음
 
     public void BeingHeld(KillerBase holdPos)
     {
         OnBeingHeld(holdPos);
-        
+
     }
     public void BeingHanged(Hanger hangerPos)
     {
@@ -251,10 +284,20 @@ public class Survivor : PlayableCharactor
         }
     }
 
+    void RotateTransformToDest(Transform dest)
+    {
+        transform.LookAt(dest);
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+    }
+    void RotateTransformToDest(Vector3 look)
+    {
+        transform.rotation.SetLookRotation(look);
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+    }
 
     public override void Interact(Generator generator)
     {
-        
+
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -301,7 +344,7 @@ public class Survivor : PlayableCharactor
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            var center = fence.transform.position + fence.transform.right ;
+            var center = fence.transform.position + fence.transform.right;
             OnJumpFence(center);
         }
         // 창틀 뛰어넘기
@@ -318,7 +361,7 @@ public class Survivor : PlayableCharactor
     {
         if (!lever.IsAvailable) return;
 
-        if (Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0))
         {
             Animator.SetTrigger("Pull");
         }
@@ -363,6 +406,16 @@ public class Survivor : PlayableCharactor
         }
         m_CharacterController.Move(-transform.up * 10f);
         isFreeze = false;
+    }
+    IEnumerator CorCorrupt()
+    {
+
+        while (m_corruptTime > 0)
+        {
+            m_corruptTime -= Time.deltaTime;
+            if (m_corruptTime < 60.0f) IsCorrupted = true;
+            yield return null;
+        }
     }
 
 

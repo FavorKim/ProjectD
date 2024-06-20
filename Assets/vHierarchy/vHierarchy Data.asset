@@ -28,7 +28,9 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-1015796136-0
         - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-568855440-0
         - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-1033393044-0
-        - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-1962363082106113041-1963347692972562174
+        - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-1528556173-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-976927179-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2ca98489250807246a5f03d13d94c839-985114066-0
         values:
         - colorIndex: 2
           iconNameOrGuid: AvatarMask On Icon
@@ -51,4 +53,8 @@ MonoBehaviour:
         - colorIndex: 2
           iconNameOrGuid: 
         - colorIndex: 8
-          iconNameOrGuid: 
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 3
+          iconNameOrGuid: Folder Icon
+        - colorIndex: 7
+          iconNameOrGuid: Folder Icon

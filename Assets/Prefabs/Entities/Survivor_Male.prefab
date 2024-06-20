@@ -86,7 +86,9 @@ MonoBehaviour:
   VFX_Bleeding: {fileID: 1914211452894954558}
   m_invincibleTime: 2
   m_moveSpeed: 1
+  m_corruptTime: 120
   rotateSpeed: 10
+  isCorrupted: 0
 --- !u!114 &1914211452663740889
 MonoBehaviour:
   m_ObjectHideFlags: 0
