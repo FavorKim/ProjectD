@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5777709028977107105}
   - component: {fileID: 5777709028957709323}
   - component: {fileID: 5777709028956740935}
-  - component: {fileID: -5317481957601587640}
+  - component: {fileID: 6853047920271031036}
   m_Layer: 0
   m_Name: FootPrint
   m_TagString: Untagged
@@ -224,7 +224,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.3018868, g: 0.2438772, b: 0, a: 0.9843137}
+      maxColor: {r: 0.3019608, g: 0, b: 0.23129211, a: 0.9843137}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4865,7 +4865,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &-5317481957601587640
+--- !u!114 &6853047920271031036
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4874,7 +4874,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5777709028976728957}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bba2a124be75c074b8020c0a4b0679bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d4a955aaae805448bdd4766c8b78a89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InvokeTime: 7

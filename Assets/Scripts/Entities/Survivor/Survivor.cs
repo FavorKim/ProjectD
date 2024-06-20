@@ -267,8 +267,8 @@ public class Survivor : PlayableCharactor
     }
     void PrintFoot()
     {
-        //서버 작업 필
-        var obj = Instantiate(VFX_FootPrintPref, new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
+        //[TODO] NetworkPool로 바꿀 것
+        PootPrintPool.Instance.PrintPootPrint(new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
 
 
@@ -404,14 +404,21 @@ public class Survivor : PlayableCharactor
     {
         float time = 0;
         isFreeze = true;
-        while (time < 0.5f)
+        while (time < 0.3f)
         {
             time += Time.deltaTime;
             m_CharacterController.Move(transform.up * 3.0f * Time.deltaTime);
             m_CharacterController.Move(transform.forward * 6.0f * Time.deltaTime);
             yield return null;
         }
-        m_CharacterController.Move(-transform.up * 10f);
+        while (time < 0.7f)
+        {
+            time += Time.deltaTime;
+            m_CharacterController.Move(transform.up * -5.0f * Time.deltaTime);
+            m_CharacterController.Move(transform.forward * 6.0f * Time.deltaTime);
+            yield return null;
+        }
+        //m_CharacterController.Move(-transform.up * 10f);
         isFreeze = false;
     }
     IEnumerator CorCorrupt()
