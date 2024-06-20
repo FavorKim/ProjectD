@@ -251,8 +251,9 @@ public class Survivor : PlayableCharactor
             MoveDir.Normalize();
             MoveDir *= m_moveSpeed * Time.deltaTime;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(MoveDir), rotateSpeed * Time.deltaTime);
-            m_CharacterController.SimpleMove(MoveDir);
         }
+            m_CharacterController.SimpleMove(MoveDir);
+        
     }
 
 
@@ -260,7 +261,7 @@ public class Survivor : PlayableCharactor
     void OnJumpFence(Vector3 dest)
     {
         RotateTransformToDest(dest);
-        
+
         m_StateMachine.ChangeState(SurvivorStateMachine.StateName.Walk);
         Animator.SetTrigger("JumpFence");
         StartCoroutine(CorJumpFence());
@@ -297,7 +298,7 @@ public class Survivor : PlayableCharactor
     void RotateTransformToDest(Vector3 look)
     {
         //transform.rotation.SetLookRotation(look);
-        m_CharacterController.Move(look-transform.position);
+        m_CharacterController.Move(look - transform.position);
         transform.LookAt(look);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
@@ -361,7 +362,10 @@ public class Survivor : PlayableCharactor
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (hanger.HangedSurvivor != null && hanger.HangedSurvivor != this)
+            {
                 hanger.SurvivorInteract();
+                CorFreeze(1.2f);
+            }
         }
     }
     public override void Interact(Lever lever)
@@ -424,12 +428,18 @@ public class Survivor : PlayableCharactor
     IEnumerator CorCorrupt()
     {
 
-        while (CorruptTime > 0)
+        while (CorruptTime > 0 && m_healthStateMachine.GetCurState() == HealthStates.Hanged)
         {
             CorruptTime -= Time.deltaTime * DebugOnly_CorruptMulti;
             if (CorruptTime < 60.0f) IsCorrupted = true;
             yield return null;
         }
+    }
+    IEnumerator CorFreeze(float time)
+    {
+        IsFreeze = true;
+        yield return new WaitForSeconds(time);
+        IsFreeze = false;
     }
 
 
@@ -480,7 +490,7 @@ public class Survivor : PlayableCharactor
     {
         m_healthStateMachine.ChangeState(HealthStates.Injured);
         IsFreeze = false;
-        m_CharacterController.SimpleMove(-transform.up);
+        m_CharacterController.Move(transform.up * -10f);
         Animator.SetTrigger("Resqued");
     }
 
