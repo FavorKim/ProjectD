@@ -351,7 +351,7 @@ public class Survivor : PlayableCharactor
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            var center = fence.transform.position + fence.transform.right;
+            var center = fence.transform.position + fence.transform.forward * -1.5f;
             OnJumpFence(center);
         }
         // 창틀 뛰어넘기
