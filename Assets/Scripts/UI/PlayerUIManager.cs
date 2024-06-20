@@ -36,6 +36,11 @@ public class PlayerUIManager : MonoBehaviour
         playerUIs[id].SetIcon(state);
     }
 
+    public void SetPlayerUIState(int id, PlayerUI.Icons state)
+    {
+        playerUIs[id].SetIcon(state);
+    }
+
     public void SetPlayerUIGauge(int id, float value)
     {
         playerUIs[id].OnCorruptTimeChanged(value);

@@ -1,3 +1,4 @@
+using Org.BouncyCastle.Crypto.Signers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -95,16 +96,20 @@ public class KillerBase : PlayableCharactor
 
     void Look()
     {
+        if (IsFreeze) return;
         transform.LookAt(Camera.main.transform.forward * 5000f);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
     void KillerMove()
     {
-        if (!isFreeze)
-        {
-            Vector3 goDriection = transform.TransformDirection(m_moveDir);
-            m_controller.SimpleMove(goDriection * Time.deltaTime * m_moveSpeed);
-        }
+        if (IsFreeze) return;
+
+        //if (m_moveDir == Vector3.zero) return;
+
+        Vector3 goDirection = transform.TransformDirection(m_moveDir);
+        //goDirection.Normalize();
+        goDirection *= Time.deltaTime * m_moveSpeed;
+        m_controller.SimpleMove(goDirection);
     }
     void KillerAttack()
     {
@@ -138,10 +143,10 @@ public class KillerBase : PlayableCharactor
     }
     public override void Interact(JumpFence jumpFence)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !IsFreeze)
         {
             StartCoroutine(CorJumpFence());
-            StartCoroutine(CorFreezeWhileSec(1.0f));
+            //StartCoroutine(CorFreezeWhileSec(1.0f));
         }
     }
     public override void Interact(Palete palete)
@@ -163,7 +168,7 @@ public class KillerBase : PlayableCharactor
     }
     public override void Interact(Hanger hanger)
     {
-        if (Input.GetKeyDown(KeyCode.Space) && m_holdSurvivor != null)
+        if (Input.GetKeyDown(KeyCode.Space) && m_holdSurvivor != null && hanger.IsAvailable())
         {
             SetAnimator_HangOrHold();
             hanger.HangedSurvivor = m_holdSurvivor;
@@ -173,7 +178,7 @@ public class KillerBase : PlayableCharactor
     }
     public override void Interact(Lever lever)
     {
-        
+
     }
 
 
@@ -190,14 +195,22 @@ public class KillerBase : PlayableCharactor
     IEnumerator CorJumpFence()
     {
         float time = 0;
-        while (time < 1.0f)
+        IsFreeze = true;
+        while (time < 0.7f)
         {
             time += Time.deltaTime;
             m_controller.Move(transform.up * 1.5f * Time.deltaTime);
-            m_controller.Move(transform.forward * 2.5f * Time.deltaTime);
+            m_controller.Move(transform.forward * 2.0f * Time.deltaTime);
             yield return null;
         }
-        m_controller.Move(-transform.up * 10f);
+        while (time < 1.8f)
+        {
+            time += Time.deltaTime;
+            m_controller.Move(transform.up * -1.5f * Time.deltaTime);
+            m_controller.Move(transform.forward * 2.0f * Time.deltaTime);
+            yield return null;
+        }
+        IsFreeze = false;
     }
     IEnumerator CorFreezeWhileSec(float time)
     {
@@ -216,7 +229,7 @@ public class KillerBase : PlayableCharactor
     {
         base.OnTriggerEnter(collision);
 
-        
+
         var survivor = collision.GetComponent<Survivor>();
         if (survivor != null)
         {
@@ -245,13 +258,13 @@ public class KillerBase : PlayableCharactor
             }
         }
     }
-    
+
 
     private event Action OnStun;
     public void OnStunCall() { OnStun(); }
     void OnStun_GetHit()
     {
-        
+
         if (!isStunable) return;
         Debug.Log("GetHit");
         Animator.SetTrigger("GetHit");
@@ -263,6 +276,8 @@ public class KillerBase : PlayableCharactor
         Vector2 dir = val.Get<Vector2>();
         m_moveDir = new Vector3(dir.x, 0, dir.y);
 
+
+        if (IsFreeze) return;
         if (m_moveDir != Vector3.zero)
         {
             Animator.SetBool("isMoving", true);
@@ -273,7 +288,6 @@ public class KillerBase : PlayableCharactor
         }
         Animator.SetFloat("inputX", m_moveDir.x);
         Animator.SetFloat("inputY", m_moveDir.z);
-
     }
 
 }

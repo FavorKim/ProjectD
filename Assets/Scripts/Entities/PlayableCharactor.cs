@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class PlayableCharactor : Interactor
 {
-    IInteractableObject m_interactDest;
+    protected IInteractableObject m_interactDest;
 
     public void Interact(IInteractableObject obj)
     {

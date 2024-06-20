@@ -44,7 +44,6 @@ public class Survivor : PlayableCharactor
 {
     CharacterController m_CharacterController;
     [SerializeField] Animator Animator;
-    DOTweenAnimation m_DOTween;
 
     [SerializeField] GameObject VFX_FootPrintPref;
     [SerializeField] GameObject VFX_Bleeding;
@@ -71,15 +70,20 @@ public class Survivor : PlayableCharactor
         {
             return m_corruptTime;
         }
-        set
+        private set
         {
             if (m_corruptTime != value)
             {
                 m_corruptTime = value;
                 PlayerUIManager.Instance.SetPlayerUIGauge(m_playerID, m_corruptTime / 120);
+                if (m_corruptTime <= 0)
+                {
+                    OnSacrificed();
+                }
             }
         }
     }
+    [SerializeField] float DebugOnly_CorruptMulti;
 
     public float GetWalkSpeed() { return walkSpeed; }
     public float GetRunSpeed() { return runSpeed; }
@@ -89,6 +93,7 @@ public class Survivor : PlayableCharactor
 
     bool isFreeze = false;
     public bool IsFreeze { get { return isFreeze; } set { isFreeze = value; } }
+
     private bool isBleeding = false;
     public bool IsBleeding
     {
@@ -107,6 +112,7 @@ public class Survivor : PlayableCharactor
             }
         }
     }
+
     bool isInvincible = false;
 
     public bool isCorrupted = false;
@@ -121,7 +127,7 @@ public class Survivor : PlayableCharactor
             if (isCorrupted != value)
             {
                 isCorrupted = value;
-                if(value == true)
+                if (value == true)
                 {
                     CorruptTime = 60.0f;
                 }
@@ -135,19 +141,26 @@ public class Survivor : PlayableCharactor
         get { return hangedCount; }
         private set
         {
-            if(hangedCount != value)
+            if (hangedCount != value)
             {
                 hangedCount = value;
-                if(value == 2)
+                if (value == 2)
                 {
                     IsCorrupted = true;
+                }
+                if (value == 3)
+                {
+                    OnSacrificed();
                 }
             }
         }
     }
 
+
+
+
     int m_playerID;
-    public int PlayerID() { return  m_playerID; }
+    public int PlayerID() { return m_playerID; }
 
 
     public Vector3 GetMoveDir() { return MoveDir; }
@@ -162,7 +175,6 @@ public class Survivor : PlayableCharactor
         m_StateMachine = new SurvivorStateMachine(this);
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
         DOTween.Init();
-        m_DOTween = GetComponent<DOTweenAnimation>();
         m_playerID = PlayerUIManager.Instance.CreatePlayerUI();
     }
 
@@ -175,11 +187,15 @@ public class Survivor : PlayableCharactor
         OnBeingHanged += OnBeingHanged_SetPosition;
         OnBeingHanged += OnBeingHanged_SetCorrupt;
 
+        OnSacrificed += OnSacrificed_SetState;
     }
     private void OnDisable()
     {
         m_healthStateMachine.UnRegisterEvent();
         OnHitted = null;
+
+
+        OnSacrificed -= OnSacrificed_SetState;
 
         OnBeingHanged -= OnBeingHanged_SetCorrupt;
         OnBeingHanged -= OnBeingHanged_SetPosition;
@@ -190,7 +206,7 @@ public class Survivor : PlayableCharactor
 
         OnBeingHanged = null;
         OnBeingHeld = null;
-
+        OnSacrificed = null;
     }
 
     // Update is called once per frame
@@ -255,44 +271,10 @@ public class Survivor : PlayableCharactor
         var obj = Instantiate(VFX_FootPrintPref, new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
 
-    // 들렸을 때
-    void OnBeingHeld_SetState(KillerBase killer)
-    {
-        if (m_healthStateMachine.GetCurState() == HealthStates.Down)
-            m_healthStateMachine.ChangeState(HealthStates.Held);
-    }
-    void OnBeingHeld_SetPosition(KillerBase killer)
-    {
-        transform.parent = killer.GetHoldPosition();
-        transform.localPosition = Vector3.zero;
-    }
 
-    // 걸렸을 때
-    void OnBeingHanged_SetState(Hanger hanger)
-    {
-        if (m_healthStateMachine.GetCurState() == HealthStates.Held)
-            m_healthStateMachine.ChangeState(HealthStates.Hanged);
-    }
-    void OnBeingHanged_SetPosition(Hanger hanger)
-    {
-        transform.parent = null;
-        transform.position = hanger.GetHangedPos().position;
-    }
-    void OnBeingHanged_SetCorrupt(Hanger hanger)
-    {
-        HangedCount++;
-        StartCoroutine(CorCorrupt());
-    }
 
-    public void OnResqued()
-    {
-        m_healthStateMachine.ChangeState(HealthStates.Injured);
-        IsFreeze = false;
-        m_CharacterController.SimpleMove(-transform.up);
-    }
 
     // command와 rpc는 참조형이 아닌 NetworkBehaviour를 상속받은 객체와 구조체만을 매개변수로 사용할 수 있음
-
     public void BeingHeld(KillerBase holdPos)
     {
         OnBeingHeld(holdPos);
@@ -311,12 +293,6 @@ public class Survivor : PlayableCharactor
             StartCoroutine(CorSprint());
             StartCoroutine(CorInvincibleTime());
         }
-    }
-
-    void RotateTransformToDest(Transform dest)
-    {
-        transform.LookAt(dest);
-        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
     void RotateTransformToDest(Vector3 look)
     {
@@ -382,7 +358,7 @@ public class Survivor : PlayableCharactor
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (hanger.HangedSurvivor != null)
+            if (hanger.HangedSurvivor != null && hanger.HangedSurvivor != this)
                 hanger.SurvivorInteract();
         }
     }
@@ -441,7 +417,7 @@ public class Survivor : PlayableCharactor
 
         while (CorruptTime > 0)
         {
-            CorruptTime -= Time.deltaTime;
+            CorruptTime -= Time.deltaTime * DebugOnly_CorruptMulti;
             if (CorruptTime < 60.0f) IsCorrupted = true;
             yield return null;
         }
@@ -451,7 +427,55 @@ public class Survivor : PlayableCharactor
     public event Action OnHitted;
     public event Action<KillerBase> OnBeingHeld;
     public event Action<Hanger> OnBeingHanged;
+    public event Action OnSacrificed;
 
-    
+    // 들렸을 때
+    void OnBeingHeld_SetState(KillerBase killer)
+    {
+        if (m_healthStateMachine.GetCurState() == HealthStates.Down)
+            m_healthStateMachine.ChangeState(HealthStates.Held);
+    }
+    void OnBeingHeld_SetPosition(KillerBase killer)
+    {
+        transform.parent = killer.GetHoldPosition();
+        transform.localPosition = Vector3.zero;
+    }
+
+    // 걸렸을 때
+    void OnBeingHanged_SetState(Hanger hanger)
+    {
+        if (m_healthStateMachine.GetCurState() == HealthStates.Held)
+        {
+            m_healthStateMachine.ChangeState(HealthStates.Hanged);
+        }
+    }
+    void OnBeingHanged_SetPosition(Hanger hanger)
+    {
+        transform.parent = null;
+        transform.position = hanger.GetHangedPos().position;
+        transform.localRotation = Quaternion.identity;
+    }
+    void OnBeingHanged_SetCorrupt(Hanger hanger)
+    {
+        HangedCount++;
+        StartCoroutine(CorCorrupt());
+    }
+
+    void OnSacrificed_SetState()
+    {
+        PlayerUIManager.Instance.SetPlayerUIState(m_playerID, PlayerUI.Icons.Killed);
+        IsFreeze = true; // 원래는 게임 결과 창으로 이동해야 함
+    }
+
+    public void OnResqued()
+    {
+        m_healthStateMachine.ChangeState(HealthStates.Injured);
+        IsFreeze = false;
+        m_CharacterController.SimpleMove(-transform.up);
+        Animator.SetTrigger("Resqued");
+    }
+
+
+
 
 }

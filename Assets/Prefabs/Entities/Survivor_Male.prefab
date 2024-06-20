@@ -56,6 +56,7 @@ MonoBehaviour:
   m_invincibleTime: 2
   m_moveSpeed: 1
   m_corruptTime: 120
+  DebugOnly_CorruptMulti: 10
   rotateSpeed: 10
   isCorrupted: 0
 --- !u!114 &816875572900217396

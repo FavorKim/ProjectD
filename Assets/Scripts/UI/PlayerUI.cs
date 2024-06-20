@@ -34,7 +34,7 @@ public class PlayerUI : MonoBehaviour
 
     public void SetIcon(Icons state)
     {
-        if (state == (Icons)HealthStates.Held) return;
+        //if (state == (Icons)HealthStates.Held) return;
 
 
         curIcon?.gameObject.SetActive(false);
