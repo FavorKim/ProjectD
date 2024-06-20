@@ -260,7 +260,7 @@ public class Survivor : PlayableCharactor
     void OnJumpFence(Vector3 dest)
     {
         RotateTransformToDest(dest);
-
+        
         m_StateMachine.ChangeState(SurvivorStateMachine.StateName.Walk);
         Animator.SetTrigger("JumpFence");
         StartCoroutine(CorJumpFence());
@@ -296,7 +296,9 @@ public class Survivor : PlayableCharactor
     }
     void RotateTransformToDest(Vector3 look)
     {
-        transform.rotation.SetLookRotation(look);
+        //transform.rotation.SetLookRotation(look);
+        m_CharacterController.Move(look-transform.position);
+        transform.LookAt(look);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
