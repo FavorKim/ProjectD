@@ -1,15 +1,14 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 
 public enum HealthStates
 {
+    Healthy,
+    Injured,
+    Down,
     Hanged,
     Held,
-    Down,
-    Injured,
-    Healthy,
 }
 
 public class SurvivorHealthStateMachine
@@ -37,13 +36,15 @@ public class SurvivorHealthStateMachine
         curState.Exit();
         curState = states[toChangeStateEnum];
         curState.Enter();
+        PlayerUIManager.Instance.SetPlayerUIState(owner.PlayerID(), curState.GetStateEnum());
     }
-    public void ChangeState(SurvivorHealthBaseState toChangeState)
-    {
-        curState.Exit();
-        curState = toChangeState;
-        curState.Enter();
-    }
+    //public void ChangeState(SurvivorHealthBaseState toChangeState)
+    //{
+    //    curState.Exit();
+    //    curState = toChangeState;
+    //    curState.Enter();
+    //    PlayerUIManager.Instance.SetPlayerUIState(owner.PlayerID(), curState.GetStateEnum());
+    //}
 
     public void StateUpdate()
     {
@@ -56,9 +57,10 @@ public class SurvivorHealthStateMachine
     }
     void GetHit()
     {
-        if (curState.GetStateEnum() > HealthStates.Down)
-            ChangeState(curState.GetStateEnum() - 1);
+        if (curState.GetStateEnum() < HealthStates.Down)
+            ChangeState(curState.GetStateEnum() + 1);
     }
+
 }
 
 public class SurvivorHealthBaseState

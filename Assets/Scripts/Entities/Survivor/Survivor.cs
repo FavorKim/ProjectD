@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -64,6 +65,21 @@ public class Survivor : PlayableCharactor
     private float crouchSpeed = 100.0f;
 
     [SerializeField] float m_corruptTime = 120;
+    public float CorruptTime
+    {
+        get
+        {
+            return m_corruptTime;
+        }
+        set
+        {
+            if (m_corruptTime != value)
+            {
+                m_corruptTime = value;
+                PlayerUIManager.Instance.SetPlayerUIGauge(m_playerID, m_corruptTime / 120);
+            }
+        }
+    }
 
     public float GetWalkSpeed() { return walkSpeed; }
     public float GetRunSpeed() { return runSpeed; }
@@ -107,7 +123,7 @@ public class Survivor : PlayableCharactor
                 isCorrupted = value;
                 if(value == true)
                 {
-                    m_corruptTime = 60.0f;
+                    CorruptTime = 60.0f;
                 }
             }
         }
@@ -130,6 +146,9 @@ public class Survivor : PlayableCharactor
         }
     }
 
+    int m_playerID;
+    public int PlayerID() { return  m_playerID; }
+
 
     public Vector3 GetMoveDir() { return MoveDir; }
 
@@ -144,6 +163,7 @@ public class Survivor : PlayableCharactor
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
         DOTween.Init();
         m_DOTween = GetComponent<DOTweenAnimation>();
+        m_playerID = PlayerUIManager.Instance.CreatePlayerUI();
     }
 
     private void OnEnable()
@@ -153,6 +173,7 @@ public class Survivor : PlayableCharactor
 
         OnBeingHanged += OnBeingHanged_SetState;
         OnBeingHanged += OnBeingHanged_SetPosition;
+        OnBeingHanged += OnBeingHanged_SetCorrupt;
 
     }
     private void OnDisable()
@@ -160,8 +181,16 @@ public class Survivor : PlayableCharactor
         m_healthStateMachine.UnRegisterEvent();
         OnHitted = null;
 
+        OnBeingHanged -= OnBeingHanged_SetCorrupt;
+        OnBeingHanged -= OnBeingHanged_SetPosition;
         OnBeingHanged -= OnBeingHanged_SetState;
+
         OnBeingHeld -= OnBeingHeld_SetState;
+        OnBeingHeld -= OnBeingHeld_SetState;
+
+        OnBeingHanged = null;
+        OnBeingHeld = null;
+
     }
 
     // Update is called once per frame
@@ -410,10 +439,10 @@ public class Survivor : PlayableCharactor
     IEnumerator CorCorrupt()
     {
 
-        while (m_corruptTime > 0)
+        while (CorruptTime > 0)
         {
-            m_corruptTime -= Time.deltaTime;
-            if (m_corruptTime < 60.0f) IsCorrupted = true;
+            CorruptTime -= Time.deltaTime;
+            if (CorruptTime < 60.0f) IsCorrupted = true;
             yield return null;
         }
     }
@@ -423,12 +452,6 @@ public class Survivor : PlayableCharactor
     public event Action<KillerBase> OnBeingHeld;
     public event Action<Hanger> OnBeingHanged;
 
-
-    //private void OnTriggerStay(Collider other)
-    //{
-    //    if (other.GetComponent<IInteractableObject>() != null)
-    //        InteractObject(other.GetComponent<IInteractableObject>());
-    //}
-
+    
 
 }
