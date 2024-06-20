@@ -230,8 +230,8 @@ public class KillerBase : PlayableCharactor
         base.OnTriggerEnter(collision);
 
 
-        var survivor = collision.GetComponent<Survivor>();
-        if (survivor != null)
+        //var survivor = collision.GetComponent<Survivor>();
+        if (collision.TryGetComponent(out Survivor survivor))
         {
             if (IsAttacking)
             {
@@ -246,15 +246,11 @@ public class KillerBase : PlayableCharactor
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            var survivor = other.GetComponent<Survivor>();
-            if (survivor != null)
+            if (other.TryGetComponent(out Survivor survivor))
             {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    SetAnimator_HangOrHold();
-                    m_holdSurvivor = survivor;
-                    m_holdSurvivor.BeingHeld(this);
-                }
+                SetAnimator_HangOrHold();
+                m_holdSurvivor = survivor;
+                m_holdSurvivor.BeingHeld(this);
             }
         }
     }

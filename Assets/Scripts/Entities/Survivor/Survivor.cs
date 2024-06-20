@@ -252,8 +252,8 @@ public class Survivor : PlayableCharactor
             MoveDir *= m_moveSpeed * Time.deltaTime;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(MoveDir), rotateSpeed * Time.deltaTime);
         }
-            m_CharacterController.SimpleMove(MoveDir);
-        
+        m_CharacterController.SimpleMove(MoveDir);
+
     }
 
 
@@ -276,6 +276,7 @@ public class Survivor : PlayableCharactor
 
 
     // command와 rpc는 참조형이 아닌 NetworkBehaviour를 상속받은 객체와 구조체만을 매개변수로 사용할 수 있음
+
     public void BeingHeld(KillerBase holdPos)
     {
         OnBeingHeld(holdPos);
@@ -295,6 +296,7 @@ public class Survivor : PlayableCharactor
             StartCoroutine(CorInvincibleTime());
         }
     }
+
     void RotateTransformToDest(Vector3 look)
     {
         //transform.rotation.SetLookRotation(look);
@@ -302,6 +304,8 @@ public class Survivor : PlayableCharactor
         transform.LookAt(look);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
+
+
 
     public override void Interact(Generator generator)
     {
@@ -494,7 +498,23 @@ public class Survivor : PlayableCharactor
         Animator.SetTrigger("Resqued");
     }
 
+    public void OnHealed()
+    {
 
+    }
+
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (Input.GetKey(KeyCode.E))
+        {
+            if (other.TryGetComponent(out Survivor survivor))
+            {
+                //survivor.
+            }
+
+        }
+    }
 
 
 }

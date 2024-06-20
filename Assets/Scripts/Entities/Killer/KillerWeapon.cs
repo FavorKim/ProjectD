@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class KillerWeapon : MonoBehaviour
@@ -13,8 +11,7 @@ public class KillerWeapon : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var survivor = other.GetComponent<Survivor>();
-        if (survivor!=null)
+        if (other.TryGetComponent(out Survivor survivor))
         {
             survivor.GetHit();
             m_col.enabled = false;
