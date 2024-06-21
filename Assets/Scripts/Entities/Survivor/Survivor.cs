@@ -14,24 +14,24 @@ using UnityEngine.UI;
  발전기 사보타지 여부
  발전기 완료(에 걸려있는 이벤트들)
 
-판자
- 판자 사용됨
- 판자 파괴됨
+판자o
+ 판자 사용됨o
+ 판자 파괴됨o
 
 갈고리
- 생존자 매달림
- 생존자 구출됨
+ 생존자 매달림o
+ 생존자 구출됨o
  
  
 생존자
  생존자 발자국 (Spawn, 풀링 해야)o
  생존자 피격o
- 생존자 치료됨
- 생존자 탈락함
+ 생존자 치료됨o
+ 생존자 탈락함o
  생존자 탈출함
 
 살인마
- 살인마가 생존자를 들어올림
+ 살인마가 생존자를 들어올림o
  (살인마 타격 -> X. 살인마의 역할은 애니메이션 재생일 뿐, 생존자가 피격되었는지만 판단하면 됨.)
  
 
@@ -305,9 +305,10 @@ public class Survivor : PlayableCharactor
         Animator.SetTrigger("JumpFence");
         StartCoroutine(CorJumpFence());
     }
+
+    [Command(requiresAuthority =false)]
     void PrintFoot()
     {
-        //[TODO] NetworkPool로 바꿀 것
         PootPrintPool.Instance.PrintPootPrint(new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
 
@@ -321,31 +322,50 @@ public class Survivor : PlayableCharactor
     {
         RpcBeingHeld(killer);
     }
-    [ClientRpc]
-    void RpcBeingHeld(KillerBase holdPos)
-    {
-        OnBeingHeld(holdPos);
-    }
-
 
     [Command(requiresAuthority =false)]
     public void BeingHanged(Hanger hanger)
     {
         RpcBeingHanged(hanger);
     }
+
+    [Command(requiresAuthority =false)]
+    public void CmdGetHit()
+    {
+        RpcGetHit();
+    }
+
+    [Command(requiresAuthority =false)]
+    void CmdOnSacrificed()
+    {
+        RpcOnSacrificed();
+    }
+
+    [Command(requiresAuthority =false)]
+    public void CmdOnResqued()
+    {
+        RpcOnResqued();
+    }
+
+    [Command(requiresAuthority =false)]
+    public void CmdOnHealed()
+    {
+        RpcOnHealed();
+    }
+
+
+    [ClientRpc]
+    void RpcBeingHeld(KillerBase holdPos)
+    {
+        OnBeingHeld(holdPos);
+    }
+
     [ClientRpc]
     void RpcBeingHanged(Hanger hangerPos)
     {
         OnBeingHanged(hangerPos);
     }
-
-
-    [Command(requiresAuthority =false)]
-    public void GetHit()
-    {
-        RpcGetHit();
-    }
-    //rpc
+    
     [ClientRpc]
     public void RpcGetHit()
     {
@@ -357,17 +377,28 @@ public class Survivor : PlayableCharactor
         }
     }
 
-    [Command(requiresAuthority =false)]
-    void CmdOnSacrificed()
-    {
-        RpcOnSacrificed();
-    }
     [ClientRpc]
     void RpcOnSacrificed()
     {
         OnSacrificed.Invoke();
     }
 
+    [ClientRpc]
+    void RpcOnResqued()
+    {
+        m_healthStateMachine.ChangeState(HealthStates.Injured);
+        IsFreeze = false;
+        m_CharacterController.Move(transform.up * -10f);
+        Animator.SetTrigger("Resqued");
+    }
+    
+    [ClientRpc]
+    void RpcOnHealed()
+    {
+        Slider_HealGauge.gameObject.SetActive(true);
+        HealGauge += Time.deltaTime * m_healSpeed;
+        IsFreeze = true;
+    }
 
     void RotateTransformToDest(Vector3 look)
     {
@@ -570,32 +601,6 @@ public class Survivor : PlayableCharactor
         IsFreeze = true; // 원래는 게임 결과 창으로 이동해야 함
     }
 
-    [Command(requiresAuthority =false)]
-    public void CmdOnResqued()
-    {
-        RpcOnResqued();
-    }
-    [ClientRpc]
-    void RpcOnResqued()
-    {
-        m_healthStateMachine.ChangeState(HealthStates.Injured);
-        IsFreeze = false;
-        m_CharacterController.Move(transform.up * -10f);
-        Animator.SetTrigger("Resqued");
-    }
-
-    [Command(requiresAuthority =false)]
-    public void CmdOnHealed()
-    {
-        RpcOnHealed();
-    }
-    [ClientRpc]
-    void RpcOnHealed()
-    {
-        Slider_HealGauge.gameObject.SetActive(true);
-        HealGauge += Time.deltaTime * m_healSpeed;
-        IsFreeze = true;
-    }
 
     void StopHeal()
     {

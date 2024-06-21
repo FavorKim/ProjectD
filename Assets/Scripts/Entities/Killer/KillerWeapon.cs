@@ -13,7 +13,7 @@ public class KillerWeapon : MonoBehaviour
     {
         if (other.TryGetComponent(out Survivor survivor))
         {
-            survivor.GetHit();
+            survivor.CmdGetHit();
             m_col.enabled = false;
         }
         

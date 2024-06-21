@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,7 @@ public class PootPrintPool : SingletonNetwork<PootPrintPool>
         pootPrintPool = GetComponent<NetworkObjectPool>();
     }
 
+    [ClientRpc]
     public void PrintPootPrint(Vector3 pos, Quaternion rot)
     {
         var obj = pootPrintPool.GetObj();

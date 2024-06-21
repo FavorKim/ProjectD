@@ -37,23 +37,40 @@ public class Palete : NetworkBehaviour, IInteractableObject
         m_anim.SetTrigger("Break");
     }
 
+    [Command(requiresAuthority =false)]
     public void OnBreak()
     {
-        Debug.Log("OnBreak");
-        Instantiate(VFX_GibletPref,transform.position,Quaternion.identity);
-        Destroy(gameObject); //서버 작업 필
+        var giblet = Instantiate(VFX_GibletPref,transform.position,Quaternion.identity);
+        NetworkServer.Spawn(giblet);
+        RpcOnBreak();
     }
+
+    [ClientRpc]
+    void RpcOnBreak()
+    {
+        gameObject.SetActive(false);
+    }
+
+
     [Command(requiresAuthority =false)]
     public void SetAttackTrue()
     {
-        isAttack = true;
+        RpcSetAttackTrue();
     }
+    [ClientRpc]
     void RpcSetAttackTrue()
     {
         isAttack = true;
     }
 
+
+    [Command(requiresAuthority =false)]
     public void SetAttackFalse()
+    {
+        RpcSetAttackFalse();
+    }
+    [ClientRpc]
+    void RpcSetAttackFalse()
     {
         isAttack = false;
     }

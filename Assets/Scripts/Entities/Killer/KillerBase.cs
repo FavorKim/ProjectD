@@ -1,4 +1,5 @@
 using Cinemachine;
+using Mirror;
 using Org.BouncyCastle.Crypto.Signers;
 using System;
 using System.Collections;
@@ -254,7 +255,7 @@ public class KillerBase : PlayableCharactor
         {
             if (IsAttacking)
             {
-                //survivor.GetHit();
+                //survivor.CmdGetHit();
                 IsAttacking = false;
             }
 
@@ -277,18 +278,27 @@ public class KillerBase : PlayableCharactor
 
 
     private event Action OnStun;
-    public void OnStunCall() { OnStun(); }
+
+    [Command(requiresAuthority =false)]
+    public void OnStunCall()
+    {
+        RpcOnStunCall();
+    }
+    [ClientRpc]
+    public void RpcOnStunCall() { OnStun(); }
+
     void OnStun_GetHit()
     {
 
         if (!isStunable) return;
-        Debug.Log("GetHit");
-        Animator.SetTrigger("GetHit");
+        Animator.SetTrigger("CmdGetHit");
         StartCoroutine(CorFreezeWhileSec(1.5f));
         StartCoroutine(CorStunCool());
     }
     public void OnMove(InputValue val)
     {
+        if (!isLocalPlayer) return;
+
         Vector2 dir = val.Get<Vector2>();
         m_moveDir = new Vector3(dir.x, 0, dir.y);
 
