@@ -17,7 +17,7 @@ public class MyNetworkManager : NetworkRoomManager
         StartHost();
     }
 
-    
+    /*
     public override void OnClientSceneChanged()
     {
         base.OnClientSceneChanged();
@@ -26,7 +26,7 @@ public class MyNetworkManager : NetworkRoomManager
         Debug.Log(conn);
         SpawnPlayer(pref, conn);
     }
-
+    */
     
     /*
     public override void OnClientChangeScene(string newSceneName, SceneOperation sceneOperation, bool customHandling)
