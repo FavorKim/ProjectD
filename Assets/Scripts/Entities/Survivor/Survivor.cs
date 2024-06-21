@@ -1,10 +1,8 @@
-using DG.Tweening;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 /*
  서버에 전달할 요소들 (서버 내의 모든 플레이어가 알아야할 정보 및 순간들)
@@ -45,11 +43,15 @@ public class Survivor : PlayableCharactor
     CharacterController m_CharacterController;
     [SerializeField] Animator Animator;
 
+    [SerializeField] Slider Slider_HealGauge;
+
     [SerializeField] GameObject VFX_FootPrintPref;
     [SerializeField] GameObject VFX_Bleeding;
 
     SurvivorStateMachine m_StateMachine;
     SurvivorHealthStateMachine m_healthStateMachine;
+
+    Survivor m_healDest;
 
     Vector3 MoveDir;
     Vector2 dir;
@@ -84,6 +86,26 @@ public class Survivor : PlayableCharactor
         }
     }
     [SerializeField] float DebugOnly_CorruptMulti;
+
+    const float MaxHealGauge = 100;
+    [SerializeField] float m_healGauge = 1;
+    public float HealGauge
+    {
+        get { return m_healGauge; }
+        set
+        {
+            if (m_healGauge != value)
+            {
+                m_healGauge = value;
+                Slider_HealGauge.value = m_healGauge / MaxHealGauge;
+                if (m_healGauge >= MaxHealGauge)
+                {
+                    m_healthStateMachine.Healed();
+                }
+            }
+        }
+    }
+    [SerializeField] float m_healSpeed = 1;
 
     public float GetWalkSpeed() { return walkSpeed; }
     public float GetRunSpeed() { return runSpeed; }
@@ -174,7 +196,6 @@ public class Survivor : PlayableCharactor
         m_CharacterController = GetComponent<CharacterController>();
         m_StateMachine = new SurvivorStateMachine(this);
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
-        DOTween.Init();
         m_playerID = PlayerUIManager.Instance.CreatePlayerUI();
     }
 
@@ -219,6 +240,8 @@ public class Survivor : PlayableCharactor
 
         if (m_healthStateMachine.GetCurState() != HealthStates.Down)
             m_StateMachine.StateUpdate();
+
+        HealOtherSurvivor();
     }
 
 
@@ -390,10 +413,11 @@ public class Survivor : PlayableCharactor
 
     public IEnumerator CorPrintFoot()
     {
-        while (m_StateMachine.CurStateIs(SurvivorStateMachine.StateName.Run))
+        while (m_StateMachine.CurStateIs(SurvivorStateMachine.StateName.Run) 
+            && m_healthStateMachine.GetCurState()>HealthStates.Down)
         {
             PrintFoot();
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.5f);
         }
     }
     IEnumerator CorSprint()
@@ -500,19 +524,73 @@ public class Survivor : PlayableCharactor
 
     public void OnHealed()
     {
-
+        Slider_HealGauge.gameObject.SetActive(true);
+        HealGauge += Time.deltaTime * m_healSpeed;
+        IsFreeze = true;
     }
 
-
-    private void OnTriggerStay(Collider other)
+    void StopHeal()
     {
-        if (Input.GetKey(KeyCode.E))
-        {
-            if (other.TryGetComponent(out Survivor survivor))
-            {
-                //survivor.
-            }
+        IsFreeze = false;
+        Animator.SetBool("isHeal", false);
 
+
+        if (m_healDest != null)
+        {
+            if (m_healDest.Slider_HealGauge.gameObject.activeSelf)
+                m_healDest.Slider_HealGauge.gameObject.SetActive(false);
+            m_healDest = null;
+        }
+    }
+
+    void HealOtherSurvivor()
+    {
+        if (m_healDest == null) return;
+        if(Input.GetMouseButtonDown(0)) 
+        {
+            IsFreeze = true;
+            Animator.SetTrigger("Heal");
+        }
+        if (Input.GetMouseButton(0))
+        {
+            Animator.SetBool("isHeal", true);
+            m_healDest?.OnHealed();
+            if (m_healDest.m_healthStateMachine.GetCurState() == HealthStates.Healthy)
+            {
+                StopHeal();
+            }
+        }
+        if(Input.GetMouseButtonUp(0))
+        {
+            Animator.SetBool("isHeal", false);
+
+            m_healDest.Slider_HealGauge.gameObject.SetActive(false);
+            IsFreeze = false;
+        }
+    }
+
+    protected override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+        if (other.TryGetComponent(out Survivor survivor))
+        {
+            if (survivor.m_healthStateMachine.GetCurState() == HealthStates.Injured || survivor.m_healthStateMachine.GetCurState() == HealthStates.Down)
+            {
+                m_healDest = survivor;
+                //m_healDest.Slider_HealGauge.gameObject.SetActive(true);
+            }
+        }
+        if (other.CompareTag("Escape"))
+        {
+            PlayerUIManager.Instance.SetPlayerUIState(m_playerID, PlayerUI.Icons.Escaped);
+        }
+    }
+    protected override void OnTriggerExit(Collider other)
+    {
+        base.OnTriggerExit(other);
+        if (other.TryGetComponent(out Survivor survivor) && survivor.gameObject != this.gameObject)
+        {
+            StopHeal();
         }
     }
 

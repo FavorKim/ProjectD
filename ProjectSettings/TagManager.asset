@@ -11,6 +11,7 @@ TagManager:
   - Palete
   - Window
   - Missile
+  - Escape
   layers:
   - Default
   - TransparentFX

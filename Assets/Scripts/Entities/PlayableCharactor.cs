@@ -28,12 +28,17 @@ public abstract class PlayableCharactor : Interactor
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<IInteractableObject>() != null)
-            m_interactDest = other.GetComponent<IInteractableObject>();
+        if(other.TryGetComponent(out IInteractableObject obj))
+        {
+            m_interactDest = obj;
+        }
 
     }
     protected virtual void OnTriggerExit(Collider other)
     {
-        m_interactDest = null;
+        if (other.TryGetComponent(out IInteractableObject obj))
+        {
+            m_interactDest = null;
+        }
     }
 }

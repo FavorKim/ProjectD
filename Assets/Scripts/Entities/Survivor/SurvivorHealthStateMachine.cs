@@ -37,6 +37,7 @@ public class SurvivorHealthStateMachine
         curState = states[toChangeStateEnum];
         curState.Enter();
         PlayerUIManager.Instance.SetPlayerUIState(owner.PlayerID(), curState.GetStateEnum());
+        owner.HealGauge = 0;
     }
     //public void ChangeState(SurvivorHealthBaseState toChangeState)
     //{
@@ -46,6 +47,11 @@ public class SurvivorHealthStateMachine
     //    PlayerUIManager.Instance.SetPlayerUIState(owner.PlayerID(), curState.GetStateEnum());
     //}
 
+    public void Healed()
+    {
+        ChangeState(curState.GetStateEnum() - 1);
+    }
+    
     public void StateUpdate()
     {
         curState.Excute();

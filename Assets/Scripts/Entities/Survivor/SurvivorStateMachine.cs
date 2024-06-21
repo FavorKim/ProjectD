@@ -52,7 +52,10 @@ public class SurvivorMoveState
     public virtual void Enter() { }
     public virtual void Excute()
     {
-        if (owner.GetMoveDir() == Vector3.zero) state.ChangeState(SurvivorStateMachine.StateName.Idle);
+        if (owner.GetMoveDir() == Vector3.zero && !Input.GetKey(KeyCode.LeftControl))
+        {
+            state.ChangeState(SurvivorStateMachine.StateName.Idle); 
+        }
     }
     public virtual void Exit() { }
 }
@@ -68,7 +71,10 @@ public class SurvivorWalk : SurvivorMoveState
     public override void Excute()
     {
         base.Excute();
-        if (Input.GetKey(KeyCode.LeftShift)) state.ChangeState(SurvivorStateMachine.StateName.Run);
+        if (Input.GetKey(KeyCode.LeftShift) 
+            && owner.GetMoveDir() != Vector3.zero) 
+            state.ChangeState(SurvivorStateMachine.StateName.Run);
+
         if (Input.GetKey(KeyCode.LeftControl)) state.ChangeState(SurvivorStateMachine.StateName.Crouch);
     }
     public override void Exit()
@@ -117,7 +123,10 @@ public class SurvivorCrouch : SurvivorMoveState
     public override void Excute()
     {
         base.Excute();
-        if (Input.GetKey(KeyCode.LeftShift)) state.ChangeState(SurvivorStateMachine.StateName.Run);
+        if (Input.GetKey(KeyCode.LeftShift)
+            && owner.GetMoveDir() != Vector3.zero)
+            state.ChangeState(SurvivorStateMachine.StateName.Run);
+
         if (Input.GetKeyUp(KeyCode.LeftControl)) state.ChangeState(SurvivorStateMachine.StateName.Walk);
 
     }
@@ -141,7 +150,11 @@ public class SurvivorIdle : SurvivorMoveState
     public override void Excute()
     {
         if (owner.GetMoveDir() != Vector3.zero) state.ChangeState(SurvivorStateMachine.StateName.Walk);
-        if (Input.GetKey(KeyCode.LeftShift)) state.ChangeState(SurvivorStateMachine.StateName.Run);
+        
+        if (Input.GetKey(KeyCode.LeftShift)
+            && owner.GetMoveDir() != Vector3.zero)
+            state.ChangeState(SurvivorStateMachine.StateName.Run);
+
         if (Input.GetKey(KeyCode.LeftControl)) state.ChangeState(SurvivorStateMachine.StateName.Crouch);
     }
     public override void Exit()

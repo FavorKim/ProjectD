@@ -30,8 +30,8 @@ public class NetworkObjectPool : MonoBehaviour
         for (int i = 0; i < PoolSize; i++)
         {
             var obj = Instantiate(ObjectPrefab, transform);
-            obj.Cmd_SetActive(false);
             pool.Enqueue(obj);
+            obj.Cmd_SetActive(false);
         }
     }
 
@@ -44,8 +44,8 @@ public class NetworkObjectPool : MonoBehaviour
 
     public virtual void ReturnObj(NetworkPoolObject obj)
     {
-        obj.Cmd_SetActive(false);
         pool.Enqueue(obj);
+        obj.Cmd_SetActive(false);
     }
 
     
