@@ -22,6 +22,11 @@ public class PootPrintPool : SingletonNetwork<PootPrintPool>
         pootPrintPool = GetComponent<NetworkObjectPool>();
     }
 
+    public void Init()
+    {
+        pootPrintPool.InitPool();
+    }
+
     [ClientRpc]
     public void PrintPootPrint(Vector3 pos, Quaternion rot)
     {

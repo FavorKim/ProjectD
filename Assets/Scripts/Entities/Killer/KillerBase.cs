@@ -72,11 +72,10 @@ public class KillerBase : PlayableCharactor
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        var cam = Instantiate(Prefab_KillerCam).GetComponent<CinemachineFreeLook>();
+        GetComponent<PlayerInput>().enabled = true;
+        var cam = Instantiate(Prefab_KillerCam).GetComponent<CinemachineVirtualCamera>();
         cam.Follow = transform;
         cam.LookAt = transform;
-
-        GetComponent<PlayerInput>().enabled = true;
         
     }
 

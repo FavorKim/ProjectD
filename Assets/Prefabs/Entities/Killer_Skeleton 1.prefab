@@ -107,7 +107,7 @@ MonoBehaviour:
   syncInterval: 0
   m_AttackCollider: {fileID: 1879315202165848655}
   Pos_HoldSurvivor: {fileID: 1879315202619207773}
-  Prefab_KillerCam: {fileID: 0}
+  Prefab_KillerCam: {fileID: 7236142770976030694, guid: 3e90230c286136b47825ee9143023d00, type: 3}
   m_moveSpeed: 400
   m_rotateSpeed: 1
   m_attackCool: 1.2

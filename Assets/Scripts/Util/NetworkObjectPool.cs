@@ -19,17 +19,15 @@ public class NetworkObjectPool : NetworkBehaviour
 
     Queue<NetworkPoolObject> pool = new Queue<NetworkPoolObject>();
 
-    private void Awake()
-    {
-        //instance = this;
-        InitPool();
-    }
+   
+    
 
-    void InitPool()
+    public void InitPool()
     {
         for (int i = 0; i < PoolSize; i++)
         {
             var obj = Instantiate(ObjectPrefab, transform);
+            NetworkServer.Spawn(obj.gameObject);
             pool.Enqueue(obj);
             obj.Cmd_SetActive(false);
         }
