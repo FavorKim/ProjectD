@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Mirror;
 
-public class NetworkPoolObject : MonoBehaviour // NetworkBehaviour
+public class NetworkPoolObject : NetworkBehaviour
 {
-    //[Command]
+    [Command]
     public void Cmd_SetActive(bool isTrue)
     {
         Rpc_SetActive(isTrue);
     }
 
-    //[ClientRpc]
+    [ClientRpc]
     public void Rpc_SetActive(bool isTrue) 
     {
         gameObject.SetActive(isTrue);

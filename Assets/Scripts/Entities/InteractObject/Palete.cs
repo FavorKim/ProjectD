@@ -1,9 +1,10 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Palete : MonoBehaviour,IInteractableObject
+public class Palete : NetworkBehaviour, IInteractableObject
 {
     [SerializeField] GameObject VFX_GibletPref;
     Animator m_anim;
@@ -14,15 +15,21 @@ public class Palete : MonoBehaviour,IInteractableObject
     {
         m_anim = GetComponent<Animator>();
     }
+
+    [Command(requiresAuthority =false)]
     public void SurvivorInteract()
     {
-        if(!isUsed)
+        RpcOnUsed();
+    }
+    [ClientRpc]
+    void RpcOnUsed()
+    {
+        if (!isUsed)
         {
             m_anim.SetTrigger("Fall");
             isUsed = true;
         }
     }
-
 
     public void KillerInteract()
     {
@@ -36,11 +43,16 @@ public class Palete : MonoBehaviour,IInteractableObject
         Instantiate(VFX_GibletPref,transform.position,Quaternion.identity);
         Destroy(gameObject); //서버 작업 필
     }
-
+    [Command(requiresAuthority =false)]
     public void SetAttackTrue()
     {
         isAttack = true;
     }
+    void RpcSetAttackTrue()
+    {
+        isAttack = true;
+    }
+
     public void SetAttackFalse()
     {
         isAttack = false;

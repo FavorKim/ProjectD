@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PootPrintPool : SingletonMono<PootPrintPool> //SingletonNetwork<PootPrintPool>
+public class PootPrintPool : SingletonNetwork<PootPrintPool>
 {
     NetworkObjectPool pootPrintPool;
     [SerializeField] float Duration_PootPrint;

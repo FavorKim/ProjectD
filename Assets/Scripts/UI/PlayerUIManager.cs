@@ -1,9 +1,10 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerUIManager : MonoBehaviour
+public class PlayerUIManager : NetworkBehaviour
 {
     [SerializeField] GameObject PlayerUIPrefab;
     Dictionary<int, PlayerUI> playerUIs = new Dictionary<int, PlayerUI>();
@@ -22,7 +23,7 @@ public class PlayerUIManager : MonoBehaviour
     {
         instance = this;
     }
-
+    //rpc
     public int CreatePlayerUI()
     {
         var obj = Instantiate(PlayerUIPrefab, GridLayout.transform).GetComponent<PlayerUI>();
@@ -31,16 +32,18 @@ public class PlayerUIManager : MonoBehaviour
         return id;
     }
 
+    //rpc
     public void SetPlayerUIState(int id, HealthStates state)
     {
         playerUIs[id].SetIcon(state);
     }
-
+    //rpc
     public void SetPlayerUIState(int id, PlayerUI.Icons state)
     {
         playerUIs[id].SetIcon(state);
     }
 
+    
     public void SetPlayerUIGauge(int id, float value)
     {
         playerUIs[id].OnCorruptTimeChanged(value);

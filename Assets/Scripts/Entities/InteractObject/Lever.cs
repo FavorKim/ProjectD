@@ -1,9 +1,10 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Lever : MonoBehaviour, IInteractableObject
+public class Lever : NetworkBehaviour, IInteractableObject
 {
     [SerializeField] float m_speed;
     [SerializeField] Animator Animator_Door;

@@ -1,3 +1,5 @@
+using Cinemachine;
+using Mirror;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -6,7 +8,7 @@ using UnityEngine.UI;
 
 /*
  서버에 전달할 요소들 (서버 내의 모든 플레이어가 알아야할 정보 및 순간들)
-발전기
+발전기o
  발전기 진척도
  발전기 진척도에 따른 이펙트
  발전기 사보타지 여부
@@ -22,10 +24,8 @@ using UnityEngine.UI;
  
  
 생존자
- 생존자의 부상 여부 (부상/빈사)
- 생존자 발자국 (Spawn, 풀링 해야)
- 생존자 혈흔 이펙트
- 생존자 피격
+ 생존자 발자국 (Spawn, 풀링 해야)o
+ 생존자 피격o
  생존자 치료됨
  생존자 탈락함
  생존자 탈출함
@@ -47,6 +47,7 @@ public class Survivor : PlayableCharactor
 
     [SerializeField] GameObject VFX_FootPrintPref;
     [SerializeField] GameObject VFX_Bleeding;
+    [SerializeField] GameObject Prefab_SurvivorTrack;
 
     SurvivorStateMachine m_StateMachine;
     SurvivorHealthStateMachine m_healthStateMachine;
@@ -80,7 +81,7 @@ public class Survivor : PlayableCharactor
                 PlayerUIManager.Instance.SetPlayerUIGauge(m_playerID, m_corruptTime / 120);
                 if (m_corruptTime <= 0)
                 {
-                    OnSacrificed();
+                    CmdOnSacrificed();
                 }
             }
         }
@@ -172,7 +173,7 @@ public class Survivor : PlayableCharactor
                 }
                 if (value == 3)
                 {
-                    OnSacrificed();
+                    CmdOnSacrificed();
                 }
             }
         }
@@ -197,7 +198,19 @@ public class Survivor : PlayableCharactor
         m_StateMachine = new SurvivorStateMachine(this);
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
         m_playerID = PlayerUIManager.Instance.CreatePlayerUI();
+        
     }
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+        var cam = Instantiate(Prefab_SurvivorTrack).GetComponent<CinemachineFreeLook>();
+        cam.LookAt = transform;
+        cam.Follow = transform;
+        GetComponent<PlayerInput>().enabled = true;
+
+    }
+
 
     private void OnEnable()
     {
@@ -233,22 +246,24 @@ public class Survivor : PlayableCharactor
     // Update is called once per frame
     protected override void Update()
     {
-        // 로컬체크
-        base.Update();
-        PlayerMove();
-        m_healthStateMachine.StateUpdate();
+            base.Update();
+        if (isLocalPlayer)
+        {
+            PlayerMove();
+            m_healthStateMachine.StateUpdate();
 
-        if (m_healthStateMachine.GetCurState() != HealthStates.Down)
-            m_StateMachine.StateUpdate();
+            if (m_healthStateMachine.GetCurState() != HealthStates.Down)
+                m_StateMachine.StateUpdate();
 
-        HealOtherSurvivor();
+            HealOtherSurvivor();
+        }
     }
 
 
     void OnMove(InputValue val)
     {
         // 로컬체크
-
+        if (!isLocalPlayer) return;
         //if (isFreeze) return;
 
 
@@ -264,6 +279,7 @@ public class Survivor : PlayableCharactor
     }
     void PlayerMove()
     {
+        
         if (isFreeze) return;
 
 
@@ -300,17 +316,38 @@ public class Survivor : PlayableCharactor
 
     // command와 rpc는 참조형이 아닌 NetworkBehaviour를 상속받은 객체와 구조체만을 매개변수로 사용할 수 있음
 
-    public void BeingHeld(KillerBase holdPos)
+    [Command(requiresAuthority =false)]
+    public void BeingHeld(KillerBase killer)
+    {
+        RpcBeingHeld(killer);
+    }
+    [ClientRpc]
+    void RpcBeingHeld(KillerBase holdPos)
     {
         OnBeingHeld(holdPos);
-
     }
-    public void BeingHanged(Hanger hangerPos)
+
+
+    [Command(requiresAuthority =false)]
+    public void BeingHanged(Hanger hanger)
+    {
+        RpcBeingHanged(hanger);
+    }
+    [ClientRpc]
+    void RpcBeingHanged(Hanger hangerPos)
     {
         OnBeingHanged(hangerPos);
     }
 
+
+    [Command(requiresAuthority =false)]
     public void GetHit()
+    {
+        RpcGetHit();
+    }
+    //rpc
+    [ClientRpc]
+    public void RpcGetHit()
     {
         if (m_healthStateMachine.GetCurState() != HealthStates.Down && !isInvincible)
         {
@@ -319,6 +356,18 @@ public class Survivor : PlayableCharactor
             StartCoroutine(CorInvincibleTime());
         }
     }
+
+    [Command(requiresAuthority =false)]
+    void CmdOnSacrificed()
+    {
+        RpcOnSacrificed();
+    }
+    [ClientRpc]
+    void RpcOnSacrificed()
+    {
+        OnSacrificed.Invoke();
+    }
+
 
     void RotateTransformToDest(Vector3 look)
     {
@@ -332,6 +381,7 @@ public class Survivor : PlayableCharactor
 
     public override void Interact(Generator generator)
     {
+        if (!isLocalPlayer) return;
 
 
         if (Input.GetMouseButtonDown(0))
@@ -358,6 +408,7 @@ public class Survivor : PlayableCharactor
     }
     public override void Interact(Palete palete)
     {
+        if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (!palete.isUsed)
@@ -377,6 +428,7 @@ public class Survivor : PlayableCharactor
     }
     public override void Interact(JumpFence fence)
     {
+        if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.E))
         {
             var center = fence.transform.position + fence.transform.forward * -1.5f;
@@ -386,6 +438,7 @@ public class Survivor : PlayableCharactor
     }
     public override void Interact(Hanger hanger)
     {
+        if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (hanger.HangedSurvivor != null && hanger.HangedSurvivor != this)
@@ -397,6 +450,7 @@ public class Survivor : PlayableCharactor
     }
     public override void Interact(Lever lever)
     {
+        if (!isLocalPlayer) return;
         if (!lever.IsAvailable) return;
 
         if (Input.GetMouseButtonDown(0))
@@ -411,6 +465,8 @@ public class Survivor : PlayableCharactor
     }
 
 
+
+    //rpc
     public IEnumerator CorPrintFoot()
     {
         while (m_StateMachine.CurStateIs(SurvivorStateMachine.StateName.Run) 
@@ -514,7 +570,13 @@ public class Survivor : PlayableCharactor
         IsFreeze = true; // 원래는 게임 결과 창으로 이동해야 함
     }
 
-    public void OnResqued()
+    [Command(requiresAuthority =false)]
+    public void CmdOnResqued()
+    {
+        RpcOnResqued();
+    }
+    [ClientRpc]
+    void RpcOnResqued()
     {
         m_healthStateMachine.ChangeState(HealthStates.Injured);
         IsFreeze = false;
@@ -522,7 +584,13 @@ public class Survivor : PlayableCharactor
         Animator.SetTrigger("Resqued");
     }
 
-    public void OnHealed()
+    [Command(requiresAuthority =false)]
+    public void CmdOnHealed()
+    {
+        RpcOnHealed();
+    }
+    [ClientRpc]
+    void RpcOnHealed()
     {
         Slider_HealGauge.gameObject.SetActive(true);
         HealGauge += Time.deltaTime * m_healSpeed;
@@ -545,8 +613,9 @@ public class Survivor : PlayableCharactor
 
     void HealOtherSurvivor()
     {
+        if (!isLocalPlayer) return;
         if (m_healDest == null) return;
-        if(Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0)) 
         {
             IsFreeze = true;
             Animator.SetTrigger("Heal");
@@ -554,7 +623,7 @@ public class Survivor : PlayableCharactor
         if (Input.GetMouseButton(0))
         {
             Animator.SetBool("isHeal", true);
-            m_healDest?.OnHealed();
+            m_healDest?.CmdOnHealed();
             if (m_healDest.m_healthStateMachine.GetCurState() == HealthStates.Healthy)
             {
                 StopHeal();

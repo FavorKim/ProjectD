@@ -29061,6 +29061,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8497ebf7b60830a46bca20e50657a1b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   maxGauge: 100
   Multi_Gauge: 10
   Slider_Gauge: {fileID: 79771728124085409}

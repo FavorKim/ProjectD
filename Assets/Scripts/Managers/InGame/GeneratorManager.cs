@@ -1,10 +1,11 @@
+using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GeneratorManager : MonoBehaviour
+public class GeneratorManager : NetworkBehaviour
 {
     List<Generator> generators = new List<Generator>();
     [SerializeField] Lever m_lever;

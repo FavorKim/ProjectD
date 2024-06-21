@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2156309147124805212}
   - component: {fileID: 7927615788585854631}
   - component: {fileID: 7340861885338113323}
+  - component: {fileID: -8380616586134343289}
   m_Layer: 0
   m_Name: Palete
   m_TagString: Untagged
@@ -147,8 +148,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fce7ffa4cb448c478611a1d05a90ab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   VFX_GibletPref: {fileID: 2084820093207374130, guid: b29779dae237de9419a55d57ebc4f4b7, type: 3}
   isUsed: 0
+  isAttack: 0
+--- !u!114 &-8380616586134343289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3545900645502940635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 725748849
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &8964763792668105288
 GameObject:
   m_ObjectHideFlags: 0

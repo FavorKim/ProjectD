@@ -1,9 +1,10 @@
+using Mirror;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Generator : MonoBehaviour, IInteractableObject
+public class Generator : NetworkBehaviour, IInteractableObject
 {
     private float curGauge;
     public float CurGauge
@@ -42,7 +43,7 @@ public class Generator : MonoBehaviour, IInteractableObject
                 isCompleted = value;
                 if(value == true)
                 {
-                    OnCompleteHandler();
+                    CmdOnCompleteHandler();
                 }
             }
         } 
@@ -58,13 +59,11 @@ public class Generator : MonoBehaviour, IInteractableObject
                 isSabotaging = value;
                 if (value == true)
                 {
-                    OnSabotage();
-                    StartCoroutine(CorSabotage());
+                    CmdOnSabotage();
                 }
                 else
                 {
-                    OnEndSabotage();
-                    StopCoroutine(CorSabotage());
+                    CmdOnEndSabotage();
                 }
 
             }
@@ -103,21 +102,37 @@ public class Generator : MonoBehaviour, IInteractableObject
 
         if (Input.GetMouseButton(0))
         {
-            IsSabotaging = false;
-            Slider_Gauge.gameObject.SetActive(true);
-            CurGauge += Time.deltaTime * Multi_Gauge;
-            Slider_Gauge.value = CurGauge / maxGauge;
+            Cmd_ProgressGenerator();
         }
         else
         {
             Slider_Gauge.gameObject.SetActive(false);
         }
     }
-    
+    [Command(requiresAuthority =false)]
+    void Cmd_ProgressGenerator() { ProgressGenerator(); }
+    [ClientRpc]
+    void ProgressGenerator()
+    {
+        IsSabotaging = false;
+        Slider_Gauge.gameObject.SetActive(true);
+        CurGauge += Time.deltaTime * Multi_Gauge;
+        Slider_Gauge.value = CurGauge / maxGauge;
+    }
+
+    [Command(requiresAuthority =false)]
+    public void CmdKillerInteract()
+    {
+        KillerInteract();
+    }
+
+    [ClientRpc]
     public void KillerInteract()
     {
         IsSabotaging = true;//서버 작업 필
     }
+
+
 
     void SetSteam()
     {
@@ -151,6 +166,20 @@ public class Generator : MonoBehaviour, IInteractableObject
     private event Action OnSabotage;
     private event Action OnEndSabotage;
     public event Action OnCompleteHandler;
+
+    [Command(requiresAuthority = false)]    
+    private void CmdOnSabotage() { RpcOnSabotage(); }
+    [Command(requiresAuthority = false)]
+    private void CmdOnEndSabotage() { RpcOnEndSabotage(); }
+    [Command(requiresAuthority = false)]
+    private void CmdOnCompleteHandler() {  RpcOnCompleteHandler(); }
+
+    [ClientRpc]
+    private void RpcOnSabotage() { OnSabotage.Invoke(); StartCoroutine(CorSabotage()); }
+    [ClientRpc]
+    private void RpcOnEndSabotage() { OnEndSabotage.Invoke(); StopCoroutine(CorSabotage()); }
+    [ClientRpc]
+    private void RpcOnCompleteHandler() {  OnCompleteHandler.Invoke(); }
 
     IEnumerator CorSabotage()
     {

@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hanger : MonoBehaviour, IInteractableObject
+public class Hanger : NetworkBehaviour, IInteractableObject
 {
     [SerializeField] Transform Pos_HangedPos;
     [SerializeField] GameObject Shackle;
@@ -35,7 +36,7 @@ public class Hanger : MonoBehaviour, IInteractableObject
 
     public void SurvivorInteract() 
     {
-        hangedSurvivor.OnResqued();
+        hangedSurvivor.CmdOnResqued();
     }
 
     public void KillerInteract()

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkObjectPool : MonoBehaviour
+public class NetworkObjectPool : NetworkBehaviour
 {
     //private static NetworkObjectPool instance;
     //public static NetworkObjectPool Instance

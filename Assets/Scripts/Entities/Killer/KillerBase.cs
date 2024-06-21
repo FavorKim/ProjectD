@@ -1,3 +1,4 @@
+using Cinemachine;
 using Org.BouncyCastle.Crypto.Signers;
 using System;
 using System.Collections;
@@ -12,6 +13,8 @@ public class KillerBase : PlayableCharactor
     [SerializeField] BoxCollider m_AttackCollider;
     Survivor m_holdSurvivor;
     [SerializeField] Transform Pos_HoldSurvivor;
+
+    [SerializeField] GameObject Prefab_KillerCam;
 
     public Transform GetHoldPosition() { return Pos_HoldSurvivor; }
 
@@ -65,7 +68,16 @@ public class KillerBase : PlayableCharactor
         }
     }
 
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+        var cam = Instantiate(Prefab_KillerCam).GetComponent<CinemachineFreeLook>();
+        cam.Follow = transform;
+        cam.LookAt = transform;
 
+        GetComponent<PlayerInput>().enabled = true;
+        
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -88,10 +100,13 @@ public class KillerBase : PlayableCharactor
     // Update is called once per frame
     protected override void Update()
     {
-        base.Update();
-        KillerMove();
-        KillerAttack();
-        Look();
+        if (isLocalPlayer)
+        {
+            base.Update();
+            KillerMove();
+            KillerAttack();
+            Look();
+        }
     }
 
     void Look()
@@ -132,6 +147,7 @@ public class KillerBase : PlayableCharactor
 
     public override void Interact(Generator generator)
     {
+        if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (!generator.IsSabotaging)
@@ -143,6 +159,7 @@ public class KillerBase : PlayableCharactor
     }
     public override void Interact(JumpFence jumpFence)
     {
+        if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space) && !IsFreeze)
         {
             StartCoroutine(CorJumpFence());
@@ -152,6 +169,7 @@ public class KillerBase : PlayableCharactor
     public override void Interact(Palete palete)
     {
 
+        if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (palete.isUsed)
@@ -168,6 +186,7 @@ public class KillerBase : PlayableCharactor
     }
     public override void Interact(Hanger hanger)
     {
+        if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space) && m_holdSurvivor != null && hanger.IsAvailable())
         {
             SetAnimator_HangOrHold();
@@ -244,6 +263,7 @@ public class KillerBase : PlayableCharactor
     }
     private void OnTriggerStay(Collider other)
     {
+        if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (other.TryGetComponent(out Survivor survivor))
