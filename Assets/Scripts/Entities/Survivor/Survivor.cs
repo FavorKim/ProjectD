@@ -184,6 +184,7 @@ public class Survivor : PlayableCharactor
 
     int m_playerID;
     public int PlayerID() { return m_playerID; }
+    public void SetPlayerID(int value) {  m_playerID = value; }
 
 
     public Vector3 GetMoveDir() { return MoveDir; }
@@ -197,7 +198,7 @@ public class Survivor : PlayableCharactor
         m_CharacterController = GetComponent<CharacterController>();
         m_StateMachine = new SurvivorStateMachine(this);
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
-        m_playerID = PlayerUIManager.Instance.CreatePlayerUI();
+        PlayerUIManager.Instance.CreatePlayerUI(this);
         
     }
 
