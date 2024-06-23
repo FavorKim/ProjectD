@@ -8,21 +8,28 @@ public class GamePlayer : NetworkBehaviour
     [SerializeField] GameObject SurvivorPref;
     [SerializeField] GameObject KillerPref;
 
-    GameObject pref;
+    [SerializeField] GameObject pref;
+
+    
 
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        NetworkConnectionToClient conn = NetworkServer.localConnection;
-        pref = conn.connectionId == 0 ? KillerPref : SurvivorPref;
-        CmdSpawnPlayer(conn, pref);
+        CmdSpawnPlayer();
     }
 
 
+
     [Command(requiresAuthority =false)]
-    void CmdSpawnPlayer(NetworkConnectionToClient conn, GameObject pref)
+    void CmdSpawnPlayer()
     {
+        NetworkConnectionToClient conn = connectionToClient;
+
+        pref = conn == NetworkServer.localConnection ? KillerPref : SurvivorPref;
+
+        //pref = conn.connectionId == 0 ? KillerPref : SurvivorPref;
         var obj = Instantiate(pref, transform.position, Quaternion.identity);
-        NetworkServer.ReplacePlayerForConnection(conn, obj);
+        NetworkServer.Spawn(obj, conn);
+        NetworkServer.ReplacePlayerForConnection(conn, obj, false);
     }
 }
