@@ -11,6 +11,7 @@ public class KillerBase : PlayableCharactor
 {
     CharacterController m_controller;
     Animator Animator;
+    NetworkAnimator netAnim;
     [SerializeField] BoxCollider m_AttackCollider;
     Survivor m_holdSurvivor;
     [SerializeField] Transform Pos_HoldSurvivor;
@@ -56,11 +57,14 @@ public class KillerBase : PlayableCharactor
                 {
                     IsFreeze = true;
                     Animator.SetTrigger("Attack");
+                    netAnim.SetTrigger("Attack");
                 }
                 else
                 {
                     IsFreeze = false;
                     Animator.SetTrigger("AttackSuccess");
+                    netAnim.SetTrigger("AttackSuccess");
+
                     StartCoroutine(CorWeaponColliderSet());
                     StartCoroutine(CorAttackCool());
                     m_lungeLength = 0;
@@ -84,6 +88,7 @@ public class KillerBase : PlayableCharactor
     {
         m_controller = GetComponent<CharacterController>();
         Animator = GetComponentInChildren<Animator>();
+        netAnim = Animator.gameObject.GetComponent<NetworkAnimator>();
         //m_AttackCollider = GetComponent<BoxCollider>();
     }
 
@@ -143,6 +148,7 @@ public class KillerBase : PlayableCharactor
     {
         StartCoroutine(CorFreezeWhileSec(1.0f));
         Animator.SetTrigger("HangHold");
+        netAnim.SetTrigger("HangHold");
     }
 
     public override void Interact(Generator generator)
@@ -153,6 +159,7 @@ public class KillerBase : PlayableCharactor
             if (!generator.IsSabotaging)
             {
                 Animator.SetTrigger("Break");
+                netAnim.SetTrigger("Break");
                 generator.KillerInteract();
             }
         }
@@ -176,6 +183,7 @@ public class KillerBase : PlayableCharactor
             {
                 StartCoroutine(CorFreezeWhileSec(1.5f));
                 Animator.SetTrigger("Break");
+                netAnim.SetTrigger("Break");
                 palete.KillerInteract();
             }
             else
@@ -297,6 +305,7 @@ public class KillerBase : PlayableCharactor
 
         if (!isStunable) return;
         Animator.SetTrigger("GetHit");
+        netAnim.SetTrigger("GetHit");
         StartCoroutine(CorFreezeWhileSec(1.5f));
         StartCoroutine(CorStunCool());
     }

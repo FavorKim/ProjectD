@@ -41,8 +41,10 @@ using UnityEngine.UI;
 public class Survivor : PlayableCharactor
 {
     CharacterController m_CharacterController;
-    [SerializeField] Animator Animator;
 
+    // 해시로 애니메이터 다뤄보기 (최적화)
+    [SerializeField] Animator Animator;
+    NetworkAnimator netAnim;
     [SerializeField] Slider Slider_HealGauge;
 
     [SerializeField] GameObject VFX_FootPrintPref;
@@ -198,7 +200,7 @@ public class Survivor : PlayableCharactor
         m_CharacterController = GetComponent<CharacterController>();
         m_StateMachine = new SurvivorStateMachine(this);
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
-
+        netAnim = Animator.gameObject.GetComponent<NetworkAnimator>();
     }
 
     public override void OnStartLocalPlayer()
@@ -304,6 +306,7 @@ public class Survivor : PlayableCharactor
 
         m_StateMachine.ChangeState(SurvivorStateMachine.StateName.Walk);
         Animator.SetTrigger("JumpFence");
+        netAnim.SetTrigger("JumpFence");
         StartCoroutine(CorJumpFence());
     }
 
@@ -390,7 +393,8 @@ public class Survivor : PlayableCharactor
         m_healthStateMachine.ChangeState(HealthStates.Injured);
         IsFreeze = false;
         m_CharacterController.Move(transform.up * -10f);
-        Animator.SetTrigger("Resqued");
+        Animator.SetTrigger(Animator.StringToHash("JumpFence"));
+        netAnim.SetTrigger("JumpFence");
     }
 
     [ClientRpc]
@@ -420,6 +424,8 @@ public class Survivor : PlayableCharactor
         if (Input.GetMouseButtonDown(0))
         {
             Animator.SetTrigger("Generate");
+            netAnim.SetTrigger("Generate");
+
             Animator.SetBool("isGenerating", true);
         }
         if (Input.GetMouseButton(0))
@@ -489,10 +495,12 @@ public class Survivor : PlayableCharactor
         if (Input.GetMouseButtonDown(0))
         {
             Animator.SetTrigger("Pull");
+            netAnim.SetTrigger("Pull");
         }
         else if (Input.GetMouseButtonUp(0))
         {
             Animator.SetTrigger("PullOver");
+            netAnim.SetTrigger("PullOver");
         }
         lever.SurvivorInteract();
     }
@@ -626,6 +634,8 @@ public class Survivor : PlayableCharactor
         {
             IsFreeze = true;
             Animator.SetTrigger("Heal");
+            netAnim.SetTrigger("Heal");
+
             m_healDest.Slider_HealGauge.gameObject.SetActive(true);
 
         }
