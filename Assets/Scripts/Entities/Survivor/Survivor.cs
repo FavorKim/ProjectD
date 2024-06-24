@@ -184,7 +184,7 @@ public class Survivor : PlayableCharactor
 
     int m_playerID;
     public int PlayerID() { return m_playerID; }
-    public void SetPlayerID(int value) {  m_playerID = value; }
+    public void SetPlayerID(int value) { m_playerID = value; }
 
 
     public Vector3 GetMoveDir() { return MoveDir; }
@@ -198,7 +198,7 @@ public class Survivor : PlayableCharactor
         m_CharacterController = GetComponent<CharacterController>();
         m_StateMachine = new SurvivorStateMachine(this);
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
-        
+
     }
 
     public override void OnStartLocalPlayer()
@@ -247,7 +247,7 @@ public class Survivor : PlayableCharactor
     // Update is called once per frame
     protected override void Update()
     {
-            base.Update();
+        base.Update();
         if (isLocalPlayer)
         {
             PlayerMove();
@@ -280,7 +280,7 @@ public class Survivor : PlayableCharactor
     }
     void PlayerMove()
     {
-        
+
         if (isFreeze) return;
 
 
@@ -307,7 +307,7 @@ public class Survivor : PlayableCharactor
         StartCoroutine(CorJumpFence());
     }
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     void PrintFoot()
     {
         PootPrintPool.Instance.PrintPootPrint(new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
@@ -318,37 +318,37 @@ public class Survivor : PlayableCharactor
 
     // command와 rpc는 참조형이 아닌 NetworkBehaviour를 상속받은 객체와 구조체만을 매개변수로 사용할 수 있음
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     public void BeingHeld(KillerBase killer)
     {
         RpcBeingHeld(killer);
     }
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     public void BeingHanged(Hanger hanger)
     {
         RpcBeingHanged(hanger);
     }
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     public void CmdGetHit()
     {
         RpcGetHit();
     }
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     void CmdOnSacrificed()
     {
         RpcOnSacrificed();
     }
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     public void CmdOnResqued()
     {
         RpcOnResqued();
     }
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     public void CmdOnHealed()
     {
         RpcOnHealed();
@@ -366,7 +366,7 @@ public class Survivor : PlayableCharactor
     {
         OnBeingHanged(hangerPos);
     }
-    
+
     [ClientRpc]
     public void RpcGetHit()
     {
@@ -392,7 +392,7 @@ public class Survivor : PlayableCharactor
         m_CharacterController.Move(transform.up * -10f);
         Animator.SetTrigger("Resqued");
     }
-    
+
     [ClientRpc]
     void RpcOnHealed()
     {
@@ -502,8 +502,8 @@ public class Survivor : PlayableCharactor
     //rpc
     public IEnumerator CorPrintFoot()
     {
-        while (m_StateMachine.CurStateIs(SurvivorStateMachine.StateName.Run) 
-            && m_healthStateMachine.GetCurState()>HealthStates.Down)
+        while (m_StateMachine.CurStateIs(SurvivorStateMachine.StateName.Run)
+            && m_healthStateMachine.GetCurState() > HealthStates.Down)
         {
             PrintFoot();
             yield return new WaitForSeconds(0.5f);
@@ -622,7 +622,7 @@ public class Survivor : PlayableCharactor
     {
         if (!isLocalPlayer) return;
         if (m_healDest == null) return;
-        if (Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0))
         {
             IsFreeze = true;
             Animator.SetTrigger("Heal");
@@ -638,7 +638,7 @@ public class Survivor : PlayableCharactor
                 StopHeal();
             }
         }
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             Animator.SetBool("isHeal", false);
 
@@ -652,7 +652,7 @@ public class Survivor : PlayableCharactor
         base.OnTriggerEnter(other);
         if (other.TryGetComponent(out Survivor survivor))
         {
-            if (survivor != null)
+            if (survivor != null && survivor != this)
             {
                 if (survivor.m_healthStateMachine.GetCurState() == HealthStates.Injured || survivor.m_healthStateMachine.GetCurState() == HealthStates.Down)
                 {
