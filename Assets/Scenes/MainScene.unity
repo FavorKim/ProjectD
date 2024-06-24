@@ -736,6 +736,14 @@ PrefabInstance:
       value: LobbyManager
       objectReference: {fileID: 0}
     - target: {fileID: 2768605591706076463, guid: f36ed1c31d4170a48a4aa84939cfa24e, type: 3}
+      propertyPath: RoomScene
+      value: Assets/Scenes/LobbyScene.unity
+      objectReference: {fileID: 0}
+    - target: {fileID: 2768605591706076463, guid: f36ed1c31d4170a48a4aa84939cfa24e, type: 3}
+      propertyPath: onlineScene
+      value: Assets/Scenes/LobbyScene.unity
+      objectReference: {fileID: 0}
+    - target: {fileID: 2768605591706076463, guid: f36ed1c31d4170a48a4aa84939cfa24e, type: 3}
       propertyPath: autoCreatePlayer
       value: 1
       objectReference: {fileID: 0}
