@@ -311,9 +311,10 @@ public class KillerBase : PlayableCharactor
             if (other.TryGetComponent(out Survivor survivor))
             {
                 SetAnimator_HangOrHold();
+                HangerManager.Instance.TurnHangersXRay(true);
+
                 m_holdSurvivor = survivor;
                 m_holdSurvivor.BeingHeld(this);
-                HangerManager.Instance.TurnHangersXRay(true);
             }
         }
     }

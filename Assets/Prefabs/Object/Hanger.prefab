@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 1966122238373733523}
   - component: {fileID: 1966122238373733522}
   - component: {fileID: 1966122238373733520}
-  - component: {fileID: 6861800416697831042}
+  - component: {fileID: -7080332766927010287}
   m_Layer: 0
   m_Name: Hanger
   m_TagString: Untagged
@@ -225,7 +225,7 @@ MonoBehaviour:
   Xray_silhouette: {fileID: 243618836535963883}
   Xray_Light: {fileID: 2783987990503822563}
   Duration_Xray: 3
---- !u!114 &6861800416697831042
+--- !u!114 &-7080332766927010287
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
