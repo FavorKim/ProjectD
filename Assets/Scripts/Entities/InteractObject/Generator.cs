@@ -1,6 +1,7 @@
 using Mirror;
 using System;
 using System.Collections;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,8 +28,12 @@ public class Generator : NetworkBehaviour, IInteractableObject
     }
     [SerializeField] float maxGauge = 100;
     [SerializeField] float Multi_Gauge = 1;
+    [SerializeField] float XrayShowDuration;
+
     [SerializeField] Slider Slider_Gauge;
     [SerializeField] GameObject Light;
+    [SerializeField] GameObject Xray_Silhouette;
+    [SerializeField] GameObject XrayLight;
     [SerializeField] ParticleSystem VFX_Spark;
     [SerializeField] ParticleSystem VFX_Smoke;
     [SerializeField] ParticleSystem VFX_Steam;
@@ -71,9 +76,17 @@ public class Generator : NetworkBehaviour, IInteractableObject
         }
     }
 
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        Xray_Silhouette.SetActive(true);
+    }
+
+
     private void OnEnable()
     {
         OnCompleteHandler += TurnOnLight;
+        OnCompleteHandler += CmdXrayOn;
 
         OnSabotage += DecreaseGauge;
         OnSabotage += PlaySabotageVFX;
@@ -88,6 +101,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
         OnSabotage -= PlaySabotageVFX;
         OnSabotage -= DecreaseGauge;
 
+        OnCompleteHandler -= CmdXrayOn;
         OnCompleteHandler -= TurnOnLight;
 
         OnCompleteHandler = null;
@@ -174,6 +188,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
         Light.gameObject.SetActive(true);
     }
 
+
     private event Action OnSabotage;
     private event Action OnEndSabotage;
     public event Action OnCompleteHandler;
@@ -184,6 +199,12 @@ public class Generator : NetworkBehaviour, IInteractableObject
     private void CmdOnEndSabotage() { RpcOnEndSabotage(); }
     [Command(requiresAuthority = false)]
     private void CmdOnCompleteHandler() {  RpcOnCompleteHandler(); }
+    [Command(requiresAuthority =false)]
+    void CmdXrayOn()
+    {
+        RpcXrayOn();
+    }
+
 
     [ClientRpc]
     private void RpcOnSabotage() { OnSabotage.Invoke(); StartCoroutine(CorSabotage()); }
@@ -191,7 +212,11 @@ public class Generator : NetworkBehaviour, IInteractableObject
     private void RpcOnEndSabotage() { OnEndSabotage.Invoke(); StopCoroutine(CorSabotage()); }
     [ClientRpc]
     private void RpcOnCompleteHandler() {  OnCompleteHandler.Invoke(); }
-
+    [ClientRpc]
+    void RpcXrayOn()
+    {
+        StartCoroutine(CorShowXray());
+    }
     void Hook_OnChangedProgress(float old, float recent)
     {
         CurGauge = recent;
@@ -204,5 +229,13 @@ public class Generator : NetworkBehaviour, IInteractableObject
             CurGauge -= Time.deltaTime * Multi_Gauge * 0.5f;
             yield return null;
         }
+    }
+    IEnumerator CorShowXray()
+    {
+        Xray_Silhouette.SetActive(true);
+        XrayLight.SetActive(true);
+        yield return new WaitForSeconds(XrayShowDuration);
+        Xray_Silhouette.SetActive(false);
+        XrayLight.SetActive(false);
     }
 }

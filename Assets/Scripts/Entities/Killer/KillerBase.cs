@@ -25,8 +25,34 @@ public class KillerBase : PlayableCharactor
     [SerializeField] float m_moveSpeed;
     [SerializeField] float m_rotateSpeed;
     [SerializeField] float m_attackCool;
-    [SerializeField] float m_stunCool;
+    [SerializeField] float m_stunLength;
+    public float StunLength
+    {
+        get
+        {
+            return m_stunLength / StunRecoverPer;
+        }
+    }
+    [SerializeField] float m_stunRecoverPer = 0.0f;
+    public float StunRecoverPer
+    {
+        get
+        {
+            return 1 + m_stunRecoverPer * 0.01f;
+        }
+    }
+
     float m_lungeLength;
+
+    [SerializeField] float m_actionSpeedPer;
+    public float ActionSpeed
+    {
+        get
+        {
+            return 1 + (m_actionSpeedPer * 0.01f);
+        }
+    }
+
     bool isFreeze = false;
     bool IsFreeze
     {
@@ -80,7 +106,6 @@ public class KillerBase : PlayableCharactor
         var cam = Instantiate(Prefab_KillerCam).GetComponent<CinemachineVirtualCamera>();
         cam.Follow = transform;
         cam.LookAt = transform;
-        
     }
 
     // Start is called before the first frame update
@@ -197,6 +222,7 @@ public class KillerBase : PlayableCharactor
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space) && m_holdSurvivor != null && hanger.IsAvailable())
         {
+            HangerManager.Instance.TurnHangersXRay(false);
             SetAnimator_HangOrHold();
             hanger.HangedSurvivor = m_holdSurvivor;
             m_holdSurvivor.BeingHanged(hanger);
@@ -212,7 +238,7 @@ public class KillerBase : PlayableCharactor
 
     IEnumerator CorAttackCool()
     {
-        m_attackCool = m_lungeLength;
+        m_attackCool = m_lungeLength + 0.8f;
         canAttack = false;
         IsFreeze = true;
         yield return new WaitForSeconds(m_attackCool);
@@ -223,18 +249,18 @@ public class KillerBase : PlayableCharactor
     {
         float time = 0;
         IsFreeze = true;
-        while (time < 0.7f)
+        while (time < 0.7f / ActionSpeed)
         {
             time += Time.deltaTime;
-            m_controller.Move(transform.up * 1.5f * Time.deltaTime);
-            m_controller.Move(transform.forward * 2.0f * Time.deltaTime);
+            m_controller.Move(transform.up * 1.5f * ActionSpeed * Time.deltaTime);
+            m_controller.Move(transform.forward * 2.0f * ActionSpeed * Time.deltaTime);
             yield return null;
         }
-        while (time < 1.8f)
+        while (time < 1.8f / ActionSpeed)
         {
             time += Time.deltaTime;
-            m_controller.Move(transform.up * -1.5f * Time.deltaTime);
-            m_controller.Move(transform.forward * 2.0f * Time.deltaTime);
+            m_controller.Move(transform.up * -1.5f * ActionSpeed * Time.deltaTime);
+            m_controller.Move(transform.forward * 2.0f * ActionSpeed * Time.deltaTime);
             yield return null;
         }
         IsFreeze = false;
@@ -248,7 +274,9 @@ public class KillerBase : PlayableCharactor
     IEnumerator CorStunCool()
     {
         isStunable = false;
-        yield return new WaitForSeconds(m_stunCool);
+        yield return new WaitForSeconds(StunLength);
+        Animator.SetTrigger("StunOver");
+        netAnim.SetTrigger("StunOver");
         isStunable = true;
     }
     IEnumerator CorWeaponColliderSet()
@@ -285,6 +313,7 @@ public class KillerBase : PlayableCharactor
                 SetAnimator_HangOrHold();
                 m_holdSurvivor = survivor;
                 m_holdSurvivor.BeingHeld(this);
+                HangerManager.Instance.TurnHangersXRay(true);
             }
         }
     }
@@ -292,7 +321,7 @@ public class KillerBase : PlayableCharactor
 
     private event Action OnStun;
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     public void OnStunCall()
     {
         RpcOnStunCall();
@@ -306,7 +335,7 @@ public class KillerBase : PlayableCharactor
         if (!isStunable) return;
         Animator.SetTrigger("GetHit");
         netAnim.SetTrigger("GetHit");
-        StartCoroutine(CorFreezeWhileSec(1.5f));
+        StartCoroutine(CorFreezeWhileSec(StunLength));
         StartCoroutine(CorStunCool());
     }
     public void OnMove(InputValue val)
@@ -330,5 +359,5 @@ public class KillerBase : PlayableCharactor
         Animator.SetFloat("inputY", m_moveDir.z);
     }
 
-    
+
 }

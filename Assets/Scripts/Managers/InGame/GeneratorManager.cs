@@ -60,4 +60,5 @@ public class GeneratorManager : NetworkBehaviour
             m_lever.IsAvailable = true;
         }
     }
+
 }

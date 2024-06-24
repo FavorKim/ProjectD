@@ -7,6 +7,11 @@ public class Hanger : NetworkBehaviour, IInteractableObject
 {
     [SerializeField] Transform Pos_HangedPos;
     [SerializeField] GameObject Shackle;
+    [SerializeField] GameObject Xray_silhouette;
+    [SerializeField] GameObject Xray_Light;
+
+    [SerializeField] float Duration_Xray;
+
     Survivor hangedSurvivor;
     public bool IsAvailable() { return Shackle.activeSelf; }
     public Survivor HangedSurvivor
@@ -37,11 +42,12 @@ public class Hanger : NetworkBehaviour, IInteractableObject
     public void SurvivorInteract() 
     {
         hangedSurvivor.CmdOnResqued();
+        CmdOnXrayOn();
     }
 
     public void KillerInteract()
     {
-
+        CmdOnXrayOn();
     }
 
     public void DropShackle()
@@ -52,5 +58,38 @@ public class Hanger : NetworkBehaviour, IInteractableObject
     void RemoveHangedSurvivor()
     {
         HangedSurvivor = null;
+    }
+
+    void TurnOnXray()
+    {
+        Xray_Light.SetActive(true);
+        Xray_silhouette.SetActive(true);
+    }
+    void TurnOffXray()
+    {
+        Xray_Light.SetActive(false);
+        Xray_silhouette.SetActive(false);
+    }
+
+    public void TurnSilhouette(bool onOff)
+    {
+        Xray_silhouette.SetActive(onOff);
+    }
+    [Command(requiresAuthority =false)]
+    void CmdOnXrayOn()
+    {
+        RpcOnXrayOn();
+    }
+    [ClientRpc]
+    void RpcOnXrayOn()
+    {
+        StartCoroutine(CorFlashXRay());
+    }
+
+    IEnumerator CorFlashXRay()
+    {
+        TurnOnXray();
+        yield return new WaitForSeconds(Duration_Xray);
+        TurnOffXray();
     }
 }
