@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 5785814562771298453}
   - component: {fileID: -6441846297463922865}
   m_Layer: 0
-  m_Name: Killer_Skeleton 1
+  m_Name: Killer_Skeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

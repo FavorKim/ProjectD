@@ -9,7 +9,7 @@ public class PlayerUIManager : NetworkBehaviour
     [SerializeField] GameObject PlayerUIPrefab;
     Dictionary<int, PlayerUI> playerUIs = new Dictionary<int, PlayerUI>();
     [SerializeField] GridLayoutGroup GridLayout;
-
+    
     private static PlayerUIManager instance;
     public static PlayerUIManager Instance
     {
@@ -27,14 +27,16 @@ public class PlayerUIManager : NetworkBehaviour
     [Command(requiresAuthority =false)]
     public void CreatePlayerUI(Survivor survivor)
     {
-        var obj = Instantiate(PlayerUIPrefab, GridLayout.transform).GetComponent<PlayerUI>();
+        var obj = Instantiate(PlayerUIPrefab).GetComponent<PlayerUI>();
         NetworkServer.Spawn(obj.gameObject);
+        obj.parent = GridLayout.gameObject;
         RpcCreatePlayerUI(obj,survivor);
     }
 
     [ClientRpc]
     public void RpcCreatePlayerUI(PlayerUI obj, Survivor survivor)
     {
+        
         var id = playerUIs.Count;
         survivor.SetPlayerID(id);
         playerUIs.Add(id, obj);

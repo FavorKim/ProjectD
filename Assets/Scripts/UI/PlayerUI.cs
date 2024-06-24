@@ -15,6 +15,8 @@ public class PlayerUI : NetworkBehaviour
         Escaped
     }
 
+    [SyncVar(hook =nameof(Hook_OnChangedParent))] public GameObject parent;
+
     [SerializeField]Slider Slider_Gauge;
     Dictionary<Icons, Image> IconDict = new Dictionary<Icons, Image>();
     GameObject curIcon;
@@ -69,5 +71,9 @@ public class PlayerUI : NetworkBehaviour
         Slider_Gauge.value = value;
     }
 
-
+    void Hook_OnChangedParent(GameObject old,  GameObject recent)
+    {
+        gameObject.transform.parent = recent.transform;
+        gameObject.transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
+    }
 }

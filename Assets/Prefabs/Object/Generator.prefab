@@ -28900,10 +28900,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -33906,6 +33906,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7225853247037714812}
     m_Modifications:
+    - target: {fileID: 4380949397697519869, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -234
+      objectReference: {fileID: 0}
+    - target: {fileID: 4380949397697519869, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -76
+      objectReference: {fileID: 0}
     - target: {fileID: 5472757295622056066, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
       propertyPath: m_Name
       value: Slider_Progress
@@ -33944,7 +33952,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6732965822591358852, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -1311.2988
+      value: -1237.8834
       objectReference: {fileID: 0}
     - target: {fileID: 6732965822591358852, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
       propertyPath: m_SizeDelta.y
@@ -33968,19 +33976,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6732965822591358852, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6732965822591358852, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6732965822591358852, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6732965822591358852, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -66.17731
+      value: -29.46991
       objectReference: {fileID: 0}
     - target: {fileID: 6732965822591358852, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -34001,6 +34009,10 @@ PrefabInstance:
     - target: {fileID: 9110497323525352275, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9110497323525352275, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -5.198242
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78aa3d4f5d542944da81dc779325a7d6, type: 3}

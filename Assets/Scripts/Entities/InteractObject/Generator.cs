@@ -100,6 +100,11 @@ public class Generator : NetworkBehaviour, IInteractableObject
             return;
         }
 
+        if(Input.GetMouseButtonDown(0))
+        {
+            Slider_Gauge.gameObject.SetActive(true);
+        }
+
         if (Input.GetMouseButton(0))
         {
             Cmd_ProgressGenerator();

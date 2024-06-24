@@ -198,7 +198,6 @@ public class Survivor : PlayableCharactor
         m_CharacterController = GetComponent<CharacterController>();
         m_StateMachine = new SurvivorStateMachine(this);
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
-        PlayerUIManager.Instance.CreatePlayerUI(this);
         
     }
 
@@ -209,6 +208,7 @@ public class Survivor : PlayableCharactor
         cam.LookAt = transform;
         cam.Follow = transform;
         GetComponent<PlayerInput>().enabled = true;
+        PlayerUIManager.Instance.CreatePlayerUI(this);
 
     }
 
@@ -396,7 +396,8 @@ public class Survivor : PlayableCharactor
     [ClientRpc]
     void RpcOnHealed()
     {
-        Slider_HealGauge.gameObject.SetActive(true);
+        if (isLocalPlayer)
+            Slider_HealGauge.gameObject.SetActive(true);
         HealGauge += Time.deltaTime * m_healSpeed;
         IsFreeze = true;
     }
@@ -625,6 +626,8 @@ public class Survivor : PlayableCharactor
         {
             IsFreeze = true;
             Animator.SetTrigger("Heal");
+            m_healDest.Slider_HealGauge.gameObject.SetActive(true);
+
         }
         if (Input.GetMouseButton(0))
         {
@@ -649,10 +652,13 @@ public class Survivor : PlayableCharactor
         base.OnTriggerEnter(other);
         if (other.TryGetComponent(out Survivor survivor))
         {
-            if (survivor.m_healthStateMachine.GetCurState() == HealthStates.Injured || survivor.m_healthStateMachine.GetCurState() == HealthStates.Down)
+            if (survivor != null)
             {
-                m_healDest = survivor;
-                //m_healDest.Slider_HealGauge.gameObject.SetActive(true);
+                if (survivor.m_healthStateMachine.GetCurState() == HealthStates.Injured || survivor.m_healthStateMachine.GetCurState() == HealthStates.Down)
+                {
+                    m_healDest = survivor;
+                    //m_healDest.Slider_HealGauge.gameObject.SetActive(true);
+                }
             }
         }
         if (other.CompareTag("Escape"))

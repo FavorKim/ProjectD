@@ -13,16 +13,18 @@ public class GamePlayer : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        NetworkConnectionToClient conn = NetworkServer.localConnection;
-        pref = conn.connectionId == 0 ? KillerPref : SurvivorPref;
-        CmdSpawnPlayer(conn, pref);
+        CmdSpawnPlayer();
     }
 
 
     [Command(requiresAuthority =false)]
-    void CmdSpawnPlayer(NetworkConnectionToClient conn, GameObject pref)
+    void CmdSpawnPlayer()
     {
+        NetworkConnectionToClient conn = connectionToClient;
+        pref = conn == NetworkServer.localConnection? KillerPref : SurvivorPref;
+
         var obj = Instantiate(pref, transform.position, Quaternion.identity);
+        NetworkServer.Spawn(obj);
         NetworkServer.ReplacePlayerForConnection(conn, obj);
     }
 }
