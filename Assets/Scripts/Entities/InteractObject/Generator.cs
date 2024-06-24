@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Generator : NetworkBehaviour, IInteractableObject
 {
+    [SyncVar(hook = nameof(Hook_OnChangedProgress))]
     private float curGauge;
     public float CurGauge
     {
@@ -115,13 +116,18 @@ public class Generator : NetworkBehaviour, IInteractableObject
         }
     }
     [Command(requiresAuthority =false)]
-    void Cmd_ProgressGenerator() { ProgressGenerator(); }
+    void Cmd_ProgressGenerator() 
+    {
+        CurGauge += Time.deltaTime * Multi_Gauge;
+        ProgressGenerator(); 
+    }
+    
     [ClientRpc]
     void ProgressGenerator()
     {
         IsSabotaging = false;
-        Slider_Gauge.gameObject.SetActive(true);
-        CurGauge += Time.deltaTime * Multi_Gauge;
+        //Slider_Gauge.gameObject.SetActive(true);
+        //CurGauge += Time.deltaTime * Multi_Gauge;
         Slider_Gauge.value = CurGauge / maxGauge;
     }
 
@@ -185,6 +191,11 @@ public class Generator : NetworkBehaviour, IInteractableObject
     private void RpcOnEndSabotage() { OnEndSabotage.Invoke(); StopCoroutine(CorSabotage()); }
     [ClientRpc]
     private void RpcOnCompleteHandler() {  OnCompleteHandler.Invoke(); }
+
+    void Hook_OnChangedProgress(float old, float recent)
+    {
+        CurGauge = recent;
+    }
 
     IEnumerator CorSabotage()
     {

@@ -61,7 +61,7 @@ public class KillerBase : PlayableCharactor
                 {
                     IsFreeze = false;
                     Animator.SetTrigger("AttackSuccess");
-                    m_AttackCollider.enabled = true;
+                    StartCoroutine(CorWeaponColliderSet());
                     StartCoroutine(CorAttackCool());
                     m_lungeLength = 0;
                 }
@@ -243,6 +243,12 @@ public class KillerBase : PlayableCharactor
         yield return new WaitForSeconds(m_stunCool);
         isStunable = true;
     }
+    IEnumerator CorWeaponColliderSet()
+    {
+        m_AttackCollider.enabled = true;
+        yield return new WaitForSeconds(0.8f);
+        m_AttackCollider.enabled = false;
+    }
 
     protected override void OnTriggerEnter(Collider collision)
     {
@@ -290,7 +296,7 @@ public class KillerBase : PlayableCharactor
     {
 
         if (!isStunable) return;
-        Animator.SetTrigger("CmdGetHit");
+        Animator.SetTrigger("GetHit");
         StartCoroutine(CorFreezeWhileSec(1.5f));
         StartCoroutine(CorStunCool());
     }
@@ -315,4 +321,5 @@ public class KillerBase : PlayableCharactor
         Animator.SetFloat("inputY", m_moveDir.z);
     }
 
+    
 }

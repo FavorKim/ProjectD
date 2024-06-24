@@ -9,7 +9,20 @@ public class GeneratorManager : NetworkBehaviour
 {
     List<Generator> generators = new List<Generator>();
     [SerializeField] Lever m_lever;
-    [SerializeField] int m_GeneratorsRemaining;
+    //[SerializeField] int m_GeneratorsRemaining;
+    public int GeneratorRemaining
+    {
+        get
+        {
+            int count = 0;
+            foreach(Generator g in generators)
+            {
+                if (!g.IsCompleted)
+                    count++;
+            }
+            return count;
+        }
+    }
     [SerializeField] Text Text_GenCount;
 
     private void Start()
@@ -20,8 +33,8 @@ public class GeneratorManager : NetworkBehaviour
             g.OnCompleteHandler += DecreasRemainingGen;
             g.OnCompleteHandler += OpenDoor;
         }
-        m_GeneratorsRemaining = generators.Count;
-        Text_GenCount.text = m_GeneratorsRemaining.ToString();
+        //m_GeneratorsRemaining = generators.Count;
+        Text_GenCount.text = GeneratorRemaining.ToString();
     }
     private void OnDisable()
     {
@@ -35,13 +48,14 @@ public class GeneratorManager : NetworkBehaviour
 
     void DecreasRemainingGen()//서버 작업 필
     {
-        m_GeneratorsRemaining--;
-        Text_GenCount.text = m_GeneratorsRemaining.ToString();
-        
+        //m_GeneratorsRemaining--;
+        Text_GenCount.text = GeneratorRemaining.ToString();
     }
+
+
     void OpenDoor()
     {
-        if(m_GeneratorsRemaining == 0)
+        if(GeneratorRemaining == 0)
         {
             m_lever.IsAvailable = true;
         }

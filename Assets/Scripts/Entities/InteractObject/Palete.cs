@@ -60,7 +60,7 @@ public class Palete : NetworkBehaviour, IInteractableObject
     [ClientRpc]
     void RpcSetAttackTrue()
     {
-        isAttack = true;
+        IsAttack = true;
     }
 
 
@@ -72,12 +72,15 @@ public class Palete : NetworkBehaviour, IInteractableObject
     [ClientRpc]
     void RpcSetAttackFalse()
     {
-        isAttack = false;
+        IsAttack = false;
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (!IsAttack) return;
-        other.GetComponent<KillerBase>()?.OnStunCall();
+        if(TryGetComponent(out KillerBase killer))
+        {
+            killer.OnStunCall();
+        }
     }
 }
