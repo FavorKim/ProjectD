@@ -30,26 +30,71 @@ public class KillerBase : PlayableCharactor
     {
         get
         {
-            return m_stunLength / StunRecoverPer;
+            return m_stunLength / StunRecover;
         }
     }
-    [SerializeField] float m_stunRecoverPer = 0.0f;
-    public float StunRecoverPer
+    [SerializeField] float m_stunRecover = 0.0f;
+    public float StunRecover
     {
         get
         {
-            return 1 + m_stunRecoverPer * 0.01f;
+            return 1 + m_stunRecover * 0.01f;
+        }
+        set
+        {
+            if (m_stunRecover != value)
+            {
+                m_stunRecover = value;
+            }
         }
     }
 
     float m_lungeLength;
 
-    [SerializeField] float m_actionSpeedPer;
-    public float ActionSpeed
+    [SerializeField] float m_jumpSpeed;
+    public float JumpSpeed
     {
         get
         {
-            return 1 + (m_actionSpeedPer * 0.01f);
+            return 1 + (m_jumpSpeed * 0.01f);
+        }
+        set
+        {
+            if(m_jumpSpeed != value)
+            {
+                m_jumpSpeed = value;
+            }
+        }
+    }
+
+    [SerializeField] float m_breakSpeed;
+    public float BreakSpeed
+    {
+        get 
+        {
+            return 1 + (m_breakSpeed * 0.01f);
+        }
+        set
+        {
+            if(m_breakSpeed!= value)
+            {
+                m_breakSpeed = value;
+            }
+        }
+    }
+    [SerializeField] float m_attackSpeed;
+    public float AttackSpeed
+    {
+        get
+        {
+            return 1 + (m_attackSpeed * 0.01f);
+        }
+        set
+        {
+            if(m_attackSpeed != value)
+            {
+                m_attackSpeed = value;
+            }
         }
     }
 
@@ -106,6 +151,7 @@ public class KillerBase : PlayableCharactor
         var cam = Instantiate(Prefab_KillerCam).GetComponent<CinemachineVirtualCamera>();
         cam.Follow = transform;
         cam.LookAt = transform;
+        PlayerPerkManager.SetKillerPerk(LobbyPlayer.Instance.GetPerkList(), this);
     }
 
     // Start is called before the first frame update
@@ -206,7 +252,7 @@ public class KillerBase : PlayableCharactor
         {
             if (palete.isUsed)
             {
-                StartCoroutine(CorFreezeWhileSec(1.5f));
+                StartCoroutine(CorFreezeWhileSec(1.5f / BreakSpeed));
                 Animator.SetTrigger("Break");
                 netAnim.SetTrigger("Break");
                 palete.KillerInteract();
@@ -238,7 +284,7 @@ public class KillerBase : PlayableCharactor
 
     IEnumerator CorAttackCool()
     {
-        m_attackCool = m_lungeLength + 0.8f;
+        m_attackCool = (m_lungeLength + 0.8f) / AttackSpeed;
         canAttack = false;
         IsFreeze = true;
         yield return new WaitForSeconds(m_attackCool);
@@ -249,18 +295,18 @@ public class KillerBase : PlayableCharactor
     {
         float time = 0;
         IsFreeze = true;
-        while (time < 0.7f / ActionSpeed)
+        while (time < 0.7f / JumpSpeed)
         {
             time += Time.deltaTime;
-            m_controller.Move(transform.up * 1.5f * ActionSpeed * Time.deltaTime);
-            m_controller.Move(transform.forward * 2.0f * ActionSpeed * Time.deltaTime);
+            m_controller.Move(transform.up * 1.5f * JumpSpeed * Time.deltaTime);
+            m_controller.Move(transform.forward * 2.0f * JumpSpeed * Time.deltaTime);
             yield return null;
         }
-        while (time < 1.8f / ActionSpeed)
+        while (time < 1.8f / JumpSpeed)
         {
             time += Time.deltaTime;
-            m_controller.Move(transform.up * -1.5f * ActionSpeed * Time.deltaTime);
-            m_controller.Move(transform.forward * 2.0f * ActionSpeed * Time.deltaTime);
+            m_controller.Move(transform.up * -1.5f * JumpSpeed * Time.deltaTime);
+            m_controller.Move(transform.forward * 2.0f * JumpSpeed * Time.deltaTime);
             yield return null;
         }
         IsFreeze = false;

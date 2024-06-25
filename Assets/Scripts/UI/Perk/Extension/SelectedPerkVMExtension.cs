@@ -14,7 +14,6 @@ namespace PerkVMExtension
         {
             PerkSettingModel.Instance.UnRegisterEventOnSelect(vm.OnResponseSelect);
             PerkSettingModel.Instance.UnRegisterEventOnEquip(vm.OnResponseEquip);
-            PerkSettingModel.Instance.selectedPerkList.Clear();
         }
 
 

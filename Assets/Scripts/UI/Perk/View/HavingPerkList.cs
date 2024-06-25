@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class HavingPerkList : MonoBehaviour // NetworkBehaviour
+public class HavingPerkList : NetworkBehaviour
 {
     [SerializeField] Transform GridTransform;
     [SerializeField] GameObject Prefab_Perk;
@@ -17,9 +17,6 @@ public class HavingPerkList : MonoBehaviour // NetworkBehaviour
     
     void SetPerkList()
     {
-        SetSurvivorPerkList();
-        return;
-
         if (NetworkClient.connection.connectionId == 0)
         {
             SetKillerPerkList();
