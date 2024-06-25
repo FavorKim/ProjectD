@@ -14,23 +14,25 @@ namespace PerkVMExtension
         {
             PerkSettingModel.Instance.UnRegisterEventOnSelect(vm.OnResponseSelect);
             PerkSettingModel.Instance.UnRegisterEventOnEquip(vm.OnResponseEquip);
+            PerkSettingModel.Instance.selectedPerkList.Clear();
         }
 
 
-        public static void OnResponseEquip(this SelectedPerkViewModel vm, PerksScriptableObject perk)
+        public static void OnResponseEquip(this SelectedPerkViewModel vm, PerksScriptableObject perk, int index)
         {
-            if (perk != null)
+            if (perk != vm.PerkSCO)
             {
-                if (perk != vm.PerkSCO)
-                {
+                if (index == vm.index)
                     vm.PerkSCO = perk;
-                }
             }
         }
 
         public static void OnResponseSelect(this SelectedPerkViewModel vm, int index)
         {
-            vm.IsSelected = true;
+            if (vm.index == index)
+                vm.IsSelected = true;
+            else
+                vm.IsSelected = false;
         }
     }
 }

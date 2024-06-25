@@ -6,7 +6,9 @@ public class SelectedPerkView : MonoBehaviour
 {
     public int index;
     [SerializeField] private GameObject SelectedMarker;
+
     [SerializeField] Perk perk;
+
 
     private SelectedPerkViewModel vm;
 
@@ -17,7 +19,9 @@ public class SelectedPerkView : MonoBehaviour
             vm = new();
             vm.PropertyChanged += OnPropChanged;
             vm.RegisterOnEnable();
+            vm.index = this.index;
         }
+        PerkSettingModel.Instance.selectedPerkList.Add(new SelectedPerk(perk.perk, index));
     }
     private void OnDisable()
     {

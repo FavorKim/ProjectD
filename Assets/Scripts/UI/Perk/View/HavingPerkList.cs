@@ -11,16 +11,13 @@ public class HavingPerkList : MonoBehaviour // NetworkBehaviour
 
     private void Start()
     {
-    }
-
-    private void OnEnable()
-    {
         SetPerkList();
-
     }
+
+    
     void SetPerkList()
     {
-        SetKillerPerkList();
+        SetSurvivorPerkList();
         return;
 
         if (NetworkClient.connection.connectionId == 0)
@@ -39,8 +36,8 @@ public class HavingPerkList : MonoBehaviour // NetworkBehaviour
         {
             if (item.Owner != "Survivor") continue;
             var perk = PerkDataManager.Instance.GetPerkByName(item.PerkName);
-            perk.GetComponent<Perk>().Init(perk);
-            Instantiate(perk, GridTransform);
+            var perkObj = Instantiate(Prefab_Perk, GridTransform).GetComponentInChildren<Perk>();
+            perkObj.Init(perk);
         }
     }
 

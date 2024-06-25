@@ -2,13 +2,15 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Perk : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
+public class Perk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    PerksScriptableObject perk;
+    public PerksScriptableObject perk;
 
     [SerializeField] Image Img_Icon;
+    [SerializeField] Sprite Img_Blank;
 
     [SerializeField] GameObject Panel_Description;
+
     [SerializeField] Text Text_Description;
     [SerializeField] Text Text_Name;
 
@@ -17,7 +19,7 @@ public class Perk : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
         OnPointerEnter_ShowDescription();
     }
 
-    public void OnPointerExit(PointerEventData data) 
+    public void OnPointerExit(PointerEventData data)
     {
         OnPointerExit_ShowDescription();
     }
@@ -25,12 +27,21 @@ public class Perk : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
     public void Init(PerksScriptableObject perk)
     {
         InitPerk(perk);
-        InitView();
     }
 
     void InitPerk(PerksScriptableObject perk)
     {
         this.perk = perk;
+
+        if (perk != null)
+        {
+            InitView();
+        }
+        else
+        {
+            Img_Icon.sprite = Img_Blank;
+        }
+
     }
 
     void InitView()
@@ -42,12 +53,14 @@ public class Perk : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
 
     public void OnPointerEnter_ShowDescription()
     {
-        Panel_Description.SetActive(true);
+        if (perk != null)
+            Panel_Description.SetActive(true);
     }
 
     public void OnPointerExit_ShowDescription()
     {
-        Panel_Description.SetActive(false);
+        if (perk != null)
+            Panel_Description.SetActive(false);
     }
 
     public void OnClick_EquipPerk()

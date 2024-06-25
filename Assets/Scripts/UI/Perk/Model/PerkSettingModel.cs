@@ -3,6 +3,18 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public class SelectedPerk
+{
+    public SelectedPerk(PerksScriptableObject perk, int index)
+    {
+        this.perk = perk;
+        this.index = index;
+    }
+    
+    public PerksScriptableObject perk;
+    public int index;
+}
+
 public class PerkSettingModel
 {
     private static PerkSettingModel instance;
@@ -19,17 +31,17 @@ public class PerkSettingModel
     }
     
 
-    public PerksScriptableObject selectedPerk;
-    public List<PerksScriptableObject> selectedPerkList = new List<PerksScriptableObject>(4);
+    public SelectedPerk selectedPerk;
+    public List<SelectedPerk> selectedPerkList = new List<SelectedPerk>(4);
 
-    public event Action<PerksScriptableObject> OnEquipPerk;
+    public event Action<PerksScriptableObject,int> OnEquipPerk;
     public event Action<int> OnSelectPerk;
 
-    public void RegisterEventOnEquip(Action<PerksScriptableObject> onEquip)
+    public void RegisterEventOnEquip(Action<PerksScriptableObject,int> onEquip)
     {
         OnEquipPerk += onEquip;
     }
-    public void UnRegisterEventOnEquip(Action<PerksScriptableObject> onEquip)
+    public void UnRegisterEventOnEquip(Action<PerksScriptableObject,int> onEquip)
     {
         OnEquipPerk -= onEquip;
     }
@@ -45,20 +57,25 @@ public class PerkSettingModel
 
     public void EquipPerk(PerksScriptableObject perkToChange)
     {
-        if (selectedPerk == null)
+        if (selectedPerk.perk == null)
         {
             foreach (var p in selectedPerkList)
             {
-                if (p == null)
+                if (p.perk == null)
                 {
                     selectedPerk = p;
                     break;
                 }
             }
-            if (selectedPerk == null) return;
         }
-        selectedPerk = perkToChange;
-        OnEquipPerk(perkToChange);
+        else if(selectedPerk.perk == perkToChange)
+        {
+            selectedPerk.perk = null;
+            OnEquipPerk(null, selectedPerk.index);
+            return;
+        }
+        selectedPerk.perk = perkToChange;
+        OnEquipPerk(selectedPerk.perk, selectedPerk.index);
     }
 
     public void SelectPerk(int index)

@@ -2,6 +2,7 @@ using System.ComponentModel;
 
 public class SelectedPerkViewModel
 {
+    public int index;
 
     private bool m_isSelected;
     public bool IsSelected
