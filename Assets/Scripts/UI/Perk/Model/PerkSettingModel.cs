@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SelectedPerk
 {
@@ -57,13 +58,15 @@ public class PerkSettingModel
 
     public void EquipPerk(PerksScriptableObject perkToChange)
     {
-        if (selectedPerk==null)
+        bool isNoSelect = false;
+        if (selectedPerk == null)
         {
-            foreach (var p in selectedPerkList)
+            for(int i = 0; i < selectedPerkList.Count; i++)
             {
-                if (p.perk == null)
+                if (selectedPerkList[i].perk == null)
                 {
-                    selectedPerk = p;
+                    selectedPerk = selectedPerkList[i];
+                    isNoSelect = true;
                     break;
                 }
             }
@@ -74,8 +77,18 @@ public class PerkSettingModel
             OnEquipPerk(null, selectedPerk.index);
             return;
         }
+
+        foreach(var p in selectedPerkList)
+        {
+            if (p.perk == null) break;
+            if (p.perk == perkToChange)
+            {
+                return;
+            }
+        }
         selectedPerk.perk = perkToChange;
         OnEquipPerk(selectedPerk.perk, selectedPerk.index);
+        if (isNoSelect) selectedPerk = null;
     }
 
     public void SelectPerk(int index)
