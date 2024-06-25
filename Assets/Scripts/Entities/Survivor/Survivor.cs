@@ -295,7 +295,6 @@ public class Survivor : PlayableCharactor
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(MoveDir), rotateSpeed * Time.deltaTime);
         }
         m_CharacterController.SimpleMove(MoveDir);
-
     }
 
 
