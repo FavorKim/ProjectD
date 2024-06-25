@@ -57,7 +57,7 @@ public class PerkSettingModel
 
     public void EquipPerk(PerksScriptableObject perkToChange)
     {
-        if (selectedPerk.perk == null)
+        if (selectedPerk==null)
         {
             foreach (var p in selectedPerkList)
             {
