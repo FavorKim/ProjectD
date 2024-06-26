@@ -8,22 +8,24 @@ public class HavingPerkList : NetworkBehaviour
 {
     [SerializeField] Transform GridTransform;
     [SerializeField] GameObject Prefab_Perk;
+    [SerializeField] GameObject parent;
 
     private void Start()
     {
         SetPerkList();
+        parent.SetActive(false);
     }
 
-    
+
     void SetPerkList()
     {
-        if (NetworkClient.connection.connectionId == 0)
+        if (isClientOnly)
         {
-            SetKillerPerkList();
+            SetSurvivorPerkList();
         }
         else
         {
-            SetSurvivorPerkList();
+            SetKillerPerkList();
         }
     }
 

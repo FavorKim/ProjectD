@@ -216,6 +216,7 @@ public class Survivor : PlayableCharacter
     public Animator GetAnimator() { return Animator; }
 
     public void SetExhaustPerk(ExhaustPerk dest) { m_exhaustPerk = dest; }
+    public ExhaustPerk GetExhaustPerk() { return m_exhaustPerk; }
 
     // Start is called before the first frame update
     void Start()
@@ -234,8 +235,12 @@ public class Survivor : PlayableCharacter
         cam.Follow = transform;
         GetComponent<PlayerInput>().enabled = true;
         PlayerUIManager.Instance.CreatePlayerUI(this);
+
         PlayerPerkManager.SetSurvivorPerk(LobbyPlayer.Instance.GetPerkList(), this);
+
         InGamePerkSlot.Instance.SetPerkIcons(LobbyPlayer.Instance.GetPerkList());
+
+        StartCoroutine(m_exhaustPerk.CorCoolTime());
 
         // 퍽 관련하여 스프린트 같은 스킬형 퍽의 경우, 기능을 클래스로 구현하고(쿨타임, 지속시간등을 코루틴으로 활용),
         // 플레이어에게 달아주는 형태의 패턴은 어떤지 질문하기
@@ -253,7 +258,6 @@ public class Survivor : PlayableCharacter
 
         OnSacrificed += OnSacrificed_SetState;
 
-        StartCoroutine(m_exhaustPerk.CorCoolTime());
     }
     private void OnDisable()
     {

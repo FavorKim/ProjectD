@@ -9,19 +9,21 @@ public abstract class ExhaustPerk
 
 
     private float m_maxCoolDown;
+    public float GetMaxCoolDown() {  return m_maxCoolDown; }
 
     protected float m_curCoolDown=0;
-    protected float CurCoolDown
+    public float CurCoolDown
     {
         get
         {
             return m_curCoolDown;
         }
-        set
+        protected set
         {
             if (m_curCoolDown != value)
             {
                 m_curCoolDown = value;
+                OnChangedCoolDown.Invoke();
                 if (m_curCoolDown >= m_maxCoolDown)
                 {
                     Activate();
@@ -30,6 +32,7 @@ public abstract class ExhaustPerk
         }
     }
     protected float m_duration;
+    public float GetDuration() { return m_duration; }
     protected float m_moveSpeed;
 
     public ExhaustPerk(float speed, float cool, float duration, Survivor owner)
@@ -48,6 +51,7 @@ public abstract class ExhaustPerk
         if (Condition() == true)
         {
             m_owner.StartCoroutine(CorActivation());
+            OnActivate.Invoke();
         }
     }
     IEnumerator CorActivation()
@@ -62,8 +66,12 @@ public abstract class ExhaustPerk
     {
         while (true)
         {
+
             CurCoolDown--;
             yield return null;
         }
     }
+
+    public event Action OnChangedCoolDown;
+    public event Action OnActivate;
 }
