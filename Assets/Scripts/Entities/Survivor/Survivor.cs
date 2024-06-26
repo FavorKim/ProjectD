@@ -57,8 +57,8 @@ public class Survivor : PlayableCharacter
 
     Survivor m_healDest;
 
-    ExhaustPerk m_exhaustPerk;
     
+
 
     Vector3 MoveDir;
     Vector2 dir;
@@ -215,7 +215,6 @@ public class Survivor : PlayableCharacter
 
     public Animator GetAnimator() { return Animator; }
 
-    public void SetExhaustPerk(ExhaustPerk dest) { m_exhaustPerk = dest; }
 
     // Start is called before the first frame update
     void Start()
@@ -253,7 +252,6 @@ public class Survivor : PlayableCharacter
 
         OnSacrificed += OnSacrificed_GoUp;
 
-        StartCoroutine(m_exhaustPerk.CorCoolTime());
     }
     private void OnDisable()
     {

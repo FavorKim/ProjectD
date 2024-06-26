@@ -29,7 +29,6 @@ public class PlayerPerkManager
                 {
                     case "Sprint":
                         var dest = new Sprint(perk.ValuePercentage, perk.CoolTime, perk.Duration, player);
-                        player.SetExhaustPerk(dest);
                         break;
                 }
             }

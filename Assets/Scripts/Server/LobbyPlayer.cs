@@ -1,8 +1,11 @@
+using DungeonArchitect;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class LobbyPlayer : SingletonNetwork<LobbyPlayer>
 {
     List<PerkData> perks;
+
 
     public void InitPerkList(List<PerkData> perks)
     {
@@ -19,6 +22,7 @@ public class LobbyPlayer : SingletonNetwork<LobbyPlayer>
         list = perks;
         return list; 
     }
+
 
     private void OnApplicationQuit()
     {

@@ -5,9 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MyNetworkManager : NetworkRoomManager
 {
-    [SerializeField] GameObject Survivor;
-    [SerializeField] GameObject Killer;
-
+    
 
     public void OnClick_Survivor()
     {
@@ -17,6 +15,45 @@ public class MyNetworkManager : NetworkRoomManager
     {
         StartHost();
     }
+    /*
+    public override void OnClientConnect()
+    {
+        base.OnClientConnect();
+        Transform startPos = CustomLobbyStartPosition.GetStartPosition();
+
+        if (CustomLobbyStartPosition.StartPositions.Count == 4)
+        {
+            Instantiate(Killer, startPos.position, startPos.rotation);
+        }
+        else
+        {
+            Instantiate(Survivor, startPos.position, startPos.rotation);
+        }
+    }
+    
+
+    public override void OnRoomClientEnter()
+    {
+        base.OnRoomClientEnter();
+        
+        
+        Transform startPos = CustomLobbyStartPosition.GetStartPosition();
+
+        if (CustomLobbyStartPosition.StartPositions.Count == 4)
+        {
+            Instantiate(Killer, startPos.position, startPos.rotation);
+        }
+        else
+        {
+            Instantiate(Survivor, startPos.position, startPos.rotation);
+        }
+    }
+    
+    public override void OnRoomClientConnect()
+    {
+        base.OnRoomClientConnect();
+    }
+    */
     public override void OnRoomClientSceneChanged()
     {
         base.OnRoomClientSceneChanged();
