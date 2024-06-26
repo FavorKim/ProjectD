@@ -251,7 +251,7 @@ public class Survivor : PlayableCharacter
         OnBeingHanged += OnBeingHanged_SetPosition;
         OnBeingHanged += OnBeingHanged_SetCorrupt;
 
-        OnSacrificed += OnSacrificed_SetState;
+        OnSacrificed += OnSacrificed_GoUp;
 
         StartCoroutine(m_exhaustPerk.CorCoolTime());
     }
@@ -261,7 +261,7 @@ public class Survivor : PlayableCharacter
         OnHitted = null;
 
 
-        OnSacrificed -= OnSacrificed_SetState;
+        OnSacrificed -= OnSacrificed_GoUp;
 
         OnBeingHanged -= OnBeingHanged_SetCorrupt;
         OnBeingHanged -= OnBeingHanged_SetPosition;
@@ -594,6 +594,23 @@ public class Survivor : PlayableCharacter
         yield return new WaitForSeconds(time);
         IsFreeze = false;
     }
+    IEnumerator CorSacrifice()
+    {
+        IsFreeze = true;
+        Animator.SetTrigger("Sacrificed");
+        netAnim.SetTrigger("Sacrificed");
+        float time = 0;
+        yield return new WaitForSeconds(2.0f);
+        while(time < 5)
+        {
+            yield return null;
+            time += Time.deltaTime;
+            m_CharacterController.Move(transform.up * Time.deltaTime * 1.0f);
+        }
+        PlayerUIManager.Instance.SetPlayerUIState(m_playerID, PlayerUI.Icons.Killed);
+        gameObject.SetActive(false);
+        // 이 부분은 게임 결과 씬으로 옮기는 것으로 대체해야함
+    }
 
 
     public event Action OnHitted;
@@ -633,10 +650,14 @@ public class Survivor : PlayableCharacter
         StartCoroutine(CorCorrupt());
     }
 
-    void OnSacrificed_SetState()
+    //void OnSacrificed_SetState()
+    //{
+    //    PlayerUIManager.Instance.SetPlayerUIState(m_playerID, PlayerUI.Icons.Killed);
+    //    IsFreeze = true; // 원래는 게임 결과 창으로 이동해야 함
+    //}
+    void OnSacrificed_GoUp()
     {
-        PlayerUIManager.Instance.SetPlayerUIState(m_playerID, PlayerUI.Icons.Killed);
-        IsFreeze = true; // 원래는 게임 결과 창으로 이동해야 함
+        StartCoroutine(CorSacrifice());
     }
 
 

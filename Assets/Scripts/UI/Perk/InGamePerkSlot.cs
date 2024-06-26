@@ -11,11 +11,14 @@ public class InGamePerkSlot : SingletonMono<InGamePerkSlot>
 
     public void SetPerkIcons(List<PerkData> perks)
     {
+        /*
         if (perks == null)
         {
             Debug.Log("ÀåÂø ÆÜ ¸®½ºÆ® Null");
             return;
         }
+        */
+
         images = GetComponentsInChildren<Image>();
 
 
