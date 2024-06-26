@@ -1,6 +1,4 @@
-using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
@@ -35,9 +33,10 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
             tempPerk.EffectTarget = (HandleValue)Enum.Parse(typeof(HandleValue), data.Attribute(nameof(tempPerk.EffectTarget)).Value);
             tempPerk.ValuePercentage = float.Parse(data.Attribute(nameof(tempPerk.ValuePercentage)).Value);
             tempPerk.Duration = float.Parse(data.Attribute(nameof(tempPerk.Duration)).Value);
-            tempPerk.Description = data.Attribute(nameof(tempPerk.Description)).Value;
             tempPerk.CoolTime = float.Parse(data.Attribute(nameof(tempPerk.CoolTime)).Value);
             tempPerk.PerkType = (PerkType)Enum.Parse(typeof(PerkType), data.Attribute(nameof(tempPerk.PerkType)).Value);
+            var desc = data.Attribute(nameof(tempPerk.Description)).Value;
+            tempPerk.Description = string.Format(desc, tempPerk.ValuePercentage, tempPerk.CoolTime, tempPerk.Duration);
 
             LoadedPerkList.Add(tempPerk.PerkName, tempPerk);
         }

@@ -58,20 +58,8 @@ public class PerkSettingModel
 
     public void EquipPerk(PerkData perkToChange)
     {
-        bool isNoSelect = false;
-        if (selectedPerk == null)
-        {
-            for(int i = 0; i < selectedPerkList.Count; i++)
-            {
-                if (selectedPerkList[i].perk == null)
-                {
-                    selectedPerk = selectedPerkList[i];
-                    isNoSelect = true;
-                    break;
-                }
-            }
-        }
-        else if(selectedPerk.perk == perkToChange)
+        
+        if(selectedPerk.perk == perkToChange)
         {
             selectedPerk.perk = null;
             OnEquipPerk(null, selectedPerk.index);
@@ -80,20 +68,23 @@ public class PerkSettingModel
 
         foreach(var p in selectedPerkList)
         {
-            if (p.perk == null) break;
-            if (p.perk == perkToChange)
+            if (p.perk == null) continue;
+            else if (p.perk == perkToChange)
             {
                 return;
             }
         }
         selectedPerk.perk = perkToChange;
         OnEquipPerk(selectedPerk.perk, selectedPerk.index);
-        if (isNoSelect) selectedPerk = null;
     }
 
     public void SelectPerk(int index)
     {
-        selectedPerk = selectedPerkList[index];
+        foreach(var p in selectedPerkList)
+        {
+            if (p.index == index)
+                selectedPerk = p;
+        }
         OnSelectPerk(index);
     }
 
