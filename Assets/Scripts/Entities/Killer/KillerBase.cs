@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class KillerBase : PlayableCharactor
+public class KillerBase : PlayableCharacter
 {
     CharacterController m_controller;
     Animator Animator;
@@ -22,7 +22,7 @@ public class KillerBase : PlayableCharactor
 
     Vector3 m_moveDir;
 
-    [SerializeField] float m_moveSpeed;
+    
     [SerializeField] float m_rotateSpeed;
     [SerializeField] float m_attackCool;
     [SerializeField] float m_stunLength;
@@ -199,7 +199,7 @@ public class KillerBase : PlayableCharactor
 
         Vector3 goDirection = transform.TransformDirection(m_moveDir);
         //goDirection.Normalize();
-        goDirection *= Time.deltaTime * m_moveSpeed;
+        goDirection *= Time.deltaTime * MoveSpeed;
         m_controller.SimpleMove(goDirection);
     }
     void KillerAttack()
@@ -207,7 +207,7 @@ public class KillerBase : PlayableCharactor
         if (Input.GetMouseButton(0) && canAttack && m_lungeLength < 1.2f)
         {
             IsAttacking = true;
-            m_controller.SimpleMove(transform.forward * Time.deltaTime * m_moveSpeed * 1.3f);
+            m_controller.SimpleMove(transform.forward * Time.deltaTime * MoveSpeed * 1.3f);
             m_lungeLength += Time.deltaTime;
         }
         if (Input.GetMouseButtonUp(0) || m_lungeLength >= 1.2f)
@@ -231,6 +231,7 @@ public class KillerBase : PlayableCharactor
             {
                 Animator.SetTrigger("Break");
                 netAnim.SetTrigger("Break");
+                StartCoroutine(CorFreezeWhileSec(1.0f / BreakSpeed));
                 generator.KillerInteract();
             }
         }

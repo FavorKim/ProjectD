@@ -8,7 +8,6 @@ public class MyNetworkManager : NetworkRoomManager
     [SerializeField] GameObject Survivor;
     [SerializeField] GameObject Killer;
 
-    GameObject playerPref;
 
     public void OnClick_Survivor()
     {
@@ -18,27 +17,10 @@ public class MyNetworkManager : NetworkRoomManager
     {
         StartHost();
     }
-    /*
-    public override void OnClientChangeScene(string newSceneName, SceneOperation sceneOperation, bool customHandling)
-    {
-        base.OnClientChangeScene(newSceneName, sceneOperation, customHandling);
-        if(newSceneName == "GameScene")
-        {
-            List<PerksScriptableObject> perks = new List<PerksScriptableObject>();
-            foreach(SelectedPerk p in PerkSettingModel.Instance.selectedPerkList)
-            {
-                perks.Add(p.perk);
-
-
-            }
-            LobbyPlayer.Instance.InitPerkList(perks);
-        }
-    }
-    */
     public override void OnRoomClientSceneChanged()
     {
         base.OnRoomClientSceneChanged();
-        List<PerksScriptableObject> perks = new List<PerksScriptableObject>();
+        List<PerkData> perks = new List<PerkData>();
         if (SceneManager.GetActiveScene().name == "GameScene")
         {
             foreach (SelectedPerk p in PerkSettingModel.Instance.selectedPerkList)

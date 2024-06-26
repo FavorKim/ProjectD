@@ -1,8 +1,11 @@
 using Palmmedia.ReportGenerator.Core.Reporting.Builders;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
+
+
 
 public class PerkDataManager : SingletonMono<PerkDataManager>
 {
@@ -28,8 +31,8 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
             var tempPerk = new PerkData();
             tempPerk.Owner = data.Attribute(nameof(tempPerk.Owner)).Value;
             tempPerk.PerkName = data.Attribute(nameof(tempPerk.PerkName)).Value;
-            tempPerk.IconName = data.Attribute(nameof(tempPerk.IconName)).Value;
-            tempPerk.EffectTarget = data.Attribute(nameof(tempPerk.EffectTarget)).Value;
+            tempPerk.IconImg = Resources.Load<Sprite>($"Perks/{tempPerk.Owner}/{tempPerk.PerkName}");
+            tempPerk.EffectTarget = (HandleValue)Enum.Parse(typeof(HandleValue), data.Attribute(nameof(tempPerk.EffectTarget)).Value);
             tempPerk.ValuePercentage = float.Parse(data.Attribute(nameof(tempPerk.ValuePercentage)).Value);
             tempPerk.Duration = float.Parse(data.Attribute(nameof(tempPerk.Duration)).Value);
             tempPerk.Description = data.Attribute(nameof(tempPerk.Description)).Value;
@@ -39,9 +42,9 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
         }
     }
 
-    public PerksScriptableObject GetPerkByName(string perkName)
+    public PerkData GetPerkByName(string perkName)
     {
-        var perk = PerkParserToSCO.Parse(LoadedPerkList[perkName]);
+        var perk = LoadedPerkList[perkName];
         return perk;
     }
 

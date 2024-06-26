@@ -38,7 +38,7 @@ using UnityEngine.UI;
  
  
  */
-public class Survivor : PlayableCharactor
+public class Survivor : PlayableCharacter
 {
     CharacterController m_CharacterController;
 
@@ -52,6 +52,7 @@ public class Survivor : PlayableCharactor
     [SerializeField] GameObject Prefab_SurvivorTrack;
 
     SurvivorStateMachine m_StateMachine;
+    public SurvivorStateMachine GetMoveState() { return m_StateMachine; }
     SurvivorHealthStateMachine m_healthStateMachine;
 
     Survivor m_healDest;
@@ -61,14 +62,14 @@ public class Survivor : PlayableCharactor
     public Vector3 HeldPosition { get; private set; }
 
     [SerializeField] float m_invincibleTime;
-    [SerializeField] float m_moveSpeed;
-    public float MoveSpeed { get { return m_moveSpeed; } set { m_moveSpeed = value; } }
 
     private float walkSpeed = 200.0f;
     private float runSpeed = 500.0f;
     private float crouchSpeed = 100.0f;
+    public float CrouchSpeed { get { return crouchSpeed; } set {  crouchSpeed = value; } }
 
-    [SerializeField] float m_corruptTime = 120;
+    [SerializeField] 
+    float m_corruptTime = 120;
     public float CorruptTime
     {
         get
@@ -88,9 +89,12 @@ public class Survivor : PlayableCharactor
             }
         }
     }
-    [SerializeField] float DebugOnly_CorruptMulti;
+    
+    [SerializeField]
+    float DebugOnly_CorruptMulti;
 
     const float MaxHealGauge = 100;
+
     [SerializeField] float m_healGauge = 1;
     public float HealGauge
     {
@@ -108,7 +112,22 @@ public class Survivor : PlayableCharactor
             }
         }
     }
+
     [SerializeField] float m_healSpeed = 1;
+    public float HealSpeed
+    {
+        get 
+        {
+            return 1 + (m_healSpeed * 0.01f);
+        }
+        set
+        {
+            if(m_healSpeed != value)
+            {
+                m_healSpeed = value;
+            }
+        }
+    }
 
     public float GetWalkSpeed() { return walkSpeed; }
     public float GetRunSpeed() { return runSpeed; }
@@ -276,7 +295,7 @@ public class Survivor : PlayableCharactor
         MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
         MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
         MoveDir.Normalize();
-        MoveDir *= m_moveSpeed * Time.deltaTime;
+        MoveDir *= MoveSpeed * Time.deltaTime;
 
         if (isFreeze) return;
         if (MoveDir != Vector3.zero) Animator.SetBool("isWalk", true);
@@ -293,7 +312,7 @@ public class Survivor : PlayableCharactor
             MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
             MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
             MoveDir.Normalize();
-            MoveDir *= m_moveSpeed * Time.deltaTime;
+            MoveDir *= MoveSpeed * Time.deltaTime;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(MoveDir), rotateSpeed * Time.deltaTime);
         }
         m_CharacterController.SimpleMove(MoveDir);
@@ -403,7 +422,7 @@ public class Survivor : PlayableCharactor
     {
         if (isLocalPlayer)
             Slider_HealGauge.gameObject.SetActive(true);
-        HealGauge += Time.deltaTime * m_healSpeed;
+        HealGauge += Time.deltaTime * HealSpeed;
         IsFreeze = true;
     }
 

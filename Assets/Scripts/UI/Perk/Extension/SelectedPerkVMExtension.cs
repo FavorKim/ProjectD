@@ -17,7 +17,7 @@ namespace PerkVMExtension
         }
 
 
-        public static void OnResponseEquip(this SelectedPerkViewModel vm, PerksScriptableObject perk, int index)
+        public static void OnResponseEquip(this SelectedPerkViewModel vm, PerkData perk, int index)
         {
             if (perk != vm.PerkSCO)
             {

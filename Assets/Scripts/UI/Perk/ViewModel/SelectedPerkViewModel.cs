@@ -18,8 +18,8 @@ public class SelectedPerkViewModel
         }
     }
 
-    private PerksScriptableObject m_perkSCO;
-    public PerksScriptableObject PerkSCO
+    private PerkData m_perkSCO;
+    public PerkData PerkSCO
     {
         get { return m_perkSCO; }
         set

@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class LobbyPlayer : SingletonMono<LobbyPlayer>
 {
-    List<PerksScriptableObject> perks = new();
+    List<PerkData> perks = new();
 
-    public void InitPerkList(List<PerksScriptableObject> perks)
+    public void InitPerkList(List<PerkData> perks)
     {
         foreach (var perk in perks)
         {
@@ -13,5 +13,5 @@ public class LobbyPlayer : SingletonMono<LobbyPlayer>
         }
     }
 
-    public List<PerksScriptableObject> GetPerkList() { return perks; }
+    public List<PerkData> GetPerkList() { return perks; }
 }

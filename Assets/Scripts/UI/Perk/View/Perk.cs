@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class Perk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public PerksScriptableObject perk;
+    public PerkData perk;
 
     [SerializeField] Image Img_Icon;
     [SerializeField] Sprite Img_Blank;
@@ -24,12 +24,12 @@ public class Perk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         OnPointerExit_ShowDescription();
     }
 
-    public void Init(PerksScriptableObject perk)
+    public void Init(PerkData perk)
     {
         InitPerk(perk);
     }
 
-    void InitPerk(PerksScriptableObject perk)
+    void InitPerk(PerkData perk)
     {
         this.perk = perk;
 

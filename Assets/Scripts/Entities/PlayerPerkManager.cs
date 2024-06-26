@@ -4,26 +4,33 @@ using UnityEngine;
 
 public class PlayerPerkManager
 {
-    public void SetPerkStat(List<PerksScriptableObject> perkList, PlayableCharactor player)
-    {
+    
 
-    }
-
-    public static void SetSurvivorPerk(List<PerksScriptableObject> perkList, Survivor player)
+    public static void SetSurvivorPerk(List<PerkData> perkList, Survivor player)
     {
         foreach (var perk in perkList)
         {
+            if (perk == null) continue;
+            switch (perk.EffectTarget)
+            {
+                case HandleValue.HealSpeed:
+                    player.HealSpeed += perk.ValuePercentage;
+                    break;
+                case HandleValue.CrouchSpeed:
+                    player.CrouchSpeed += perk.ValuePercentage;
+                    break;
 
+            }
         }
     }
 
-    public static void SetKillerPerk(List<PerksScriptableObject> perkList, KillerBase player)
+    public static void SetKillerPerk(List<PerkData> perkList, KillerBase player)
     {
         foreach (var perk in perkList)
         {
             if (perk == null) continue;
 
-            switch (perk.Target)
+            switch (perk.EffectTarget)
             {
                 case HandleValue.AttackSpeed:
                     player.AttackSpeed += perk.ValuePercentage;

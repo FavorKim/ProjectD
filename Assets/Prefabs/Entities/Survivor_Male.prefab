@@ -56,13 +56,13 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  m_moveSpeed: 1
   Animator: {fileID: 4700450406186153302}
   Slider_HealGauge: {fileID: 7073257724788928691}
   VFX_FootPrintPref: {fileID: 5777709028976728957, guid: b45ca06ea95f27643876bd539917063f, type: 3}
   VFX_Bleeding: {fileID: 816875572618674131}
   Prefab_SurvivorTrack: {fileID: 8335291862723811247, guid: ae710e97df9ca0b44951a0f534991145, type: 3}
   m_invincibleTime: 2
-  m_moveSpeed: 1
   m_corruptTime: 120
   DebugOnly_CorruptMulti: 1
   m_healGauge: 0

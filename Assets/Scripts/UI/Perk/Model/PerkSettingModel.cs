@@ -6,13 +6,13 @@ using UnityEngine.UIElements;
 
 public class SelectedPerk
 {
-    public SelectedPerk(PerksScriptableObject perk, int index)
+    public SelectedPerk(PerkData perk, int index)
     {
         this.perk = perk;
         this.index = index;
     }
     
-    public PerksScriptableObject perk;
+    public PerkData perk;
     public int index;
 }
 
@@ -35,14 +35,14 @@ public class PerkSettingModel
     public SelectedPerk selectedPerk;
     public List<SelectedPerk> selectedPerkList = new List<SelectedPerk>(4);
 
-    public event Action<PerksScriptableObject,int> OnEquipPerk;
+    public event Action<PerkData,int> OnEquipPerk;
     public event Action<int> OnSelectPerk;
 
-    public void RegisterEventOnEquip(Action<PerksScriptableObject,int> onEquip)
+    public void RegisterEventOnEquip(Action<PerkData, int> onEquip)
     {
         OnEquipPerk += onEquip;
     }
-    public void UnRegisterEventOnEquip(Action<PerksScriptableObject,int> onEquip)
+    public void UnRegisterEventOnEquip(Action<PerkData, int> onEquip)
     {
         OnEquipPerk -= onEquip;
     }
@@ -56,7 +56,7 @@ public class PerkSettingModel
         OnSelectPerk -= onSelect;
     }
 
-    public void EquipPerk(PerksScriptableObject perkToChange)
+    public void EquipPerk(PerkData perkToChange)
     {
         bool isNoSelect = false;
         if (selectedPerk == null)
