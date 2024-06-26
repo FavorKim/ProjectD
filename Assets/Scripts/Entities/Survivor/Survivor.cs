@@ -235,6 +235,8 @@ public class Survivor : PlayableCharacter
         GetComponent<PlayerInput>().enabled = true;
         PlayerUIManager.Instance.CreatePlayerUI(this);
         PlayerPerkManager.SetSurvivorPerk(LobbyPlayer.Instance.GetPerkList(), this);
+        InGamePerkSlot.Instance.SetPerkIcons(LobbyPlayer.Instance.GetPerkList());
+
         // 퍽 관련하여 스프린트 같은 스킬형 퍽의 경우, 기능을 클래스로 구현하고(쿨타임, 지속시간등을 코루틴으로 활용),
         // 플레이어에게 달아주는 형태의 패턴은 어떤지 질문하기
     }

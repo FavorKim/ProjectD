@@ -152,6 +152,8 @@ public class KillerBase : PlayableCharacter
         cam.Follow = transform;
         cam.LookAt = transform;
         PlayerPerkManager.SetKillerPerk(LobbyPlayer.Instance.GetPerkList(), this);
+        InGamePerkSlot.Instance.SetPerkIcons(LobbyPlayer.Instance.GetPerkList());
+
     }
 
     // Start is called before the first frame update

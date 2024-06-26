@@ -5,10 +5,11 @@ public class PlayerPerkManager
 {
     public static void SetSurvivorPerk(List<PerkData> perkList, Survivor player)
     {
+
         foreach (var perk in perkList)
         {
             if (perk == null) continue;
-            
+
             if (perk.PerkType == PerkType.Passive)
             {
                 switch (perk.EffectTarget)
@@ -24,10 +25,12 @@ public class PlayerPerkManager
 
             else if (perk.PerkType == PerkType.Exhaust)
             {
-                if (perk.PerkName == "Sprint")
+                switch (perk.PerkName)
                 {
-                    var dest = new Sprint(perk.ValuePercentage, perk.CoolTime, perk.Duration, player);
-                    player.SetExhaustPerk(dest);
+                    case "Sprint":
+                        var dest = new Sprint(perk.ValuePercentage, perk.CoolTime, perk.Duration, player);
+                        player.SetExhaustPerk(dest);
+                        break;
                 }
             }
         }
