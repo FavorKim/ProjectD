@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,11 +32,12 @@ public abstract class ExhaustPerk
     protected float m_duration;
     protected float m_moveSpeed;
 
-    public ExhaustPerk(float speed, float cool, float duration)
+    public ExhaustPerk(float speed, float cool, float duration, Survivor owner)
     {
         m_duration = duration;
         m_moveSpeed = speed;
         m_maxCoolDown = cool;
+        m_owner = owner;
     }
 
 
@@ -43,7 +45,7 @@ public abstract class ExhaustPerk
 
     protected virtual void Activate()
     {
-        if (Condition()==true)
+        if (Condition() == true)
         {
             m_owner.StartCoroutine(CorActivation());
         }
@@ -55,6 +57,7 @@ public abstract class ExhaustPerk
         yield return new WaitForSeconds(m_duration);
         m_owner.MoveSpeed -= m_moveSpeed;
     }
+
     public IEnumerator CorCoolTime()
     {
         while (true)

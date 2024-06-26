@@ -10,6 +10,13 @@ public enum HandleValue
     CrouchSpeed,
     BreakSpeed,
 }
+
+public enum PerkType
+{
+    Passive,
+    Exhaust,
+}
+
 public class PerkData
 {
     public string Owner;
@@ -20,5 +27,6 @@ public class PerkData
     public float Duration;
     public string Description;
     public float CoolTime;
+    public PerkType PerkType;
 }
 

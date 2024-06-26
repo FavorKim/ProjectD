@@ -37,6 +37,7 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
             tempPerk.Duration = float.Parse(data.Attribute(nameof(tempPerk.Duration)).Value);
             tempPerk.Description = data.Attribute(nameof(tempPerk.Description)).Value;
             tempPerk.CoolTime = float.Parse(data.Attribute(nameof(tempPerk.CoolTime)).Value);
+            tempPerk.PerkType = (PerkType)Enum.Parse(typeof(PerkType), data.Attribute(nameof(tempPerk.PerkType)).Value);
 
             LoadedPerkList.Add(tempPerk.PerkName, tempPerk);
         }

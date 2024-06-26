@@ -1,13 +1,10 @@
 
 public class Sprint : ExhaustPerk
 {
-    public Sprint(float speed, float cool, float duration) : base(speed, cool, duration) { }
+    public Sprint(float speed, float cool, float duration, Survivor owner) : base(speed, cool, duration, owner) { }
 
     protected override bool Condition()
     {
-        if (m_owner.GetMoveState().CurStateIs(SurvivorStateMachine.StateName.Run))
-            return true;
-        else
-            return false;
+        return m_owner.GetMoveState().CurStateIs(SurvivorStateMachine.StateName.Run) ? true : false;
     }
 }
