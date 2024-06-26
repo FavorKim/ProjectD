@@ -22,6 +22,10 @@ public class SelectedPerkView : MonoBehaviour
             vm.index = this.index;
         }
         PerkSettingModel.Instance.selectedPerkList.Add(new SelectedPerk(perk.perk, index));
+        if(index == 0)
+        {
+            PerkSettingModel.Instance.SelectPerk(this.index);
+        }
     }
     private void OnDisable()
     {
