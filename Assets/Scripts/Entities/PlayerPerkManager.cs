@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class PlayerPerkManager
 {
@@ -28,7 +29,9 @@ public class PlayerPerkManager
                 switch (perk.PerkName)
                 {
                     case "Sprint":
-                        var dest = new Sprint(perk.ValuePercentage, perk.CoolTime, perk.Duration, player);
+                        var dest = player.gameObject.AddComponent<Sprint>();
+                        dest.Init(perk.ValuePercentage, perk.CoolTime, perk.Duration, player.GetComponent<Survivor>(), PerkType.Exhaust);
+                        StatusHUDManager.Instance.CreateStatusHUD(dest);
                         break;
                 }
             }
