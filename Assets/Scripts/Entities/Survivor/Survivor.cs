@@ -195,6 +195,9 @@ public class Survivor : PlayableCharacter
         }
     }
 
+    public bool IsSelfCare { get; set; }
+
+
     int hangedCount = 0;
     public int HangedCount
     {
@@ -299,6 +302,7 @@ public class Survivor : PlayableCharacter
                 m_StateMachine.StateUpdate();
 
             HealOtherSurvivor();
+            SelfCare();
         }
     }
 
@@ -349,16 +353,14 @@ public class Survivor : PlayableCharacter
         StartCoroutine(CorJumpFence());
     }
 
+    #region Command
+
     [Command(requiresAuthority = false)]
     void PrintFoot()
     {
         PootPrintPool.Instance.PrintPootPrint(new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
 
-
-
-
-    // command와 rpc는 참조형이 아닌 NetworkBehaviour를 상속받은 객체와 구조체만을 매개변수로 사용할 수 있음
 
     [Command(requiresAuthority = false)]
     public void BeingHeld(KillerBase killer)
@@ -395,8 +397,9 @@ public class Survivor : PlayableCharacter
     {
         RpcOnHealed();
     }
+    #endregion
 
-
+    #region Rpc
     [ClientRpc]
     void RpcBeingHeld(KillerBase holdPos)
     {
@@ -444,17 +447,10 @@ public class Survivor : PlayableCharacter
         HealGauge += Time.deltaTime * HealSpeed;
         IsFreeze = true;
     }
-
-    void RotateTransformToDest(Vector3 look)
-    {
-        //transform.rotation.SetLookRotation(look);
-        m_CharacterController.Move(look - transform.position);
-        transform.LookAt(look);
-        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-    }
+    #endregion
 
 
-
+    #region Interact
     public override void Interact(Generator generator)
     {
         if (!isLocalPlayer) return;
@@ -543,10 +539,10 @@ public class Survivor : PlayableCharacter
         }
         lever.SurvivorInteract();
     }
+    #endregion
 
 
-
-    //rpc
+    #region Coroutine
     public IEnumerator CorPrintFoot()
     {
         while (m_StateMachine.CurStateIs(SurvivorStateMachine.StateName.Run)
@@ -622,8 +618,10 @@ public class Survivor : PlayableCharacter
         gameObject.SetActive(false);
         // 이 부분은 게임 결과 씬으로 옮기는 것으로 대체해야함
     }
+    #endregion
 
 
+    #region Event
     public event Action OnHitted;
     public event Action<KillerBase> OnBeingHeld;
     public event Action<Hanger> OnBeingHanged;
@@ -662,15 +660,11 @@ public class Survivor : PlayableCharacter
         StartCoroutine(CorCorrupt());
     }
 
-    //void OnSacrificed_SetState()
-    //{
-    //    PlayerUIManager.Instance.SetPlayerUIState(m_playerID, PlayerUI.Icons.Killed);
-    //    IsFreeze = true; // 원래는 게임 결과 창으로 이동해야 함
-    //}
     void OnSacrificed_GoUp()
     {
         StartCoroutine(CorSacrifice());
     }
+    #endregion
 
 
     void StopHeal()
@@ -685,37 +679,59 @@ public class Survivor : PlayableCharacter
                 m_healDest.Slider_HealGauge.gameObject.SetActive(false);
             m_healDest = null;
         }
+        else
+        {
+            Slider_HealGauge.gameObject.SetActive(false);
+        }
     }
-
     void HealOtherSurvivor()
     {
         if (!isLocalPlayer) return;
         if (m_healDest == null) return;
-        if (Input.GetMouseButtonDown(0))
+
+        HealSurvivor(m_healDest,0);
+    }
+    void SelfCare()
+    {
+        if (IsSelfCare && m_healthStateMachine.GetCurState() == HealthStates.Injured)
+            HealSurvivor(this,1);
+    }
+
+    void HealSurvivor(Survivor dest, int mouseIndex)
+    {
+        if (Input.GetMouseButtonDown(mouseIndex))
         {
             IsFreeze = true;
             Animator.SetTrigger("Heal");
             netAnim.SetTrigger("Heal");
 
-            m_healDest.Slider_HealGauge.gameObject.SetActive(true);
+            dest.Slider_HealGauge.gameObject.SetActive(true);
 
         }
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(mouseIndex))
         {
             Animator.SetBool("isHeal", true);
-            m_healDest?.CmdOnHealed();
-            if (m_healDest.m_healthStateMachine.GetCurState() == HealthStates.Healthy)
+            dest.CmdOnHealed();
+            if (dest.m_healthStateMachine.GetCurState() == HealthStates.Healthy)
             {
                 StopHeal();
             }
         }
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(mouseIndex))
         {
             Animator.SetBool("isHeal", false);
 
-            m_healDest.Slider_HealGauge.gameObject.SetActive(false);
+            dest.Slider_HealGauge.gameObject.SetActive(false);
             IsFreeze = false;
         }
+    }
+
+    void RotateTransformToDest(Vector3 look)
+    {
+        //transform.rotation.SetLookRotation(look);
+        m_CharacterController.Move(look - transform.position);
+        transform.LookAt(look);
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
     protected override void OnTriggerEnter(Collider other)

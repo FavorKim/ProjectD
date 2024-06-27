@@ -13,6 +13,11 @@ public class PlayerPerkManager
 
             if (perk.PerkType == PerkType.Passive)
             {
+                if (perk.PerkName == "SelfCare")
+                {
+                    player.IsSelfCare = true;
+                }
+
                 switch (perk.EffectTarget)
                 {
                     case HandleValue.HealSpeed:
