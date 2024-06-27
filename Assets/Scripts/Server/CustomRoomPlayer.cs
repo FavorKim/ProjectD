@@ -1,13 +1,16 @@
+using Michsky.UI.Dark;
 using Mirror;
 using UnityEngine;
 
 public class CustomRoomPlayer : NetworkRoomPlayer
 {
+    GameObject OutLook;
 
 
-    public override void OnStartLocalPlayer()
+    public override void OnClientEnterRoom()
     {
-        base.OnStartLocalPlayer();
+        base.OnClientEnterRoom();
+        if (!isLocalPlayer) return;
         var manager = NetworkRoomManager.singleton as MyNetworkManager;
         if (isServer)
         {
@@ -19,6 +22,21 @@ public class CustomRoomPlayer : NetworkRoomPlayer
         {
             manager.SurvivorSideCam.SetActive(true);
             manager.KillerSideCam.SetActive(false);
+        }
+    }
+
+    public override void OnClientExitRoom()
+    {
+        base.OnClientExitRoom();
+        if (isLocalPlayer)
+        {
+            OutLook = gameObject.transform.GetChild(0).gameObject;
+            OutLook.SetActive(false);
+            /*
+            var manager = NetworkRoomManager.singleton as MyNetworkManager;
+            manager.KillerSideCam.SetActive(false);
+            manager.SurvivorSideCam.SetActive(false);
+            */
         }
     }
 }

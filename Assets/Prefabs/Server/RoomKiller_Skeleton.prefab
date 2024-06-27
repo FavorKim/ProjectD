@@ -172,6 +172,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skeleton
       objectReference: {fileID: 0}
+    - target: {fileID: 1193970726551977524, guid: 072b30da64c94be419eefa6706f5a440, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1591114696510474948, guid: 072b30da64c94be419eefa6706f5a440, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
