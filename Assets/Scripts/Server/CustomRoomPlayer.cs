@@ -1,32 +1,24 @@
-using DungeonArchitect;
 using Mirror;
 using UnityEngine;
 
 public class CustomRoomPlayer : NetworkRoomPlayer
 {
-    [SerializeField] GameObject Killer;
-    [SerializeField] GameObject Survivor;
+
 
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        SpawnLobbyPlayer();
-    }
-
-    [Command(requiresAuthority =false)]
-    void SpawnLobbyPlayer()
-    {
-        Transform startPos = CustomLobbyStartPosition.GetStartPosition();
-        GameObject obj;
-        if (CustomLobbyStartPosition.StartPositions.Count==4)
+        var manager = NetworkRoomManager.singleton as MyNetworkManager;
+        if (isServer)
         {
-            obj = Instantiate(Killer, startPos.position, startPos.rotation);
+            manager.KillerSideCam.SetActive(true);
+            manager.SurvivorSideCam.SetActive(false);
+
         }
         else
         {
-            obj = Instantiate(Survivor, startPos.position, startPos.rotation);
+            manager.SurvivorSideCam.SetActive(true);
+            manager.KillerSideCam.SetActive(false);
         }
-        NetworkServer.Spawn(obj);
     }
-
 }
