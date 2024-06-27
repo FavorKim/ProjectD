@@ -130,7 +130,7 @@ public class Survivor : PlayableCharacter
         }
     }
 
-    [SerializeField] float m_healSpeed = 1;
+    [SerializeField] float m_healSpeed = 0.0f;
     public float HealSpeed
     {
         get
@@ -139,10 +139,7 @@ public class Survivor : PlayableCharacter
         }
         set
         {
-            if (m_healSpeed != value)
-            {
-                CmdOnChangedHealSpeed(value);
-            }
+            m_healSpeed = value;
         }
     }
 
@@ -256,7 +253,7 @@ public class Survivor : PlayableCharacter
         PlayerUIManager.Instance.CreatePlayerUI(this);
         PlayerPerkManager.SetSurvivorPerk(SelectedPerkManager.EquippedPerkList, this);
         InGamePerkSlot.Instance.SetPerkIcons(SelectedPerkManager.EquippedPerkList);
-
+        CmdOnChangedHealSpeed(m_healSpeed);
         // 퍽 관련하여 스프린트 같은 스킬형 퍽의 경우, 기능을 클래스로 구현하고(쿨타임, 지속시간등을 코루틴으로 활용),
         // 플레이어에게 달아주는 형태의 패턴은 어떤지 질문하기
     }
@@ -407,7 +404,7 @@ public class Survivor : PlayableCharacter
     {
         if (isLocalPlayer)
             Slider_HealGauge.gameObject.SetActive(true);
-        HealGauge += Time.deltaTime * HealSpeed;
+        HealGauge += Time.deltaTime * HealSpeed * 9.0f;
         IsFreeze = true;
     }
 
