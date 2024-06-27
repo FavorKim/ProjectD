@@ -3,6 +3,8 @@ public class Sprint : StatusPerk
 {
     protected float m_moveSpeed;
 
+    private new Survivor m_owner;
+
     private void Start()
     {
         StartCoroutine(CorCoolTime());
@@ -11,7 +13,7 @@ public class Sprint : StatusPerk
     public void Init(float speed, float cool, float duration, Survivor owner, PerkType type)
     {
         m_duration = duration;
-        m_moveSpeed = speed;
+        m_moveSpeed = owner.RunSpeed * speed * 0.01f;
         m_maxCoolTime = cool;
         m_curCoolTime = m_maxCoolTime;
         m_owner = owner;
@@ -33,16 +35,16 @@ public class Sprint : StatusPerk
     }
     protected override bool Condition()
     {
-        return (m_owner as Survivor).GetMoveState().CurStateIs(SurvivorStateMachine.StateName.Run);
+        return m_owner.GetMoveState().CurStateIs(SurvivorStateMachine.StateName.Run);
     }
 
     void OnEffectStart_RunSpeedUp()
     {
-        m_owner.MoveSpeed += m_moveSpeed;
+        m_owner.RunSpeed += m_moveSpeed;
     }
     void OnEffectEnd_ResetRunSpeed()
     {
-        m_owner.MoveSpeed -= m_moveSpeed;
+        m_owner.RunSpeed -= m_moveSpeed;
     }
 
 }

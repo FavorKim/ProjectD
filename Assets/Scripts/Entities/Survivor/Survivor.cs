@@ -68,6 +68,19 @@ public class Survivor : PlayableCharacter
 
     private float walkSpeed = 200.0f;
     private float runSpeed = 500.0f;
+    public float RunSpeed
+    {
+        get { return runSpeed; }
+        set
+        {
+            if (RunSpeed != value)
+            {
+                runSpeed = value;
+                OnChangedRunSpeed.Invoke();
+            }
+        }
+    }
+
     private float crouchSpeed = 100.0f;
     public float CrouchSpeed { get { return crouchSpeed; } set {  crouchSpeed = value; } }
 
@@ -615,6 +628,7 @@ public class Survivor : PlayableCharacter
     public event Action<KillerBase> OnBeingHeld;
     public event Action<Hanger> OnBeingHanged;
     public event Action OnSacrificed;
+    public event Action OnChangedRunSpeed;
 
     // µÈ∑»¿ª ∂ß
     void OnBeingHeld_SetState(KillerBase killer)
