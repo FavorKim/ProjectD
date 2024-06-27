@@ -40,6 +40,7 @@ using UnityEngine.UI;
  */
 public class Survivor : PlayableCharacter
 {
+    #region Class
     CharacterController m_CharacterController;
 
     // 해시로 애니메이터 다뤄보기 (최적화)
@@ -56,14 +57,13 @@ public class Survivor : PlayableCharacter
     SurvivorHealthStateMachine m_healthStateMachine;
 
     Survivor m_healDest;
-
-    
-
-
+    #endregion
+    #region Vector
     Vector3 MoveDir;
     Vector2 dir;
     public Vector3 HeldPosition { get; private set; }
-
+    #endregion
+    #region Float
     [SerializeField] float m_invincibleTime;
 
     private float walkSpeed = 200.0f;
@@ -82,9 +82,9 @@ public class Survivor : PlayableCharacter
     }
 
     private float crouchSpeed = 100.0f;
-    public float CrouchSpeed { get { return crouchSpeed; } set {  crouchSpeed = value; } }
+    public float CrouchSpeed { get { return crouchSpeed; } set { crouchSpeed = value; } }
 
-    [SerializeField] 
+    [SerializeField]
     float m_corruptTime = 120;
     public float CorruptTime
     {
@@ -105,7 +105,7 @@ public class Survivor : PlayableCharacter
             }
         }
     }
-    
+
     [SerializeField]
     float DebugOnly_CorruptMulti;
 
@@ -124,6 +124,7 @@ public class Survivor : PlayableCharacter
                 if (m_healGauge >= MaxHealGauge)
                 {
                     m_healthStateMachine.Healed();
+                    StopHeal();
                 }
             }
         }
@@ -132,15 +133,15 @@ public class Survivor : PlayableCharacter
     [SerializeField] float m_healSpeed = 1;
     public float HealSpeed
     {
-        get 
+        get
         {
             return 1 + (m_healSpeed * 0.01f);
         }
         set
         {
-            if(m_healSpeed != value)
+            if (m_healSpeed != value)
             {
-                m_healSpeed = value;
+                CmdOnChangedHealSpeed(value);
             }
         }
     }
@@ -150,6 +151,9 @@ public class Survivor : PlayableCharacter
     public float GetCrouchSpeed() { return crouchSpeed; }
 
     [SerializeField] float rotateSpeed;
+
+    #endregion
+    #region Boolean
 
     bool isFreeze = false;
     public bool IsFreeze { get { return isFreeze; } set { isFreeze = value; } }
@@ -196,8 +200,8 @@ public class Survivor : PlayableCharacter
     }
 
     public bool IsSelfCare { get; set; }
-
-
+    #endregion
+    #region Inteager
     int hangedCount = 0;
     public int HangedCount
     {
@@ -218,13 +222,11 @@ public class Survivor : PlayableCharacter
             }
         }
     }
-
-
-
-
     int m_playerID;
+    #endregion
+
+    #region GetterSetter
     public int PlayerID() { return m_playerID; }
-    public void SetPlayerID(int value) { m_playerID = value; }
 
 
     public Vector3 GetMoveDir() { return MoveDir; }
@@ -232,7 +234,11 @@ public class Survivor : PlayableCharacter
     public Animator GetAnimator() { return Animator; }
 
 
-    // Start is called before the first frame update
+    public void SetPlayerID(int value) { m_playerID = value; }
+    #endregion
+
+
+    #region LifeCycle
     void Start()
     {
         m_CharacterController = GetComponent<CharacterController>();
@@ -240,7 +246,6 @@ public class Survivor : PlayableCharacter
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
         netAnim = Animator.gameObject.GetComponent<NetworkAnimator>();
     }
-
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
@@ -256,7 +261,6 @@ public class Survivor : PlayableCharacter
         // 플레이어에게 달아주는 형태의 패턴은 어떤지 질문하기
     }
 
-
     private void OnEnable()
     {
         OnBeingHeld += OnBeingHeld_SetState;
@@ -269,6 +273,23 @@ public class Survivor : PlayableCharacter
         OnSacrificed += OnSacrificed_GoUp;
 
     }
+
+    protected override void Update()
+    {
+        base.Update();
+        if (isLocalPlayer)
+        {
+            PlayerMove();
+            m_healthStateMachine.StateUpdate();
+
+            if (m_healthStateMachine.GetCurState() != HealthStates.Down)
+                m_StateMachine.StateUpdate();
+
+            HealOtherSurvivor();
+            SelfCare();
+        }
+    }
+
     private void OnDisable()
     {
         m_healthStateMachine.UnRegisterEvent();
@@ -288,70 +309,8 @@ public class Survivor : PlayableCharacter
         OnBeingHeld = null;
         OnSacrificed = null;
     }
+    #endregion
 
-    // Update is called once per frame
-    protected override void Update()
-    {
-        base.Update();
-        if (isLocalPlayer)
-        {
-            PlayerMove();
-            m_healthStateMachine.StateUpdate();
-
-            if (m_healthStateMachine.GetCurState() != HealthStates.Down)
-                m_StateMachine.StateUpdate();
-
-            HealOtherSurvivor();
-            SelfCare();
-        }
-    }
-
-
-    void OnMove(InputValue val)
-    {
-        // 로컬체크
-        if (!isLocalPlayer) return;
-        //if (isFreeze) return;
-
-
-        dir = val.Get<Vector2>();
-        MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
-        MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
-        MoveDir.Normalize();
-        MoveDir *= MoveSpeed * Time.deltaTime;
-
-        if (isFreeze) return;
-        if (MoveDir != Vector3.zero) Animator.SetBool("isWalk", true);
-        else Animator.SetBool("isWalk", false);
-    }
-    void PlayerMove()
-    {
-
-        if (isFreeze) return;
-
-
-        if (MoveDir != Vector3.zero)
-        {
-            MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
-            MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
-            MoveDir.Normalize();
-            MoveDir *= MoveSpeed * Time.deltaTime;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(MoveDir), rotateSpeed * Time.deltaTime);
-        }
-        m_CharacterController.SimpleMove(MoveDir);
-    }
-
-
-
-    void OnJumpFence(Vector3 dest)
-    {
-        RotateTransformToDest(dest);
-
-        m_StateMachine.ChangeState(SurvivorStateMachine.StateName.Walk);
-        Animator.SetTrigger("JumpFence");
-        netAnim.SetTrigger("JumpFence");
-        StartCoroutine(CorJumpFence());
-    }
 
     #region Command
 
@@ -360,7 +319,6 @@ public class Survivor : PlayableCharacter
     {
         PootPrintPool.Instance.PrintPootPrint(new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
-
 
     [Command(requiresAuthority = false)]
     public void BeingHeld(KillerBase killer)
@@ -397,8 +355,13 @@ public class Survivor : PlayableCharacter
     {
         RpcOnHealed();
     }
-    #endregion
 
+    [Command(requiresAuthority = false)]
+    public void CmdOnChangedHealSpeed(float value)
+    {
+        RpcOnChangedHealSpeed(value);
+    }
+    #endregion
     #region Rpc
     [ClientRpc]
     void RpcBeingHeld(KillerBase holdPos)
@@ -446,6 +409,12 @@ public class Survivor : PlayableCharacter
             Slider_HealGauge.gameObject.SetActive(true);
         HealGauge += Time.deltaTime * HealSpeed;
         IsFreeze = true;
+    }
+
+    [ClientRpc]
+    void RpcOnChangedHealSpeed(float value)
+    {
+        m_healSpeed = value;
     }
     #endregion
 
@@ -541,7 +510,6 @@ public class Survivor : PlayableCharacter
     }
     #endregion
 
-
     #region Coroutine
     public IEnumerator CorPrintFoot()
     {
@@ -608,7 +576,7 @@ public class Survivor : PlayableCharacter
         netAnim.SetTrigger("Sacrificed");
         float time = 0;
         yield return new WaitForSeconds(2.0f);
-        while(time < 5)
+        while (time < 5)
         {
             yield return null;
             time += Time.deltaTime;
@@ -619,7 +587,6 @@ public class Survivor : PlayableCharacter
         // 이 부분은 게임 결과 씬으로 옮기는 것으로 대체해야함
     }
     #endregion
-
 
     #region Event
     public event Action OnHitted;
@@ -664,9 +631,38 @@ public class Survivor : PlayableCharacter
     {
         StartCoroutine(CorSacrifice());
     }
+
+    void OnJumpFence(Vector3 dest)
+    {
+        RotateTransformToDest(dest);
+
+        m_StateMachine.ChangeState(SurvivorStateMachine.StateName.Walk);
+        Animator.SetTrigger("JumpFence");
+        netAnim.SetTrigger("JumpFence");
+        StartCoroutine(CorJumpFence());
+    }
+
+    void OnMove(InputValue val)
+    {
+        // 로컬체크
+        if (!isLocalPlayer) return;
+        //if (isFreeze) return;
+
+
+        dir = val.Get<Vector2>();
+        MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
+        MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
+        MoveDir.Normalize();
+        MoveDir *= MoveSpeed * Time.deltaTime;
+
+        if (isFreeze) return;
+        if (MoveDir != Vector3.zero) Animator.SetBool("isWalk", true);
+        else Animator.SetBool("isWalk", false);
+    }
+
     #endregion
 
-
+    #region Methods
     void StopHeal()
     {
         IsFreeze = false;
@@ -689,16 +685,21 @@ public class Survivor : PlayableCharacter
         if (!isLocalPlayer) return;
         if (m_healDest == null) return;
 
-        HealSurvivor(m_healDest,0);
+        HealSurvivor(m_healDest, 0);
     }
     void SelfCare()
     {
-        if (IsSelfCare && m_healthStateMachine.GetCurState() == HealthStates.Injured)
-            HealSurvivor(this,1);
+        if (IsSelfCare)
+            HealSurvivor(this, 1);
     }
 
     void HealSurvivor(Survivor dest, int mouseIndex)
     {
+        if (dest.m_healthStateMachine.GetCurState() == HealthStates.Healthy)
+        {
+            StopHeal();
+            return;
+        }
         if (Input.GetMouseButtonDown(mouseIndex))
         {
             IsFreeze = true;
@@ -711,11 +712,11 @@ public class Survivor : PlayableCharacter
         if (Input.GetMouseButton(mouseIndex))
         {
             Animator.SetBool("isHeal", true);
-            dest.CmdOnHealed();
-            if (dest.m_healthStateMachine.GetCurState() == HealthStates.Healthy)
-            {
-                StopHeal();
-            }
+            if (dest == this)
+                CmdOnHealed();
+            else
+                dest.CmdOnHealed();
+
         }
         if (Input.GetMouseButtonUp(mouseIndex))
         {
@@ -733,6 +734,26 @@ public class Survivor : PlayableCharacter
         transform.LookAt(look);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
+
+    void PlayerMove()
+    {
+
+        if (isFreeze) return;
+
+
+        if (MoveDir != Vector3.zero)
+        {
+            MoveDir = dir.y * Camera.main.transform.forward + dir.x * Camera.main.transform.right;
+            MoveDir = new Vector3(MoveDir.x, 0, MoveDir.z);
+            MoveDir.Normalize();
+            MoveDir *= MoveSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(MoveDir), rotateSpeed * Time.deltaTime);
+        }
+        m_CharacterController.SimpleMove(MoveDir);
+    }
+
+    #endregion
+
 
     protected override void OnTriggerEnter(Collider other)
     {
