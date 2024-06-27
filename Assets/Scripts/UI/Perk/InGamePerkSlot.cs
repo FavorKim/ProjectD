@@ -1,13 +1,9 @@
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class InGamePerkSlot : SingletonMono<InGamePerkSlot>
 {
-    [SerializeField]Image[] images;
-
-
-    
+    Image[] images;
 
     public void SetPerkIcons(List<PerkData> perks)
     {

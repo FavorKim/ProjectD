@@ -151,8 +151,8 @@ public class KillerBase : PlayableCharacter
         var cam = Instantiate(Prefab_KillerCam).GetComponent<CinemachineVirtualCamera>();
         cam.Follow = transform;
         cam.LookAt = transform;
-        PlayerPerkManager.SetKillerPerk(LobbyPlayer.Instance.GetPerkList(), this);
-        InGamePerkSlot.Instance.SetPerkIcons(LobbyPlayer.Instance.GetPerkList());
+        PlayerPerkManager.SetKillerPerk(SelectedPerkManager.EquippedPerkList, this);
+        InGamePerkSlot.Instance.SetPerkIcons(SelectedPerkManager.EquippedPerkList);
 
     }
 
@@ -162,7 +162,6 @@ public class KillerBase : PlayableCharacter
         m_controller = GetComponent<CharacterController>();
         Animator = GetComponentInChildren<Animator>();
         netAnim = Animator.gameObject.GetComponent<NetworkAnimator>();
-        //m_AttackCollider = GetComponent<BoxCollider>();
     }
 
     private void OnEnable()

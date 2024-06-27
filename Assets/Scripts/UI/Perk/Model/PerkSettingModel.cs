@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.UIElements;
 
 public class SelectedPerk
 {
@@ -33,7 +30,7 @@ public class PerkSettingModel
     
 
     public SelectedPerk selectedPerk;
-    public List<SelectedPerk> selectedPerkList = new List<SelectedPerk>(4);
+    public List<SelectedPerk> selectedPerkList = new List<SelectedPerk>();
 
     public event Action<PerkData,int> OnEquipPerk;
     public event Action<int> OnSelectPerk;

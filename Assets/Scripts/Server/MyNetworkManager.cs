@@ -77,22 +77,10 @@ public class MyNetworkManager : NetworkRoomManager
         Destroy(conn.identity);
     }
 
-    public override void OnRoomClientSceneChanged()
-    {
-        base.OnRoomClientSceneChanged();
-        List<PerkData> perks = new List<PerkData>();
-        if (SceneManager.GetActiveScene().name == "GameScene")
-        {
-            foreach (SelectedPerk p in PerkSettingModel.Instance.selectedPerkList)
-            {
-                perks.Add(p.perk);
-            }
-            LobbyPlayer.Instance.InitPerkList(perks);
-        }
-    }
+
     public override void OnApplicationQuit()
     {
-        base.OnApplicationQuit();
         PerkSettingModel.Instance.selectedPerkList.Clear();
+        base.OnApplicationQuit();
     }
 }
