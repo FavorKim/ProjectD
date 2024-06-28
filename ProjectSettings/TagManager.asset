@@ -12,6 +12,9 @@ TagManager:
   - Window
   - Missile
   - Escape
+  - NormalSkillCheck
+  - CiriticalSkillCheck
+  - SkillCheckFail
   layers:
   - Default
   - TransparentFX

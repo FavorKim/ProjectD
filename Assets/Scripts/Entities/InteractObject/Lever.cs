@@ -8,6 +8,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
 {
     [SerializeField] float m_speed;
     [SerializeField] Animator Animator_Door;
+    [SerializeField] NetworkAnimator netAnim_Door;
     Animator Animator;
     const float m_maxGauge = 100;
     float curGauge;
@@ -75,5 +76,6 @@ public class Lever : NetworkBehaviour, IInteractableObject
     void OpenDoor()
     {
         Animator_Door.SetTrigger("Open");
+        netAnim_Door.SetTrigger("Open");
     }
 }

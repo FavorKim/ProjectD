@@ -33,10 +33,13 @@ public class Generator : NetworkBehaviour, IInteractableObject
     [SerializeField] Slider Slider_Gauge;
     [SerializeField] GameObject Light;
     [SerializeField] GameObject Xray_Silhouette;
-    [SerializeField] GameObject XrayLight;
+    [SerializeField] GameObject XrayWhiteLight;
+    [SerializeField] GameObject XrayRedLight;
     [SerializeField] ParticleSystem VFX_Spark;
     [SerializeField] ParticleSystem VFX_Smoke;
     [SerializeField] ParticleSystem VFX_Steam;
+
+    [SerializeField] SkillCheckManager SkillCheckManager;
 
     bool isCompleted = false;
     public bool IsCompleted 
@@ -92,6 +95,10 @@ public class Generator : NetworkBehaviour, IInteractableObject
         OnSabotage += PlaySabotageVFX;
 
         OnEndSabotage += StopSabotageVFX;
+
+        SkillCheckManager.GetSkillChecker().OnSkillCheckSuccess += OnSkillCheckSuccess;
+        SkillCheckManager.GetSkillChecker().OnSkillCheckCritical += OnSkillCheckCritical;
+        SkillCheckManager.GetSkillChecker().OnSkillCheckFailed += OnSkillCheckFailed;
     }
 
     private void OnDisable()
@@ -105,6 +112,10 @@ public class Generator : NetworkBehaviour, IInteractableObject
         OnCompleteHandler -= TurnOnLight;
 
         OnCompleteHandler = null;
+
+        SkillCheckManager.GetSkillChecker().OnSkillCheckFailed -= OnSkillCheckFailed;
+        SkillCheckManager.GetSkillChecker().OnSkillCheckCritical -= OnSkillCheckCritical;
+        SkillCheckManager.GetSkillChecker().OnSkillCheckSuccess -= OnSkillCheckSuccess;
     }
 
     public void SurvivorInteract()
@@ -118,26 +129,28 @@ public class Generator : NetworkBehaviour, IInteractableObject
         if(Input.GetMouseButtonDown(0))
         {
             Slider_Gauge.gameObject.SetActive(true);
+            SkillCheckManager.IsSkillChecking = true;
         }
 
         if (Input.GetMouseButton(0))
         {
-            Cmd_ProgressGenerator();
+            Cmd_ProgressGenerator(1);
         }
         else
         {
             Slider_Gauge.gameObject.SetActive(false);
+            SkillCheckManager.IsSkillChecking = false;
         }
     }
     [Command(requiresAuthority =false)]
-    void Cmd_ProgressGenerator() 
+    void Cmd_ProgressGenerator(float multi) 
     {
         CurGauge += Time.deltaTime * Multi_Gauge;
-        ProgressGenerator(); 
+        ProgressGenerator(multi); 
     }
     
     [ClientRpc]
-    void ProgressGenerator()
+    void ProgressGenerator(float multi)
     {
         IsSabotaging = false;
         //Slider_Gauge.gameObject.SetActive(true);
@@ -159,12 +172,16 @@ public class Generator : NetworkBehaviour, IInteractableObject
 
 
 
+    
     void SetSteam()
     {
         var emission = VFX_Steam.emission;
         emission.rateOverTime = curGauge * 0.05f;
     }
-
+    void TurnOnLight()
+    {
+        Light.gameObject.SetActive(true);
+    }
 
     void DecreaseGauge()
     {
@@ -175,7 +192,6 @@ public class Generator : NetworkBehaviour, IInteractableObject
         VFX_Spark.Play();
         VFX_Smoke.Play();
     }
-
     void StopSabotageVFX()
     {
         VFX_Spark.Stop();
@@ -183,10 +199,6 @@ public class Generator : NetworkBehaviour, IInteractableObject
     }
 
     
-    void TurnOnLight()
-    {
-        Light.gameObject.SetActive(true);
-    }
 
 
     private event Action OnSabotage;
@@ -206,6 +218,8 @@ public class Generator : NetworkBehaviour, IInteractableObject
     }
 
 
+
+
     [ClientRpc]
     private void RpcOnSabotage() { OnSabotage.Invoke(); StartCoroutine(CorSabotage()); }
     [ClientRpc]
@@ -215,11 +229,26 @@ public class Generator : NetworkBehaviour, IInteractableObject
     [ClientRpc]
     void RpcXrayOn()
     {
-        StartCoroutine(CorShowXray());
+        StartCoroutine(CorShowWhiteXray());
     }
     void Hook_OnChangedProgress(float old, float recent)
     {
         CurGauge = recent;
+    }
+
+
+    void OnSkillCheckSuccess()
+    {
+        ProgressGenerator(60);
+    }
+    void OnSkillCheckCritical()
+    {
+        ProgressGenerator(200);
+    }
+    void OnSkillCheckFailed()
+    {
+        StartCoroutine(CorShowRedXray());
+        ProgressGenerator(-300.0f);
     }
 
     IEnumerator CorSabotage()
@@ -230,12 +259,20 @@ public class Generator : NetworkBehaviour, IInteractableObject
             yield return null;
         }
     }
-    IEnumerator CorShowXray()
+    IEnumerator CorShowWhiteXray()
     {
         Xray_Silhouette.SetActive(true);
-        XrayLight.SetActive(true);
+        XrayWhiteLight.SetActive(true);
         yield return new WaitForSeconds(XrayShowDuration);
         Xray_Silhouette.SetActive(false);
-        XrayLight.SetActive(false);
+        XrayWhiteLight.SetActive(false);
+    }
+    IEnumerator CorShowRedXray()
+    {
+        Xray_Silhouette.SetActive(true);
+        XrayRedLight.SetActive(true);
+        yield return new WaitForSeconds(XrayShowDuration);
+        Xray_Silhouette.SetActive(false);
+        XrayRedLight.SetActive(false);
     }
 }
