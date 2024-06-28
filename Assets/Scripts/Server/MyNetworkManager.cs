@@ -68,7 +68,7 @@ public class MyNetworkManager : NetworkRoomManager
         return roomObj;
     }
 
-
+    
     public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
     {
         base.OnRoomServerDisconnect(conn);
@@ -77,6 +77,11 @@ public class MyNetworkManager : NetworkRoomManager
         Destroy(conn.identity);
     }
 
+    public override void OnRoomClientDisconnect()
+    {
+        base.OnRoomClientDisconnect();
+    }
+    
 
     public override void OnApplicationQuit()
     {
