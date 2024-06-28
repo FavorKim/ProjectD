@@ -5,9 +5,23 @@ using Mirror;
 
 public class SkillChecker : NetworkBehaviour
 {
+    RectTransform skillCheckCircle;
+    RectTransform thisRect;
+
+    private void Start()
+    {
+        thisRect = GetComponent<RectTransform>();
+        StartCoroutine(CorRotateSkillChecker());
+    }
+
+    public void InitCircle(RectTransform skillCheckCircle)
+    {
+        this.skillCheckCircle = skillCheckCircle;
+    }
+
     private void OnEnable()
     {
-        transform.localEulerAngles = new Vector3(0f, 0f, 180f);
+        thisRect.rotation = Quaternion.identity;
         StartCoroutine(CorRotateSkillChecker());
     }
 
@@ -17,48 +31,61 @@ public class SkillChecker : NetworkBehaviour
         float curTime = 0f;
         while (curTime <= 1.0f)
         {
-            yield return null;
             curTime += Time.deltaTime;
-            transform.localEulerAngles = new Vector3(0f, 0f, 180 + curTime * 360.0f);
+            thisRect.localEulerAngles = new Vector3(0f, 0f, curTime * -359.0f);
+            yield return null;
         }
         CmdOnSkillFailed();
+        OnSkillCheckEnd.Invoke();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnDisable()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        StopCoroutine(CorRotateSkillChecker());
+    }
+
+    private void Update()
+    {
+        if (skillCheckCircle != null && Input.GetKeyDown(KeyCode.Space))
         {
-            var tag = collision.gameObject.tag;
-            switch (tag)
-            {
-                case "NormalSkillCheck":
-                    CmdOnSkillSuccess();
-                    break;
-                case "CriticalSkillCheck":
-                    CmdOnSkillCritical();
-                    break;
-                case "SkillCheckFail":
-                    CmdOnSkillFailed();
-                    break;
-            }
+            float circleRot = skillCheckCircle.rotation.z;
+            if (circleRot - thisRect.rotation.z > 0)
+                CmdOnSkillFailed();
+            else if (circleRot - thisRect.rotation.z < 15)
+                CmdOnSkillCritical();
+            else if (circleRot - thisRect.rotation.z < 68)
+                CmdOnSkillSuccess();
+            else
+                CmdOnSkillFailed();
+
             StopCoroutine(CorRotateSkillChecker());
+
+            Invoke(nameof(InvokeOnSkillCheckEnd), 1.0f);
         }
     }
+
     [Command(requiresAuthority = false)]
     void CmdOnSkillSuccess() { RpcInvokeOnSkillSuccess(); }
     [Command(requiresAuthority = false)]
-    void CmdOnSkillCritical() {  RpcInvokeOnSkillCritical(); }
+    void CmdOnSkillCritical() { RpcInvokeOnSkillCritical(); }
     [Command(requiresAuthority = false)]
-    void CmdOnSkillFailed() {  RpcInvokeOnSkillFailed(); }
-    
+    void CmdOnSkillFailed() { RpcInvokeOnSkillFailed(); }
+
     [ClientRpc]
     void RpcInvokeOnSkillSuccess() { OnSkillCheckSuccess.Invoke(); }
     [ClientRpc]
-    void RpcInvokeOnSkillCritical() {  OnSkillCheckCritical.Invoke(); }
+    void RpcInvokeOnSkillCritical() { OnSkillCheckCritical.Invoke(); }
     [ClientRpc]
-    void RpcInvokeOnSkillFailed() {  OnSkillCheckFailed.Invoke(); }
+    void RpcInvokeOnSkillFailed() { OnSkillCheckFailed.Invoke(); }
+
+
+    void InvokeOnSkillCheckEnd()
+    {
+        OnSkillCheckEnd.Invoke();
+    }
 
     public event Action OnSkillCheckSuccess;
     public event Action OnSkillCheckCritical;
     public event Action OnSkillCheckFailed;
+    public event Action OnSkillCheckEnd;
 }

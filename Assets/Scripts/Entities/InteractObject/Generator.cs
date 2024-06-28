@@ -123,6 +123,8 @@ public class Generator : NetworkBehaviour, IInteractableObject
         if (IsCompleted)
         {
             Slider_Gauge.gameObject.SetActive(false);
+            SkillCheckManager.IsSkillChecking = false;
+
             return;
         }
 
@@ -142,10 +144,12 @@ public class Generator : NetworkBehaviour, IInteractableObject
             SkillCheckManager.IsSkillChecking = false;
         }
     }
+
+
     [Command(requiresAuthority =false)]
     void Cmd_ProgressGenerator(float multi) 
     {
-        CurGauge += Time.deltaTime * Multi_Gauge;
+        CurGauge += Time.deltaTime * Multi_Gauge * multi;
         ProgressGenerator(multi); 
     }
     
@@ -216,6 +220,11 @@ public class Generator : NetworkBehaviour, IInteractableObject
     {
         RpcXrayOn();
     }
+    [Command(requiresAuthority = false)]
+    void CmdRedLightOn()
+    {
+        RpcRedLightOn();
+    }
 
 
 
@@ -231,6 +240,13 @@ public class Generator : NetworkBehaviour, IInteractableObject
     {
         StartCoroutine(CorShowWhiteXray());
     }
+    [ClientRpc]
+    void RpcRedLightOn()
+    {
+        StartCoroutine(CorShowRedXray());
+    }
+
+
     void Hook_OnChangedProgress(float old, float recent)
     {
         CurGauge = recent;
@@ -239,16 +255,16 @@ public class Generator : NetworkBehaviour, IInteractableObject
 
     void OnSkillCheckSuccess()
     {
-        ProgressGenerator(60);
+        Cmd_ProgressGenerator(60);
     }
     void OnSkillCheckCritical()
     {
-        ProgressGenerator(200);
+        Cmd_ProgressGenerator(200);
     }
     void OnSkillCheckFailed()
     {
-        StartCoroutine(CorShowRedXray());
-        ProgressGenerator(-300.0f);
+        CmdRedLightOn();
+        Cmd_ProgressGenerator(-300.0f);
     }
 
     IEnumerator CorSabotage()
