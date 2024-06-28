@@ -52,8 +52,8 @@ public class SkillCheckManager : MonoBehaviour
 
     void RotateCircle()
     {
-        float rot = UnityEngine.Random.Range(-60f, -280.0f);
-        circleRect.localEulerAngles = new Vector3(0.0f, 0.0f, rot);
+        float rot = UnityEngine.Random.Range(72f, 300.0f);
+        circleRect.eulerAngles = new Vector3(0.0f, 0.0f, rot);
     }
 
     void OnSkillCheckEnd_DisableObject()

@@ -21,7 +21,7 @@ public class SkillChecker : NetworkBehaviour
 
     private void OnEnable()
     {
-        thisRect.rotation = Quaternion.identity;
+        thisRect.eulerAngles = new Vector3(0, 0, 359.0f);
         StartCoroutine(CorRotateSkillChecker());
     }
 
@@ -33,7 +33,7 @@ public class SkillChecker : NetworkBehaviour
         while (curTime <= 1.0f)
         {
             curTime += Time.deltaTime;
-            thisRect.localEulerAngles = new Vector3(0f, 0f, curTime * -359.0f);
+            thisRect.eulerAngles = new Vector3(0f, 0f, 359.0f - (curTime * 359.0f));
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnSpaceDown();
@@ -54,12 +54,12 @@ public class SkillChecker : NetworkBehaviour
 
     void OnSpaceDown()
     {
-        float circleRot = skillCheckCircle.localEulerAngles.z;
-        if (circleRot - thisRect.localEulerAngles.z > 0)
+        float circleRot = skillCheckCircle.eulerAngles.z;
+        if ((circleRot - thisRect.eulerAngles.z) < 0)
             CmdOnSkillFailed();
-        else if (circleRot - thisRect.localEulerAngles.z < 15)
+        else if ((circleRot - thisRect.eulerAngles.z) < 13)
             CmdOnSkillCritical();
-        else if (circleRot - thisRect.localEulerAngles.z < 68)
+        else if ((circleRot - thisRect.eulerAngles.z) < 68)
             CmdOnSkillSuccess();
         else
             CmdOnSkillFailed();
