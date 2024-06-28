@@ -136,7 +136,7 @@ public class Down : SurvivorHealthBaseState
     {
         base.Enter();
         owner.IsBleeding = true;
-        owner.MoveSpeed = 100;
+        owner.MoveSpeed = owner.GetDownSpeed();
         owner.GetAnimator().SetBool("isDown", true);
         owner.GetAnimator().SetTrigger("Down");
     }

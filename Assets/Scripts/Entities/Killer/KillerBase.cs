@@ -205,13 +205,13 @@ public class KillerBase : PlayableCharacter
     }
     void KillerAttack()
     {
-        if (Input.GetMouseButton(0) && canAttack && m_lungeLength < 1.2f)
+        if (Input.GetMouseButton(0) && canAttack && m_lungeLength < 0.5f)
         {
             IsAttacking = true;
-            m_controller.SimpleMove(transform.forward * Time.deltaTime * MoveSpeed * 1.3f);
+            m_controller.SimpleMove(transform.forward * Time.deltaTime * MoveSpeed * 1.568f);
             m_lungeLength += Time.deltaTime;
         }
-        if (Input.GetMouseButtonUp(0) || m_lungeLength >= 1.2f)
+        if (Input.GetMouseButtonUp(0) || m_lungeLength >= 0.5f)
         {
             IsAttacking = false;
         }
@@ -286,7 +286,8 @@ public class KillerBase : PlayableCharacter
 
     IEnumerator CorAttackCool()
     {
-        m_attackCool = (m_lungeLength + 0.8f) / AttackSpeed;
+        m_attackCool = (m_lungeLength + 1.0f) / AttackSpeed;
+        m_attackCool = m_lungeLength == 0.5f ? 2.7f / AttackSpeed : (1.0f + m_lungeLength) / AttackSpeed;
         canAttack = false;
         IsFreeze = true;
         yield return new WaitForSeconds(m_attackCool);

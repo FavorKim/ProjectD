@@ -104,15 +104,17 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  m_moveSpeed: 440
   m_AttackCollider: {fileID: 3569902607194640352}
   Pos_HoldSurvivor: {fileID: 1879315202619207773}
   Prefab_KillerCam: {fileID: 7236142770976030694, guid: 3e90230c286136b47825ee9143023d00, type: 3}
-  m_moveSpeed: 400
   m_rotateSpeed: 1
   m_attackCool: 1.2
-  m_stunCool: 2
-  m_stunRecoverPer: 0
-  m_actionSpeedPer: 0
+  m_stunLength: 0
+  m_stunRecover: 0
+  m_jumpSpeed: 0
+  m_breakSpeed: 0
+  m_attackSpeed: 0
 --- !u!114 &1879315202919675952
 MonoBehaviour:
   m_ObjectHideFlags: 0

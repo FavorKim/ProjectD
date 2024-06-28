@@ -67,6 +67,7 @@ MonoBehaviour:
   DebugOnly_CorruptMulti: 1
   m_healGauge: 0
   m_healSpeed: 0
+  m_entireHealTime: 16
   rotateSpeed: 10
   isCorrupted: 0
 --- !u!114 &816875572900217396

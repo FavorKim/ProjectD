@@ -66,8 +66,8 @@ public class Survivor : PlayableCharacter
     #region Float
     [SerializeField] float m_invincibleTime;
 
-    private float walkSpeed = 200.0f;
-    private float runSpeed = 500.0f;
+    private float walkSpeed = 226.0f;
+    private float runSpeed = 400.0f;
     public float RunSpeed
     {
         get { return runSpeed; }
@@ -80,8 +80,9 @@ public class Survivor : PlayableCharacter
             }
         }
     }
+    private float downSpeed = 70.0f;
 
-    private float crouchSpeed = 100.0f;
+    private float crouchSpeed = 113.0f;
     public float CrouchSpeed { get { return crouchSpeed; } set { crouchSpeed = value; } }
 
     [SerializeField]
@@ -109,9 +110,9 @@ public class Survivor : PlayableCharacter
     [SerializeField]
     float DebugOnly_CorruptMulti;
 
-    const float MaxHealGauge = 100;
+    const float MaxHealGauge = 1;
 
-    [SerializeField] float m_healGauge = 1;
+    [SerializeField] float m_healGauge = 0;
     public float HealGauge
     {
         get { return m_healGauge; }
@@ -143,9 +144,12 @@ public class Survivor : PlayableCharacter
         }
     }
 
+    [SerializeField] float m_entireHealTime = 16.0f;
+
     public float GetWalkSpeed() { return walkSpeed; }
     public float GetRunSpeed() { return runSpeed; }
     public float GetCrouchSpeed() { return crouchSpeed; }
+    public float GetDownSpeed() { return downSpeed; }
 
     [SerializeField] float rotateSpeed;
 
@@ -402,7 +406,7 @@ public class Survivor : PlayableCharacter
     {
         if (isLocalPlayer)
             Slider_HealGauge.gameObject.SetActive(true);
-        HealGauge += Time.deltaTime * (1 + m_healSpeed * 0.01f) * 9.0f;
+        HealGauge += Time.deltaTime * (1 + m_healSpeed * 0.01f) / m_entireHealTime;
         IsFreeze = true;
     }
 
