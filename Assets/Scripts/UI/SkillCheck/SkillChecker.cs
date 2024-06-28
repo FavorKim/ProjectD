@@ -29,14 +29,22 @@ public class SkillChecker : NetworkBehaviour
     IEnumerator CorRotateSkillChecker()
     {
         float curTime = 0f;
+        bool isClick = false;
         while (curTime <= 1.0f)
         {
             curTime += Time.deltaTime;
             thisRect.localEulerAngles = new Vector3(0f, 0f, curTime * -359.0f);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                OnSpaceDown();
+                isClick = true;
+                break;
+            }
             yield return null;
         }
-        CmdOnSkillFailed();
-        OnSkillCheckEnd.Invoke();
+        if (!isClick)
+            CmdOnSkillFailed();
+        Invoke(nameof(InvokeOnSkillCheckEnd), 1.0f);
     }
 
     private void OnDisable()
@@ -44,24 +52,17 @@ public class SkillChecker : NetworkBehaviour
         StopCoroutine(CorRotateSkillChecker());
     }
 
-    private void Update()
+    void OnSpaceDown()
     {
-        if (skillCheckCircle != null && Input.GetKeyDown(KeyCode.Space))
-        {
-            float circleRot = skillCheckCircle.rotation.z;
-            if (circleRot - thisRect.rotation.z > 0)
-                CmdOnSkillFailed();
-            else if (circleRot - thisRect.rotation.z < 15)
-                CmdOnSkillCritical();
-            else if (circleRot - thisRect.rotation.z < 68)
-                CmdOnSkillSuccess();
-            else
-                CmdOnSkillFailed();
-
-            StopCoroutine(CorRotateSkillChecker());
-
-            Invoke(nameof(InvokeOnSkillCheckEnd), 1.0f);
-        }
+        float circleRot = skillCheckCircle.localEulerAngles.z;
+        if (circleRot - thisRect.localEulerAngles.z > 0)
+            CmdOnSkillFailed();
+        else if (circleRot - thisRect.localEulerAngles.z < 15)
+            CmdOnSkillCritical();
+        else if (circleRot - thisRect.localEulerAngles.z < 68)
+            CmdOnSkillSuccess();
+        else
+            CmdOnSkillFailed();
     }
 
     [Command(requiresAuthority = false)]
