@@ -7,6 +7,7 @@ public class SkillChecker : NetworkBehaviour
 {
     RectTransform skillCheckCircle;
     RectTransform thisRect;
+    [SerializeField] float CheckerRotateSpeed;
 
     private void Start()
     {
@@ -30,10 +31,10 @@ public class SkillChecker : NetworkBehaviour
     {
         float curTime = 0f;
         bool isClick = false;
-        while (curTime <= 1.0f)
+        while (curTime <= CheckerRotateSpeed)
         {
             curTime += Time.deltaTime;
-            thisRect.eulerAngles = new Vector3(0f, 0f, 359.0f - (curTime * 359.0f));
+            thisRect.eulerAngles = new Vector3(0f, 0f, 359.0f - (curTime * 359.0f / CheckerRotateSpeed));
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnSpaceDown();
