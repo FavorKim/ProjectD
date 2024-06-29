@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml.Linq;
 using UnityEngine;
 
@@ -10,6 +11,9 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
     public Dictionary<string, PerkData> LoadedPerkList;
 
     public readonly string rootPath = "C:/Users/KGA/Desktop/ProjectD_Data";
+
+    
+    //[TODO 상대경로화] public readonly string perkTablePath = Directory.GetParent(Application.dataPath).FullName;
 
     private void Awake()
     {
@@ -22,6 +26,7 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
     {
         LoadedPerkList = new Dictionary<string, PerkData>();
         XDocument doc = XDocument.Load($"{rootPath}/PerkTable.xml");
+        //XDocument doc = XDocument.Load($"{perkTablePath}/PerkTable.xml");
         var dataElements = doc.Descendants("data");
 
         foreach ( var data in dataElements )
