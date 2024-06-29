@@ -6,38 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-/*
- 서버에 전달할 요소들 (서버 내의 모든 플레이어가 알아야할 정보 및 순간들)
-발전기o
- 발전기 진척도
- 발전기 진척도에 따른 이펙트
- 발전기 사보타지 여부
- 발전기 완료(에 걸려있는 이벤트들)
 
-판자o
- 판자 사용됨o
- 판자 파괴됨o
-
-갈고리
- 생존자 매달림o
- 생존자 구출됨o
- 
- 
-생존자
- 생존자 발자국 (Spawn, 풀링 해야)o
- 생존자 피격o
- 생존자 치료됨o
- 생존자 탈락함o
- 생존자 탈출함
-
-살인마
- 살인마가 생존자를 들어올림o
- (살인마 타격 -> X. 살인마의 역할은 애니메이션 재생일 뿐, 생존자가 피격되었는지만 판단하면 됨.)
- 
-
- 
- 
- */
 public class Survivor : PlayableCharacter
 {
     #region Class
@@ -125,7 +94,6 @@ public class Survivor : PlayableCharacter
                 if (m_healGauge >= MaxHealGauge)
                 {
                     m_healthStateMachine.Healed();
-                    StopHeal();
                 }
             }
         }
@@ -360,6 +328,12 @@ public class Survivor : PlayableCharacter
     {
         RpcOnChangedHealSpeed(value);
     }
+
+    [Command(requiresAuthority = false)]
+    void CmdOnStopHeal()
+    {
+        RpcOnStopHeal();
+    }
     #endregion
     #region Rpc
     [ClientRpc]
@@ -414,6 +388,12 @@ public class Survivor : PlayableCharacter
     void RpcOnChangedHealSpeed(float value)
     {
         m_healSpeed = value;
+    }
+
+    [ClientRpc]
+    void RpcOnStopHeal()
+    {
+        StopHeal();
     }
     #endregion
 
@@ -672,7 +652,6 @@ public class Survivor : PlayableCharacter
         {
             if (m_healDest.Slider_HealGauge.gameObject.activeSelf)
                 m_healDest.Slider_HealGauge.gameObject.SetActive(false);
-            m_healDest = null;
         }
         else
         {
@@ -719,10 +698,8 @@ public class Survivor : PlayableCharacter
         }
         if (Input.GetMouseButtonUp(mouseIndex))
         {
-            Animator.SetBool("isHeal", false);
-
-            dest.Slider_HealGauge.gameObject.SetActive(false);
-            IsFreeze = false;
+            dest.CmdOnStopHeal();
+            CmdOnStopHeal();
         }
     }
 
@@ -757,6 +734,7 @@ public class Survivor : PlayableCharacter
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
+
         if (other.TryGetComponent(out Survivor survivor))
         {
             if (survivor != null && survivor != this)
@@ -764,7 +742,6 @@ public class Survivor : PlayableCharacter
                 if (survivor.m_healthStateMachine.GetCurState() == HealthStates.Injured || survivor.m_healthStateMachine.GetCurState() == HealthStates.Down)
                 {
                     m_healDest = survivor;
-                    //m_healDest.Slider_HealGauge.gameObject.SetActive(true);
                 }
             }
         }
