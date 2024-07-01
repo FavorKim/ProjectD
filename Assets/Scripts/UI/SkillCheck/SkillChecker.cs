@@ -2,29 +2,57 @@ using System.Collections;
 using UnityEngine;
 using System;
 using Mirror;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+
+
+public enum SkillCheckResult
+{
+    Failed, Success, Critical
+}
 
 public class SkillChecker : NetworkBehaviour
 {
     RectTransform skillCheckCircle;
     RectTransform thisRect;
     [SerializeField] float CheckerRotateSpeed;
+    SkillCheckManager scM;
+    [SerializeField] bool IsHeldSkillChecker;
+
+    int rotateDir = 1;
+
 
     private void Start()
     {
         thisRect = GetComponent<RectTransform>();
-        StartCoroutine(CorRotateSkillChecker());
+        if (!IsHeldSkillChecker)
+            StartCoroutine(CorRotateSkillChecker());
+        else
+        {
+            OnSkillCheckCritical += OnHeldCheckerSkillSuccess;
+            OnSkillCheckSuccess += OnHeldCheckerSkillSuccess;
+            StartCoroutine(CorRotateHeldSkillChecker());
+        }
     }
 
-    public void InitCircle(RectTransform skillCheckCircle)
+    public void InitCircle(SkillCheckManager SCM)
     {
-        this.skillCheckCircle = skillCheckCircle;
+        this.scM = SCM;
     }
+
 
     private void OnEnable()
     {
-        thisRect.eulerAngles = new Vector3(0, 0, 359.0f);
-        StartCoroutine(CorRotateSkillChecker());
+        thisRect.eulerAngles = Vector3.zero;
+        if (!IsHeldSkillChecker)
+            StartCoroutine(CorRotateSkillChecker());
+        else
+        {
+            StartCoroutine(CorRotateHeldSkillChecker());
+        }
     }
+
+
 
 
     IEnumerator CorRotateSkillChecker()
@@ -34,7 +62,7 @@ public class SkillChecker : NetworkBehaviour
         while (curTime <= CheckerRotateSpeed)
         {
             curTime += Time.deltaTime;
-            thisRect.eulerAngles = new Vector3(0f, 0f, 359.0f - (curTime * 359.0f / CheckerRotateSpeed));
+            thisRect.eulerAngles = new Vector3(0f, 0f, (curTime * 359.0f) / CheckerRotateSpeed);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnSpaceDown();
@@ -48,22 +76,74 @@ public class SkillChecker : NetworkBehaviour
         Invoke(nameof(InvokeOnSkillCheckEnd), 1.0f);
     }
 
+    IEnumerator CorRotateHeldSkillChecker()
+    {
+        while (true)
+        {
+            float zVal = 0;
+            zVal += Time.deltaTime * 359.0f / CheckerRotateSpeed * rotateDir;
+            thisRect.eulerAngles = new Vector3(0f, 0f, thisRect.eulerAngles.z + zVal);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                OnSpaceDown();
+            }
+            yield return null;
+
+        }
+    }
+
+    void OnHeldCheckerSkillSuccess()
+    {
+        rotateDir *= -1;
+    }
+
     private void OnDisable()
     {
-        StopCoroutine(CorRotateSkillChecker());
+        if (!IsHeldSkillChecker)
+            StopCoroutine(CorRotateSkillChecker());
+        else
+        {
+            StopCoroutine(CorRotateHeldSkillChecker());
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        OnSkillCheckSuccess -= OnHeldCheckerSkillSuccess;
+        OnSkillCheckCritical -= OnHeldCheckerSkillSuccess;
     }
 
     void OnSpaceDown()
     {
-        float circleRot = skillCheckCircle.eulerAngles.z;
-        if ((circleRot - thisRect.eulerAngles.z) < 0)
-            CmdOnSkillFailed();
-        else if ((circleRot - thisRect.eulerAngles.z) < 13)
-            CmdOnSkillCritical();
-        else if ((circleRot - thisRect.eulerAngles.z) < 68)
-            CmdOnSkillSuccess();
-        else
-            CmdOnSkillFailed();
+        switch (CheckSkillResult())
+        {
+            case SkillCheckResult.Success:
+                CmdOnSkillSuccess();
+                break;
+            case SkillCheckResult.Critical:
+                CmdOnSkillCritical();
+                break;
+            case SkillCheckResult.Failed:
+                CmdOnSkillFailed();
+                break;
+        }
+    }
+    SkillCheckResult CheckSkillResult()
+    {
+        SkillCheckResult result = SkillCheckResult.Failed;
+
+        foreach (GameObject val in scM.NormalArea)
+        {
+            if (val.transform.eulerAngles.z - thisRect.eulerAngles.z < 69 && val.transform.eulerAngles.z - thisRect.eulerAngles.z > 0)
+                result = SkillCheckResult.Success;
+        }
+
+        foreach (GameObject val in scM.CriticalArea)
+        {
+            if (val.transform.eulerAngles.z - thisRect.eulerAngles.z < 14 && val.transform.eulerAngles.z - thisRect.eulerAngles.z > 0)
+                result = SkillCheckResult.Critical;
+        }
+        return result;
     }
 
     [Command(requiresAuthority = false)]

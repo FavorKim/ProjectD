@@ -14,6 +14,18 @@ public class KillerBase : PlayableCharacter
     NetworkAnimator netAnim;
     [SerializeField] BoxCollider m_AttackCollider;
     Survivor m_holdSurvivor;
+    public Survivor HoldSurvivor
+    {
+        get { return m_holdSurvivor; }
+        set
+        {
+            if (m_holdSurvivor != value)
+            {
+                m_holdSurvivor = value;
+            }
+        }
+    }
+
     [SerializeField] Transform Pos_HoldSurvivor;
 
     [SerializeField] GameObject Prefab_KillerCam;
@@ -22,7 +34,7 @@ public class KillerBase : PlayableCharacter
 
     Vector3 m_moveDir;
 
-    
+
     [SerializeField] float m_rotateSpeed;
     [SerializeField] float m_attackCool;
     [SerializeField] float m_stunLength;
@@ -60,7 +72,7 @@ public class KillerBase : PlayableCharacter
         }
         set
         {
-            if(m_jumpSpeed != value)
+            if (m_jumpSpeed != value)
             {
                 m_jumpSpeed = value;
             }
@@ -70,13 +82,13 @@ public class KillerBase : PlayableCharacter
     [SerializeField] float m_breakSpeed;
     public float BreakSpeed
     {
-        get 
+        get
         {
             return 1 + (m_breakSpeed * 0.01f);
         }
         set
         {
-            if(m_breakSpeed!= value)
+            if (m_breakSpeed != value)
             {
                 m_breakSpeed = value;
             }
@@ -91,7 +103,7 @@ public class KillerBase : PlayableCharacter
         }
         set
         {
-            if(m_attackSpeed != value)
+            if (m_attackSpeed != value)
             {
                 m_attackSpeed = value;
             }
@@ -167,9 +179,11 @@ public class KillerBase : PlayableCharacter
     private void OnEnable()
     {
         OnStun += OnStun_GetHit;
+        OnStun += OnStun_RevealSurvivor;
     }
     private void OnDisable()
     {
+        OnStun -= OnStun_RevealSurvivor;
         OnStun -= OnStun_GetHit;
         OnStun = null;
     }
@@ -362,8 +376,8 @@ public class KillerBase : PlayableCharacter
                 SetAnimator_HangOrHold();
                 HangerManager.Instance.TurnHangersXRay(true);
 
-                m_holdSurvivor = survivor;
-                m_holdSurvivor.BeingHeld(this);
+                HoldSurvivor = survivor;
+                HoldSurvivor.BeingHeld(this);
             }
         }
     }
@@ -381,13 +395,21 @@ public class KillerBase : PlayableCharacter
 
     void OnStun_GetHit()
     {
-
+        if (!isLocalPlayer) return;
         if (!isStunable) return;
         Animator.SetTrigger("GetHit");
         netAnim.SetTrigger("GetHit");
         StartCoroutine(CorFreezeWhileSec(StunLength));
         StartCoroutine(CorStunCool());
     }
+    void OnStun_RevealSurvivor()
+    {
+        if (HoldSurvivor != null)
+        {
+            HoldSurvivor = null;
+        }
+    }
+
     public void OnMove(InputValue val)
     {
         if (!isLocalPlayer) return;
@@ -409,5 +431,16 @@ public class KillerBase : PlayableCharacter
         Animator.SetFloat("inputY", m_moveDir.z);
     }
 
+
+
+    void OnEscapedFromKiller_GetStun()
+    {
+        OnStunCall();
+    }
+
+    public void MoveToDirection(Vector3 dir)
+    {
+        m_controller.SimpleMove(dir);
+    }
 
 }

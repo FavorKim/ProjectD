@@ -17,13 +17,7 @@ public class NetworkObjectPool : NetworkBehaviour
     {
         InitPool();
     }
-    /*
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-        InitPool();
-    }
-    */
+
     public void InitPool()
     {
         if (pool.Count > 0) return;

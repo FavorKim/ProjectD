@@ -6,14 +6,19 @@ using UnityEngine;
 
 public class SkillCheckManager : MonoBehaviour
 {
-    [SerializeField] GameObject skillCheckCircle;
+    public GameObject skillCheckCircle;
     RectTransform circleRect;
     [SerializeField] GameObject skillCheckObject;
     [SerializeField] SkillChecker skillChecker;
+    public List<GameObject> CriticalArea;
+    public List<GameObject> NormalArea;
+
 
     [SerializeField] float skillCheckCoolTime;
 
     [SerializeField] bool isSkillChecking;
+    [SerializeField] bool IsRotatable;
+
     public bool IsSkillChecking
     {
         get { return isSkillChecking; }
@@ -29,7 +34,7 @@ public class SkillCheckManager : MonoBehaviour
     private void Start()
     {
         circleRect = skillCheckCircle.GetComponent<RectTransform>();
-        skillChecker.InitCircle(circleRect);
+        skillChecker.InitCircle(this);
         StartCoroutine(CorSkillCheck());
     }
 
@@ -45,7 +50,8 @@ public class SkillCheckManager : MonoBehaviour
 
     private void SkillCheckStart()
     {
-        RotateCircle();
+        if (IsRotatable)
+            RotateCircle();
         skillCheckObject.SetActive(true);
     }
 
@@ -70,8 +76,8 @@ public class SkillCheckManager : MonoBehaviour
                 yield return null;
                 continue;
             }
-            yield return new WaitForSeconds(skillCheckCoolTime);
             SkillCheckStart();
+            yield return new WaitForSeconds(skillCheckCoolTime);
         }
     }
 

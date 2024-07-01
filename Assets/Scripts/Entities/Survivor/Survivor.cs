@@ -1,4 +1,5 @@
 using Cinemachine;
+using DG.Tweening.Core.Easing;
 using Mirror;
 using System;
 using System.Collections;
@@ -16,6 +17,7 @@ public class Survivor : PlayableCharacter
     [SerializeField] Animator Animator;
     NetworkAnimator netAnim;
     [SerializeField] Slider Slider_HealGauge;
+    [SerializeField] Slider Slider_EscapeGauge;
 
     [SerializeField] GameObject VFX_FootPrintPref;
     [SerializeField] GameObject VFX_Bleeding;
@@ -26,6 +28,10 @@ public class Survivor : PlayableCharacter
     SurvivorHealthStateMachine m_healthStateMachine;
 
     Survivor m_healDest;
+    KillerBase m_holdingKiller;
+
+    [SerializeField] SkillCheckManager EscapeSkillCheckManager;
+
     #endregion
     #region Vector
     Vector3 MoveDir;
@@ -114,12 +120,33 @@ public class Survivor : PlayableCharacter
 
     [SerializeField] float m_entireHealTime = 16.0f;
 
+    [SerializeField] float escapeGauge = 0;
+    public float EscapeGauge
+    {
+        get { return escapeGauge; }
+        private set
+        {
+            if(escapeGauge != value)
+            {
+                escapeGauge = value;
+                Slider_EscapeGauge.value = escapeGauge;
+                if (escapeGauge >= 1)
+                    CmdOnEscaped();
+            }
+        }
+    }
+
+
+
     public float GetWalkSpeed() { return walkSpeed; }
     public float GetRunSpeed() { return runSpeed; }
     public float GetCrouchSpeed() { return crouchSpeed; }
     public float GetDownSpeed() { return downSpeed; }
 
     [SerializeField] float rotateSpeed;
+
+
+
 
     #endregion
     #region Boolean
@@ -192,6 +219,8 @@ public class Survivor : PlayableCharacter
         }
     }
     int m_playerID;
+    int resistDir = 1;
+
     #endregion
 
     #region GetterSetter
@@ -234,12 +263,23 @@ public class Survivor : PlayableCharacter
     {
         OnBeingHeld += OnBeingHeld_SetState;
         OnBeingHeld += OnBeingHeld_SetPosition;
+        OnBeingHeld += OnBeingHeld_SetHoldingKiller;
+        OnBeingHeld += OnBeingHeld_SetHeldSkillChekcer;
 
         OnBeingHanged += OnBeingHanged_SetState;
         OnBeingHanged += OnBeingHanged_SetPosition;
         OnBeingHanged += OnBeingHanged_SetCorrupt;
+        
 
         OnSacrificed += OnSacrificed_GoUp;
+
+        OnEscapedFromKiller += OnEscapedFromKiller_SetState;
+        OnEscapedFromKiller += OnEscapedFromKiller_StunKiller;
+        OnEscapedFromKiller += OnEscapedFromKiller_ResetEscape;
+
+        EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckSuccess += OnEscapeSkillCheckSuccess;
+        EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckCritical += OnEscapeSkillCheckCritical;
+        EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckFailed += OnEscapeSkillCheckFailed;
 
     }
 
@@ -267,16 +307,28 @@ public class Survivor : PlayableCharacter
 
         OnSacrificed -= OnSacrificed_GoUp;
 
+        
         OnBeingHanged -= OnBeingHanged_SetCorrupt;
         OnBeingHanged -= OnBeingHanged_SetPosition;
         OnBeingHanged -= OnBeingHanged_SetState;
 
+        OnBeingHeld -= OnBeingHeld_SetHeldSkillChekcer;
+        OnBeingHeld -= OnBeingHeld_SetHoldingKiller;
+        OnBeingHeld -= OnBeingHeld_SetPosition;
         OnBeingHeld -= OnBeingHeld_SetState;
-        OnBeingHeld -= OnBeingHeld_SetState;
+
+        OnEscapedFromKiller -= OnEscapedFromKiller_ResetEscape;
+        OnEscapedFromKiller -= OnEscapedFromKiller_StunKiller;
+        OnEscapedFromKiller -= OnEscapedFromKiller_SetState;
+        
+        EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckFailed -= OnEscapeSkillCheckFailed;
+        EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckCritical -= OnEscapeSkillCheckCritical;
+        EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckSuccess -= OnEscapeSkillCheckSuccess;
 
         OnBeingHanged = null;
         OnBeingHeld = null;
         OnSacrificed = null;
+        OnEscapedFromKiller = null;
     }
     #endregion
 
@@ -336,6 +388,13 @@ public class Survivor : PlayableCharacter
     {
         RpcOnStopHeal();
     }
+
+    [Command(requiresAuthority = false)]
+    void CmdOnEscaped()
+    {
+        RpcOnEscaped();
+    }
+
     #endregion
     #region Rpc
     [ClientRpc]
@@ -396,6 +455,12 @@ public class Survivor : PlayableCharacter
     void RpcOnStopHeal()
     {
         StopHeal();
+    }
+
+    [ClientRpc]
+    void RpcOnEscaped()
+    {
+        OnEscapedFromKiller.Invoke();
     }
     #endregion
 
@@ -579,6 +644,7 @@ public class Survivor : PlayableCharacter
     public event Action<Hanger> OnBeingHanged;
     public event Action OnSacrificed;
     public event Action OnChangedRunSpeed;
+    public event Action OnEscapedFromKiller;
 
     // µÈ∑»¿ª ∂ß
     void OnBeingHeld_SetState(KillerBase killer)
@@ -590,6 +656,18 @@ public class Survivor : PlayableCharacter
     {
         transform.parent = killer.GetHoldPosition();
         transform.localPosition = Vector3.zero;
+    }
+    void OnBeingHeld_SetHoldingKiller(KillerBase killer)
+    {
+        m_holdingKiller = killer;
+    }
+    void OnBeingHeld_SetHeldSkillChekcer(KillerBase killer)
+    {
+        if (isLocalPlayer)
+        {
+            Slider_EscapeGauge.gameObject.SetActive(true);
+            EscapeSkillCheckManager.IsSkillChecking = true;
+        }
     }
 
     // ∞…∑»¿ª ∂ß
@@ -612,6 +690,23 @@ public class Survivor : PlayableCharacter
         StartCoroutine(CorCorrupt());
     }
 
+    void OnEscapedFromKiller_SetState()
+    {
+        m_healthStateMachine.ChangeState(HealthStates.Injured);
+        IsFreeze = false;
+    }
+    void OnEscapedFromKiller_StunKiller()
+    {
+        if (isLocalPlayer)
+            m_holdingKiller.OnStunCall();
+    }
+    void OnEscapedFromKiller_ResetEscape()
+    {
+        EscapeSkillCheckManager.IsSkillChecking = false;
+        EscapeGauge = 0;
+        Slider_EscapeGauge.gameObject.SetActive(false);
+    }
+
     void OnSacrificed_GoUp()
     {
         StartCoroutine(CorSacrifice());
@@ -625,6 +720,27 @@ public class Survivor : PlayableCharacter
         Animator.SetTrigger("JumpFence");
         netAnim.SetTrigger("JumpFence");
         StartCoroutine(CorJumpFence());
+    }
+
+    void OnEscapeSkillCheckSuccess()
+    {
+        EscapeGauge += 0.05f;
+        MoveHoldingKiller();
+    }
+    void OnEscapeSkillCheckCritical()
+    {
+        EscapeGauge += 0.1f;
+        MoveHoldingKiller();
+    }
+    void OnEscapeSkillCheckFailed()
+    {
+
+    }
+
+    void MoveHoldingKiller()
+    {
+        resistDir *= -1;
+        m_holdingKiller.MoveToDirection(m_holdingKiller.transform.right * resistDir * Time.deltaTime * 50);
     }
 
     void OnMove(InputValue val)
