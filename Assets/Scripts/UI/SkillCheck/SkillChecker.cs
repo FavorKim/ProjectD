@@ -61,8 +61,9 @@ public class SkillChecker : NetworkBehaviour
         bool isClick = false;
         while (curTime <= CheckerRotateSpeed)
         {
-            curTime += Time.deltaTime;
-            thisRect.eulerAngles = new Vector3(0f, 0f, (curTime * 359.0f) / CheckerRotateSpeed);
+            float zVal = 0;
+            zVal = Time.deltaTime * 359.0f / CheckerRotateSpeed;
+            thisRect.eulerAngles = new Vector3(0f, 0f, thisRect.eulerAngles.z + zVal);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnSpaceDown();

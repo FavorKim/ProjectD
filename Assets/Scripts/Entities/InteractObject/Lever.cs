@@ -52,8 +52,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
 
         if (Input.GetMouseButton(0))
         {
-            if (!Slider_Gauge.gameObject.activeSelf)
-                Slider_Gauge.gameObject.SetActive(true);
+            Slider_Gauge.gameObject.SetActive(true);
             CurrentGauge += Time.deltaTime * m_speed;
             Animator.SetBool("isUsing", true);
         }
