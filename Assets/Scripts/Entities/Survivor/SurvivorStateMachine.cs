@@ -93,7 +93,6 @@ public class SurvivorRun : SurvivorMoveState
     {
         owner.MoveSpeed = owner.RunSpeed;
         Animator.SetBool("isRun", true);
-        owner.StartCoroutine(owner.CorPrintFoot());
     }
 
     public override void Excute()
@@ -108,7 +107,6 @@ public class SurvivorRun : SurvivorMoveState
     public override void Exit()
     {
         Animator.SetBool("isRun", false);
-        //owner.StopCoroutine(owner.CorPrintFoot());
     }
 
     void OnChangedRunSpeed()

@@ -214,6 +214,8 @@ public class Survivor : PlayableCharacter
         m_StateMachine = new SurvivorStateMachine(this);
         m_healthStateMachine = new SurvivorHealthStateMachine(this);
         netAnim = Animator.gameObject.GetComponent<NetworkAnimator>();
+
+        StartCoroutine(CorPrintFoot());
     }
     public override void OnStartLocalPlayer()
     {
@@ -284,7 +286,6 @@ public class Survivor : PlayableCharacter
     [Command(requiresAuthority = false)]
     void PrintFoot()
     {
-        Debug.Log("PrintFoot");
         FootPrintPool.Instance.PrintFootPrint(new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
 
@@ -493,9 +494,13 @@ public class Survivor : PlayableCharacter
     #region Coroutine
     public IEnumerator CorPrintFoot()
     {
-        while (m_StateMachine.CurStateIs(SurvivorStateMachine.StateName.Run)
-            && m_healthStateMachine.GetCurState() > HealthStates.Down)
+        while (true)
         {
+            if (m_healthStateMachine.GetCurState() == HealthStates.Down || !m_StateMachine.CurStateIs(SurvivorStateMachine.StateName.Run))
+            {
+                yield return null;
+                continue;
+            }
             PrintFoot();
             yield return new WaitForSeconds(0.5f);
         }

@@ -31,17 +31,16 @@ public class FootPrintPool : SingletonNetwork<FootPrintPool>
     [ClientRpc]
     public void PrintFootPrint(Vector3 pos, Quaternion rot)
     {
-        Debug.Log("RpcPrintFoot");
-
         var obj = footPrintPool.GetObj();
         obj.transform.position = pos;
         obj.transform.rotation = rot;
         StartCoroutine(CorInvokeReturn(obj));
     }
 
-    IEnumerator CorInvokeReturn(NetworkPoolObject obj)
+    IEnumerator CorInvokeReturn(GameObject obj)
     {
         yield return new WaitForSeconds(Duration_FootPrint);
         footPrintPool.ReturnObj(obj);
+        obj.gameObject.SetActive(false);
     }
 }
