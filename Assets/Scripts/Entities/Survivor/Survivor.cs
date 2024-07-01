@@ -126,7 +126,7 @@ public class Survivor : PlayableCharacter
         get { return escapeGauge; }
         private set
         {
-            if(escapeGauge != value)
+            if (escapeGauge != value)
             {
                 escapeGauge = value;
                 Slider_EscapeGauge.value = escapeGauge;
@@ -269,7 +269,7 @@ public class Survivor : PlayableCharacter
         OnBeingHanged += OnBeingHanged_SetState;
         OnBeingHanged += OnBeingHanged_SetPosition;
         OnBeingHanged += OnBeingHanged_SetCorrupt;
-        
+
 
         OnSacrificed += OnSacrificed_GoUp;
 
@@ -307,7 +307,7 @@ public class Survivor : PlayableCharacter
 
         OnSacrificed -= OnSacrificed_GoUp;
 
-        
+
         OnBeingHanged -= OnBeingHanged_SetCorrupt;
         OnBeingHanged -= OnBeingHanged_SetPosition;
         OnBeingHanged -= OnBeingHanged_SetState;
@@ -320,7 +320,7 @@ public class Survivor : PlayableCharacter
         OnEscapedFromKiller -= OnEscapedFromKiller_ResetEscape;
         OnEscapedFromKiller -= OnEscapedFromKiller_StunKiller;
         OnEscapedFromKiller -= OnEscapedFromKiller_SetState;
-        
+
         EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckFailed -= OnEscapeSkillCheckFailed;
         EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckCritical -= OnEscapeSkillCheckCritical;
         EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckSuccess -= OnEscapeSkillCheckSuccess;
@@ -572,9 +572,9 @@ public class Survivor : PlayableCharacter
     }
     IEnumerator CorSprint()
     {
-        runSpeed += 200.0f;
+        RunSpeed += 200.0f;
         yield return new WaitForSeconds(1.5f);
-        runSpeed -= 200.0f;
+        RunSpeed -= 200.0f;
     }
     IEnumerator CorInvincibleTime()
     {
@@ -636,6 +636,17 @@ public class Survivor : PlayableCharacter
         gameObject.SetActive(false);
         // 이 부분은 게임 결과 씬으로 옮기는 것으로 대체해야함
     }
+    IEnumerator CorResistKiller()
+    {
+        float dur = 0;
+        resistDir *= -1;
+        while (dur < 0.5f)
+        {
+            dur += Time.deltaTime;
+            MoveHoldingKiller();
+            yield return null;
+        }
+    }
     #endregion
 
     #region Event
@@ -694,6 +705,11 @@ public class Survivor : PlayableCharacter
     {
         m_healthStateMachine.ChangeState(HealthStates.Injured);
         IsFreeze = false;
+        if (isLocalPlayer)
+        {
+            Animator.SetTrigger("Resqued");
+            netAnim.SetTrigger("Resqued");
+        }
     }
     void OnEscapedFromKiller_StunKiller()
     {
@@ -705,6 +721,10 @@ public class Survivor : PlayableCharacter
         EscapeSkillCheckManager.IsSkillChecking = false;
         EscapeGauge = 0;
         Slider_EscapeGauge.gameObject.SetActive(false);
+        EscapeSkillCheckManager.GetSkillChecker().InvokeOnSkillCheckEnd();
+        // 스킬체크매니저 끄기
+
+
     }
 
     void OnSacrificed_GoUp()
@@ -725,23 +745,19 @@ public class Survivor : PlayableCharacter
     void OnEscapeSkillCheckSuccess()
     {
         EscapeGauge += 0.05f;
-        MoveHoldingKiller();
+        StartCoroutine(CorResistKiller());
+
     }
     void OnEscapeSkillCheckCritical()
     {
         EscapeGauge += 0.1f;
-        MoveHoldingKiller();
+        StartCoroutine(CorResistKiller());
     }
     void OnEscapeSkillCheckFailed()
     {
-
+        EscapeGauge -= 0.05f;
     }
 
-    void MoveHoldingKiller()
-    {
-        resistDir *= -1;
-        m_holdingKiller.MoveToDirection(m_holdingKiller.transform.right * resistDir * Time.deltaTime * 50);
-    }
 
     void OnMove(InputValue val)
     {
@@ -850,6 +866,10 @@ public class Survivor : PlayableCharacter
         m_CharacterController.SimpleMove(MoveDir);
     }
 
+    void MoveHoldingKiller()
+    {
+        m_holdingKiller.MoveToDirection(m_holdingKiller.transform.right * resistDir * Time.deltaTime * 1.5f);
+    }
     #endregion
 
 

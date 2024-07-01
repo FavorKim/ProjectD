@@ -1188,7 +1188,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  CheckerRotateSpeed: 2.5
+  CheckerRotateSpeed: 1
   IsHeldSkillChecker: 1
 --- !u!1 &5925158098567064786
 GameObject:

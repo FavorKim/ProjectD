@@ -161,7 +161,7 @@ public class SkillChecker : NetworkBehaviour
     void RpcInvokeOnSkillFailed() { OnSkillCheckFailed.Invoke(); }
 
 
-    void InvokeOnSkillCheckEnd()
+    public void InvokeOnSkillCheckEnd()
     {
         OnSkillCheckEnd.Invoke();
     }
