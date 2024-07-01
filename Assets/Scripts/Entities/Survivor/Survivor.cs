@@ -284,7 +284,8 @@ public class Survivor : PlayableCharacter
     [Command(requiresAuthority = false)]
     void PrintFoot()
     {
-        PootPrintPool.Instance.PrintPootPrint(new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
+        Debug.Log("PrintFoot");
+        FootPrintPool.Instance.PrintFootPrint(new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
     }
 
     [Command(requiresAuthority = false)]

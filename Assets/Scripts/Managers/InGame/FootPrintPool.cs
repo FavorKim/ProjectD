@@ -2,12 +2,13 @@ using JetBrains.Annotations;
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class PootPrintPool : SingletonNetwork<PootPrintPool>
+public class FootPrintPool : SingletonNetwork<FootPrintPool>
 {
-    NetworkObjectPool pootPrintPool;
-    [SerializeField] float Duration_PootPrint;
+    NetworkObjectPool footPrintPool;
+    [SerializeField] float Duration_FootPrint;
 
     private void Start()
     {
@@ -19,27 +20,28 @@ public class PootPrintPool : SingletonNetwork<PootPrintPool>
         instance = this;
         DontDestroyOnLoad(this);
 
-        pootPrintPool = GetComponent<NetworkObjectPool>();
+
+    }
+    private void Awake()
+    {
+        footPrintPool = GetComponent<NetworkObjectPool>();
     }
 
-    public void Init()
-    {
-        pootPrintPool.InitPool();
-    }
 
     [ClientRpc]
-    public void PrintPootPrint(Vector3 pos, Quaternion rot)
+    public void PrintFootPrint(Vector3 pos, Quaternion rot)
     {
-        var obj = pootPrintPool.GetObj();
+        Debug.Log("RpcPrintFoot");
+
+        var obj = footPrintPool.GetObj();
         obj.transform.position = pos;
         obj.transform.rotation = rot;
-
         StartCoroutine(CorInvokeReturn(obj));
     }
 
     IEnumerator CorInvokeReturn(NetworkPoolObject obj)
     {
-        yield return new WaitForSeconds(Duration_PootPrint);
-        pootPrintPool.ReturnObj(obj);
+        yield return new WaitForSeconds(Duration_FootPrint);
+        footPrintPool.ReturnObj(obj);
     }
 }
