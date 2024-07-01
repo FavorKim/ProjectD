@@ -99,7 +99,7 @@ public class Survivor : PlayableCharacter
                 Slider_HealGauge.value = m_healGauge / MaxHealGauge;
                 if (m_healGauge >= MaxHealGauge)
                 {
-                    m_healthStateMachine.Healed();
+                    CmdOnChangedState(m_healthStateMachine.GetCurState() -1);
                 }
             }
         }
@@ -115,6 +115,8 @@ public class Survivor : PlayableCharacter
         set
         {
             m_healSpeed = value;
+            CmdOnChangedHealSpeed(value);
+
         }
     }
 
@@ -256,7 +258,6 @@ public class Survivor : PlayableCharacter
         PlayerUIManager.Instance.CreatePlayerUI(this);
         PlayerPerkManager.SetSurvivorPerk(SelectedPerkManager.EquippedPerkList, this);
         InGamePerkSlot.Instance.SetPerkIcons(SelectedPerkManager.EquippedPerkList);
-        CmdOnChangedHealSpeed(m_healSpeed);
     }
 
     private void OnEnable()
@@ -372,9 +373,10 @@ public class Survivor : PlayableCharacter
     }
 
     [Command(requiresAuthority = false)]
-    public void CmdOnHealed()
+    public void CmdOnHealed(Survivor healer)
     {
-        RpcOnHealed();
+        HealGauge += Time.deltaTime * (1 + healer.HealSpeed * 0.01f) / m_entireHealTime;
+        RpcOnHealed(HealGauge);
     }
 
     [Command(requiresAuthority = false)]
@@ -393,6 +395,12 @@ public class Survivor : PlayableCharacter
     void CmdOnEscaped()
     {
         RpcOnEscaped();
+    }
+
+    [Command(requiresAuthority =false)]
+    void CmdOnChangedState(HealthStates newState)
+    {
+        OnChangedState(newState);
     }
 
     #endregion
@@ -437,11 +445,13 @@ public class Survivor : PlayableCharacter
     }
 
     [ClientRpc]
-    void RpcOnHealed()
+    void RpcOnHealed(float gauge)
     {
         if (isLocalPlayer)
             Slider_HealGauge.gameObject.SetActive(true);
-        HealGauge += Time.deltaTime * (1 + m_healSpeed * 0.01f) / m_entireHealTime;
+        
+
+        HealGauge = gauge;
         IsFreeze = true;
     }
 
@@ -461,6 +471,12 @@ public class Survivor : PlayableCharacter
     void RpcOnEscaped()
     {
         OnEscapedFromKiller.Invoke();
+    }
+
+    [ClientRpc]
+    void OnChangedState(HealthStates newState)
+    {
+        m_healthStateMachine.ChangeState(newState);
     }
     #endregion
 
@@ -572,9 +588,9 @@ public class Survivor : PlayableCharacter
     }
     IEnumerator CorSprint()
     {
-        RunSpeed += 200.0f;
-        yield return new WaitForSeconds(1.5f);
-        RunSpeed -= 200.0f;
+        RunSpeed += 260.0f;
+        yield return new WaitForSeconds(1.8f);
+        RunSpeed -= 260.0f;
     }
     IEnumerator CorInvincibleTime()
     {
@@ -801,15 +817,15 @@ public class Survivor : PlayableCharacter
         if (!isLocalPlayer) return;
         if (m_healDest == null) return;
 
-        HealSurvivor(m_healDest, 0);
+        HealSurvivor(m_healDest, this, 0);
     }
     void SelfCare()
     {
-        if (IsSelfCare)
-            HealSurvivor(this, 1);
+        if (IsSelfCare && isLocalPlayer)
+            HealSurvivor(this, this, 1);
     }
 
-    void HealSurvivor(Survivor dest, int mouseIndex)
+    void HealSurvivor(Survivor dest, Survivor healer, int mouseIndex)
     {
         if (dest.m_healthStateMachine.GetCurState() == HealthStates.Healthy)
         {
@@ -828,11 +844,7 @@ public class Survivor : PlayableCharacter
         if (Input.GetMouseButton(mouseIndex))
         {
             Animator.SetBool("isHeal", true);
-            if (dest == this)
-                CmdOnHealed();
-            else
-                dest.CmdOnHealed();
-
+            dest.CmdOnHealed(healer);
         }
         if (Input.GetMouseButtonUp(mouseIndex))
         {
