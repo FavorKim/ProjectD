@@ -99,7 +99,7 @@ public class Survivor : PlayableCharacter
                 Slider_HealGauge.value = m_healGauge / MaxHealGauge;
                 if (m_healGauge >= MaxHealGauge)
                 {
-                    CmdOnChangedState(m_healthStateMachine.GetCurState() -1);
+                    CmdOnChangedState(m_healthStateMachine.GetCurState() - 1);
                 }
             }
         }
@@ -270,6 +270,8 @@ public class Survivor : PlayableCharacter
         OnBeingHanged += OnBeingHanged_SetState;
         OnBeingHanged += OnBeingHanged_SetPosition;
         OnBeingHanged += OnBeingHanged_SetCorrupt;
+        OnBeingHanged += OnBeingHanged_ResetEscape;
+        
 
 
         OnSacrificed += OnSacrificed_GoUp;
@@ -281,6 +283,8 @@ public class Survivor : PlayableCharacter
         EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckSuccess += OnEscapeSkillCheckSuccess;
         EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckCritical += OnEscapeSkillCheckCritical;
         EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckFailed += OnEscapeSkillCheckFailed;
+
+        OnHitted += OnHitted_SetAnimation;
 
     }
 
@@ -305,10 +309,11 @@ public class Survivor : PlayableCharacter
         m_healthStateMachine.UnRegisterEvent();
         OnHitted = null;
 
+        OnHitted -= OnHitted_SetAnimation;
 
         OnSacrificed -= OnSacrificed_GoUp;
 
-
+        OnBeingHanged -= OnBeingHanged_ResetEscape;
         OnBeingHanged -= OnBeingHanged_SetCorrupt;
         OnBeingHanged -= OnBeingHanged_SetPosition;
         OnBeingHanged -= OnBeingHanged_SetState;
@@ -330,6 +335,8 @@ public class Survivor : PlayableCharacter
         OnBeingHeld = null;
         OnSacrificed = null;
         OnEscapedFromKiller = null;
+        
+        OnHitted = null;
     }
     #endregion
 
@@ -339,7 +346,7 @@ public class Survivor : PlayableCharacter
     [Command(requiresAuthority = false)]
     void PrintFoot()
     {
-        FootPrintPool.Instance.PrintFootPrint(new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(-90, 0, 0));
+        FootPrintPool.Instance.PrintFootPrint(new Vector3(transform.position.x, 0.001f, transform.position.z), Quaternion.Euler(90, 0, 0));
     }
 
     [Command(requiresAuthority = false)]
@@ -397,7 +404,7 @@ public class Survivor : PlayableCharacter
         RpcOnEscaped();
     }
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     void CmdOnChangedState(HealthStates newState)
     {
         OnChangedState(newState);
@@ -449,7 +456,7 @@ public class Survivor : PlayableCharacter
     {
         if (isLocalPlayer)
             Slider_HealGauge.gameObject.SetActive(true);
-        
+
 
         HealGauge = gauge;
         IsFreeze = true;
@@ -484,7 +491,7 @@ public class Survivor : PlayableCharacter
     #region Interact
     public override void Interact(Generator generator)
     {
-        if (!isLocalPlayer) return;
+        if (!isLocalPlayer || IsFreeze) return;
 
 
         if (Input.GetMouseButtonDown(0))
@@ -516,7 +523,7 @@ public class Survivor : PlayableCharacter
     }
     public override void Interact(Palete palete)
     {
-        if (!isLocalPlayer) return;
+        if (!isLocalPlayer || IsFreeze) return;
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (!palete.isUsed)
@@ -524,6 +531,7 @@ public class Survivor : PlayableCharacter
                 // 판자 내리기 애니메이션
                 Animator.SetTrigger("UsePallete");
                 netAnim.SetTrigger("UsePallete");
+                StartCoroutine(CorFreeze(0.3f));
                 palete.SurvivorInteract();
             }
             else
@@ -538,7 +546,7 @@ public class Survivor : PlayableCharacter
     }
     public override void Interact(JumpFence fence)
     {
-        if (!isLocalPlayer) return;
+        if (!isLocalPlayer || IsFreeze) return;
         if (Input.GetKeyDown(KeyCode.E))
         {
             var center = fence.transform.position + fence.transform.forward * -1.5f;
@@ -548,7 +556,7 @@ public class Survivor : PlayableCharacter
     }
     public override void Interact(Hanger hanger)
     {
-        if (!isLocalPlayer) return;
+        if (!isLocalPlayer || IsFreeze) return;
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (hanger.HangedSurvivor != null && hanger.HangedSurvivor != this)
@@ -560,7 +568,7 @@ public class Survivor : PlayableCharacter
     }
     public override void Interact(Lever lever)
     {
-        if (!isLocalPlayer) return;
+        if (!isLocalPlayer || IsFreeze) return;
         if (!lever.IsAvailable) return;
 
         if (Input.GetMouseButtonDown(0))
@@ -606,23 +614,23 @@ public class Survivor : PlayableCharacter
     IEnumerator CorJumpFence()
     {
         float time = 0;
-        isFreeze = true;
+        IsFreeze = true;
         while (time < 0.3f)
         {
             time += Time.deltaTime;
-            m_CharacterController.Move(transform.up * 3.0f * Time.deltaTime);
-            m_CharacterController.Move(transform.forward * 6.0f * Time.deltaTime);
+            m_CharacterController.Move(transform.up * 5.0f * Time.deltaTime);
+            m_CharacterController.Move(transform.forward * 4.0f * Time.deltaTime);
             yield return null;
         }
-        while (time < 0.7f)
+        while (time < 0.6f)
         {
             time += Time.deltaTime;
-            m_CharacterController.Move(transform.up * -5.0f * Time.deltaTime);
-            m_CharacterController.Move(transform.forward * 6.0f * Time.deltaTime);
+            m_CharacterController.Move(transform.up * -9.5f * Time.deltaTime);
+            m_CharacterController.Move(transform.forward * 4.0f * Time.deltaTime);
             yield return null;
         }
         //m_CharacterController.Move(-transform.up * 10f);
-        isFreeze = false;
+        IsFreeze = false;
     }
     IEnumerator CorCorrupt()
     {
@@ -721,6 +729,11 @@ public class Survivor : PlayableCharacter
         HangedCount++;
         StartCoroutine(CorCorrupt());
     }
+    void OnBeingHanged_ResetEscape(Hanger hanger)
+    {
+        OnEscapedFromKiller_ResetEscape();
+    }
+    
 
     void OnEscapedFromKiller_SetState()
     {
@@ -803,6 +816,12 @@ public class Survivor : PlayableCharacter
         else Animator.SetBool("isWalk", false);
     }
 
+    void OnHitted_SetAnimation()
+    {
+        Animator.SetTrigger("GetHit");
+        netAnim.SetTrigger("GetHit");
+    }
+
     #endregion
 
     #region Methods
@@ -831,7 +850,7 @@ public class Survivor : PlayableCharacter
     }
     void SelfCare()
     {
-        if (IsSelfCare && isLocalPlayer)
+        if (IsSelfCare && isLocalPlayer && m_healthStateMachine.GetCurState() != HealthStates.Down)
         {
             HealSurvivor(this, this, 1);
         }
@@ -841,34 +860,35 @@ public class Survivor : PlayableCharacter
     {
         if (dest.m_healthStateMachine.GetCurState() == HealthStates.Healthy)
         {
-            StopHeal();
+            healer.StopHeal();
             return;
         }
         if (Input.GetMouseButtonDown(mouseIndex))
         {
-            IsFreeze = true;
+            healer.IsFreeze = true;
+            healer.Animator.SetBool("isHeal", true);
             if (dest == healer)
             {
-                Animator.SetTrigger("SelfCare");
-                netAnim.SetTrigger("SelfCare");
+                healer.Animator.SetTrigger("SelfCare");
+                healer.netAnim.SetTrigger("SelfCare");
             }
             else
             {
-                Animator.SetTrigger("Heal");
-                netAnim.SetTrigger("Heal");
+                healer.Animator.SetTrigger("Heal");
+                healer.netAnim.SetTrigger("Heal");
             }
+
             dest.Slider_HealGauge.gameObject.SetActive(true);
 
         }
         if (Input.GetMouseButton(mouseIndex))
         {
-            Animator.SetBool("isHeal", true);
             dest.CmdOnHealed(healer);
         }
         if (Input.GetMouseButtonUp(mouseIndex))
         {
             dest.CmdOnStopHeal();
-            CmdOnStopHeal();
+            healer.CmdOnStopHeal();
         }
     }
 
@@ -883,7 +903,7 @@ public class Survivor : PlayableCharacter
     void PlayerMove()
     {
 
-        if (isFreeze) return;
+        if (IsFreeze) return;
 
 
         if (MoveDir != Vector3.zero)

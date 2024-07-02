@@ -28,15 +28,7 @@ public class CustomRoomPlayer : NetworkRoomPlayer
     public override void OnClientExitRoom()
     {
         base.OnClientExitRoom();
-        if (isLocalPlayer)
-        {
-            OutLook = gameObject.transform.GetChild(0).gameObject;
-            OutLook.SetActive(false);
-            /*
-            var manager = NetworkRoomManager.singleton as MyNetworkManager;
-            manager.KillerSideCam.SetActive(false);
-            manager.SurvivorSideCam.SetActive(false);
-            */
-        }
+        OutLook = gameObject.transform.GetChild(0).gameObject;
+        OutLook.SetActive(false);
     }
 }

@@ -57,7 +57,11 @@ public class SurvivorHealthStateMachine
     void GetHit()
     {
         if (curState.GetStateEnum() < HealthStates.Down)
+        {
             ChangeState(curState.GetStateEnum() + 1);
+            owner.IsFreeze = false;
+        }
+
     }
 
 }

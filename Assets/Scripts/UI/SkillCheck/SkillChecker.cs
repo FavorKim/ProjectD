@@ -19,7 +19,6 @@ public class SkillChecker : NetworkBehaviour
     SkillCheckManager scM;
     [SerializeField] bool IsHeldSkillChecker;
 
-    Vector3 checkerIdentity = new Vector3(0, 180, 0);
 
     int rotateDir = 1;
 
@@ -45,7 +44,7 @@ public class SkillChecker : NetworkBehaviour
 
     private void OnEnable()
     {
-        thisRect.eulerAngles = checkerIdentity;
+
         if (!IsHeldSkillChecker)
             StartCoroutine(CorRotateSkillChecker());
         else
@@ -63,9 +62,10 @@ public class SkillChecker : NetworkBehaviour
         bool isClick = false;
         while (curTime <= CheckerRotateSpeed)
         {
+            curTime += Time.deltaTime;
             float zVal = 0;
             zVal = Time.deltaTime * 359.0f / CheckerRotateSpeed;
-            thisRect.eulerAngles = new Vector3(0f, 0f, thisRect.eulerAngles.z + zVal);
+            thisRect.eulerAngles = new Vector3(0f, 0, thisRect.eulerAngles.z + zVal);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnSpaceDown();
@@ -85,7 +85,7 @@ public class SkillChecker : NetworkBehaviour
         {
             float zVal = 0;
             zVal += Time.deltaTime * 359.0f / CheckerRotateSpeed * rotateDir;
-            thisRect.eulerAngles = new Vector3(0f, 0f, thisRect.eulerAngles.z + zVal);
+            thisRect.eulerAngles = new Vector3(0f, 0, thisRect.eulerAngles.z + zVal);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnSpaceDown();
@@ -114,6 +114,12 @@ public class SkillChecker : NetworkBehaviour
     {
         OnSkillCheckSuccess -= OnHeldCheckerSkillSuccess;
         OnSkillCheckCritical -= OnHeldCheckerSkillSuccess;
+
+        OnSkillCheckCritical = null;
+        OnSkillCheckEnd = null;
+        OnSkillCheckFailed = null;
+        OnSkillCheckSuccess = null;
+            
     }
 
     void OnSpaceDown()

@@ -136,7 +136,7 @@ MonoBehaviour:
   Animator: {fileID: 4700450406186153302}
   Slider_HealGauge: {fileID: 7073257724788928691}
   Slider_EscapeGauge: {fileID: 6081851148783554213}
-  VFX_FootPrintPref: {fileID: 5777709028976728957, guid: b45ca06ea95f27643876bd539917063f, type: 3}
+  VFX_FootPrintPref: {fileID: 5176948967343782109, guid: 2bd6a091554880f4895f5e404ce471c3, type: 3}
   VFX_Bleeding: {fileID: 816875572618674131}
   Prefab_SurvivorTrack: {fileID: 8335291862723811247, guid: ae710e97df9ca0b44951a0f534991145, type: 3}
   EscapeSkillCheckManager: {fileID: 566522584940255919}
