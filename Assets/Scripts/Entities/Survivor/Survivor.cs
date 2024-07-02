@@ -858,7 +858,7 @@ public class Survivor : PlayableCharacter
 
     void HealSurvivor(Survivor dest, Survivor healer, int mouseIndex)
     {
-        if (dest.m_healthStateMachine.GetCurState() == HealthStates.Healthy)
+        if (dest.m_healthStateMachine.GetCurState() == HealthStates.Healthy && Input.GetMouseButton(mouseIndex))
         {
             healer.StopHeal();
             return;
@@ -883,6 +883,7 @@ public class Survivor : PlayableCharacter
         }
         if (Input.GetMouseButton(mouseIndex))
         {
+            healer.Animator.SetBool("isHeal", true);
             dest.CmdOnHealed(healer);
         }
         if (Input.GetMouseButtonUp(mouseIndex))
