@@ -19,6 +19,8 @@ public class SkillChecker : NetworkBehaviour
     SkillCheckManager scM;
     [SerializeField] bool IsHeldSkillChecker;
 
+    Vector3 checkerIdentity = new Vector3(0, 180, 0);
+
     int rotateDir = 1;
 
 
@@ -43,7 +45,7 @@ public class SkillChecker : NetworkBehaviour
 
     private void OnEnable()
     {
-        thisRect.eulerAngles = Vector3.zero;
+        thisRect.eulerAngles = checkerIdentity;
         if (!IsHeldSkillChecker)
             StartCoroutine(CorRotateSkillChecker());
         else

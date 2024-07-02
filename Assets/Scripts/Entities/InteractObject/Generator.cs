@@ -20,6 +20,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
         private set
         {
             curGauge = value;
+            anim.SetFloat("Progress", value);
             if (curGauge >= maxGauge)
             {
                 IsCompleted = true;
@@ -39,23 +40,25 @@ public class Generator : NetworkBehaviour, IInteractableObject
     [SerializeField] ParticleSystem VFX_Smoke;
     [SerializeField] ParticleSystem VFX_Steam;
 
+    Animator anim;
+
     [SerializeField] SkillCheckManager SkillCheckManager;
 
     bool isCompleted = false;
-    public bool IsCompleted 
+    public bool IsCompleted
     {
         get { return isCompleted; }
-        private set 
+        private set
         {
             if (isCompleted != value)
             {
                 isCompleted = value;
-                if(value == true)
+                if (value == true)
                 {
                     CmdOnCompleteHandler();
                 }
             }
-        } 
+        }
     }
     bool isSabotaging;
     public bool IsSabotaging
@@ -85,6 +88,10 @@ public class Generator : NetworkBehaviour, IInteractableObject
         Xray_Silhouette.SetActive(true);
     }
 
+    private void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     private void OnEnable()
     {
@@ -128,7 +135,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
             return;
         }
 
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Slider_Gauge.gameObject.SetActive(true);
             SkillCheckManager.IsSkillChecking = true;
@@ -142,17 +149,18 @@ public class Generator : NetworkBehaviour, IInteractableObject
         {
             Slider_Gauge.gameObject.SetActive(false);
             SkillCheckManager.IsSkillChecking = false;
+            SkillCheckManager.GetSkillChecker().InvokeOnSkillCheckEnd();
         }
     }
 
 
-    [Command(requiresAuthority =false)]
-    void Cmd_ProgressGenerator(float multi) 
+    [Command(requiresAuthority = false)]
+    void Cmd_ProgressGenerator(float multi)
     {
         CurGauge += Time.deltaTime * Multi_Gauge * multi;
-        ProgressGenerator(multi); 
+        ProgressGenerator(multi);
     }
-    
+
     [ClientRpc]
     void ProgressGenerator(float multi)
     {
@@ -162,7 +170,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
         Slider_Gauge.value = CurGauge / maxGauge;
     }
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     public void CmdKillerInteract()
     {
         KillerInteract();
@@ -176,7 +184,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
 
 
 
-    
+
     void SetSteam()
     {
         var emission = VFX_Steam.emission;
@@ -202,20 +210,21 @@ public class Generator : NetworkBehaviour, IInteractableObject
         VFX_Smoke.Stop();
     }
 
-    
+
 
 
     private event Action OnSabotage;
     private event Action OnEndSabotage;
     public event Action OnCompleteHandler;
+    public event Action OnGeneratorFailed;
 
-    [Command(requiresAuthority = false)]    
+    [Command(requiresAuthority = false)]
     private void CmdOnSabotage() { RpcOnSabotage(); }
     [Command(requiresAuthority = false)]
     private void CmdOnEndSabotage() { RpcOnEndSabotage(); }
     [Command(requiresAuthority = false)]
-    private void CmdOnCompleteHandler() {  RpcOnCompleteHandler(); }
-    [Command(requiresAuthority =false)]
+    private void CmdOnCompleteHandler() { RpcOnCompleteHandler(); }
+    [Command(requiresAuthority = false)]
     void CmdXrayOn()
     {
         RpcXrayOn();
@@ -234,7 +243,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
     [ClientRpc]
     private void RpcOnEndSabotage() { OnEndSabotage.Invoke(); StopCoroutine(CorSabotage()); }
     [ClientRpc]
-    private void RpcOnCompleteHandler() {  OnCompleteHandler.Invoke(); }
+    private void RpcOnCompleteHandler() { OnCompleteHandler.Invoke(); }
     [ClientRpc]
     void RpcXrayOn()
     {
@@ -255,16 +264,16 @@ public class Generator : NetworkBehaviour, IInteractableObject
 
     void OnSkillCheckSuccess()
     {
-        Cmd_ProgressGenerator(60);
+        Cmd_ProgressGenerator(20);
     }
     void OnSkillCheckCritical()
     {
-        Cmd_ProgressGenerator(200);
+        Cmd_ProgressGenerator(100);
     }
     void OnSkillCheckFailed()
     {
         CmdRedLightOn();
-        Cmd_ProgressGenerator(-300.0f);
+        Cmd_ProgressGenerator(-150.0f);
     }
 
     IEnumerator CorSabotage()

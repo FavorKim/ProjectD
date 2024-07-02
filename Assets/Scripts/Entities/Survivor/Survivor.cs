@@ -493,6 +493,8 @@ public class Survivor : PlayableCharacter
             netAnim.SetTrigger("Generate");
 
             Animator.SetBool("isGenerating", true);
+
+            generator.OnGeneratorFailed += OnGeneratorFailed;
         }
         if (Input.GetMouseButton(0))
         {
@@ -507,6 +509,7 @@ public class Survivor : PlayableCharacter
         if (Input.GetMouseButtonUp(0))
         {
             Animator.SetBool("isGenerating", false);
+            generator.OnGeneratorFailed -= OnGeneratorFailed;
             isFreeze = false;
         }
         generator.SurvivorInteract();
@@ -519,6 +522,8 @@ public class Survivor : PlayableCharacter
             if (!palete.isUsed)
             {
                 // 판자 내리기 애니메이션
+                Animator.SetTrigger("UsePallete");
+                netAnim.SetTrigger("UsePallete");
                 palete.SurvivorInteract();
             }
             else
@@ -774,6 +779,11 @@ public class Survivor : PlayableCharacter
         EscapeGauge -= 0.05f;
     }
 
+    void OnGeneratorFailed()
+    {
+        Animator.SetTrigger("GenFail");
+        netAnim.SetTrigger("GenFail");
+    }
 
     void OnMove(InputValue val)
     {
@@ -822,7 +832,9 @@ public class Survivor : PlayableCharacter
     void SelfCare()
     {
         if (IsSelfCare && isLocalPlayer)
+        {
             HealSurvivor(this, this, 1);
+        }
     }
 
     void HealSurvivor(Survivor dest, Survivor healer, int mouseIndex)
@@ -835,9 +847,16 @@ public class Survivor : PlayableCharacter
         if (Input.GetMouseButtonDown(mouseIndex))
         {
             IsFreeze = true;
-            Animator.SetTrigger("Heal");
-            netAnim.SetTrigger("Heal");
-
+            if (dest == healer)
+            {
+                Animator.SetTrigger("SelfCare");
+                netAnim.SetTrigger("SelfCare");
+            }
+            else
+            {
+                Animator.SetTrigger("Heal");
+                netAnim.SetTrigger("Heal");
+            }
             dest.Slider_HealGauge.gameObject.SetActive(true);
 
         }
