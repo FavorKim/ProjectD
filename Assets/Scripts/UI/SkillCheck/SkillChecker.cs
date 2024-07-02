@@ -44,7 +44,6 @@ public class SkillChecker : NetworkBehaviour
 
     private void OnEnable()
     {
-
         if (!IsHeldSkillChecker)
             StartCoroutine(CorRotateSkillChecker());
         else
@@ -58,14 +57,15 @@ public class SkillChecker : NetworkBehaviour
 
     IEnumerator CorRotateSkillChecker()
     {
+        
         float curTime = 0f;
         bool isClick = false;
+        float zVal = 0;
         while (curTime <= CheckerRotateSpeed)
         {
             curTime += Time.deltaTime;
-            float zVal = 0;
-            zVal = Time.deltaTime * 359.0f / CheckerRotateSpeed;
-            thisRect.eulerAngles = new Vector3(0f, 0, thisRect.eulerAngles.z + zVal);
+            zVal += Time.deltaTime * 359.0f / CheckerRotateSpeed;
+            thisRect.eulerAngles = new Vector3(0f, 179, 359 - zVal);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnSpaceDown();
@@ -81,11 +81,11 @@ public class SkillChecker : NetworkBehaviour
 
     IEnumerator CorRotateHeldSkillChecker()
     {
+        float zVal = 0;
         while (true)
         {
-            float zVal = 0;
-            zVal += Time.deltaTime * 359.0f / CheckerRotateSpeed * rotateDir;
-            thisRect.eulerAngles = new Vector3(0f, 0, thisRect.eulerAngles.z + zVal);
+            zVal = Time.deltaTime * 359.0f / CheckerRotateSpeed * rotateDir;
+            thisRect.rotation = Quaternion.Euler(new Vector3(0f, 180, thisRect.rotation.z + zVal));
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnSpaceDown();
