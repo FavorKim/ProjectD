@@ -44,6 +44,7 @@ public class SkillChecker : NetworkBehaviour
 
     private void OnEnable()
     {
+        thisRect.eulerAngles = Vector3.zero;
         if (!IsHeldSkillChecker)
             StartCoroutine(CorRotateSkillChecker());
         else
@@ -57,15 +58,14 @@ public class SkillChecker : NetworkBehaviour
 
     IEnumerator CorRotateSkillChecker()
     {
-        
         float curTime = 0f;
         bool isClick = false;
-        float zVal = 0;
+        float zVal = Time.deltaTime * 359.0f / CheckerRotateSpeed;
         while (curTime <= CheckerRotateSpeed)
         {
             curTime += Time.deltaTime;
-            zVal += Time.deltaTime * 359.0f / CheckerRotateSpeed;
-            thisRect.eulerAngles = new Vector3(0f, 179, 359 - zVal);
+            
+            thisRect.eulerAngles = new Vector3(0f, 0.0f, thisRect.eulerAngles.z + zVal);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnSpaceDown();
@@ -119,7 +119,7 @@ public class SkillChecker : NetworkBehaviour
         OnSkillCheckEnd = null;
         OnSkillCheckFailed = null;
         OnSkillCheckSuccess = null;
-            
+
     }
 
     void OnSpaceDown()
@@ -141,15 +141,56 @@ public class SkillChecker : NetworkBehaviour
     {
         SkillCheckResult result = SkillCheckResult.Failed;
 
+        float thisRotZ = thisRect.eulerAngles.z;
+        while (thisRotZ < 0 || thisRotZ > 360)
+        {
+            if (thisRotZ < 0)
+            {
+                thisRotZ += 360.0f;
+            }
+            else if (thisRotZ > 360)
+            {
+                thisRotZ -= 360.0f;
+            }
+        }
+
         foreach (GameObject val in scM.NormalArea)
         {
-            if (val.transform.eulerAngles.z - thisRect.eulerAngles.z < 69 && val.transform.eulerAngles.z - thisRect.eulerAngles.z > 0)
+            float rotZ = val.gameObject.transform.eulerAngles.z;
+            while (rotZ < 0 || rotZ > 360)
+            {
+                if (rotZ < 0)
+                {
+                    rotZ += 360.0f;
+                }
+                else if (rotZ > 360)
+                {
+                    rotZ -= 360.0f;
+                }
+            }
+            float resultval = Mathf.Abs(thisRotZ - rotZ);
+
+            if (resultval < 69 && rotZ - thisRotZ > 0)
                 result = SkillCheckResult.Success;
         }
 
         foreach (GameObject val in scM.CriticalArea)
         {
-            if (val.transform.eulerAngles.z - thisRect.eulerAngles.z < 14 && val.transform.eulerAngles.z - thisRect.eulerAngles.z > 0)
+            float rotZ = val.gameObject.transform.eulerAngles.z;
+            while (rotZ < 0 || rotZ > 360)
+            {
+                if (rotZ < 0)
+                {
+                    rotZ += 360.0f;
+                }
+                else if (rotZ > 360)
+                {
+                    rotZ -= 360.0f;
+                }
+            }
+            float resultval = Mathf.Abs(thisRotZ - rotZ);
+
+            if (resultval < 14 && rotZ - thisRotZ > 0)
                 result = SkillCheckResult.Critical;
         }
         return result;
