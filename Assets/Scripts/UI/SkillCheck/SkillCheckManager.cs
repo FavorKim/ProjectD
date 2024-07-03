@@ -51,7 +51,7 @@ public class SkillCheckManager : MonoBehaviour
         skillChecker.OnSkillCheckEnd -= OnSkillCheckEnd_DisableObject;
     }
 
-    private void SkillCheckStart()
+    public void SkillCheckStart()
     {
         if (IsRotatable)
             RotateCircle();
@@ -61,8 +61,11 @@ public class SkillCheckManager : MonoBehaviour
 
     void RotateCircle()
     {
-        timeToSuccess = UnityEngine.Random.Range(0.6f, skillChecker.GetCheckerRotateSpeed() - 0.1f);
-        float rot = timeToSuccess / skillChecker.GetCheckerRotateSpeed() * 360;
+        float checkTime = skillChecker.GetCheckerRotateSpeed();
+
+
+        timeToSuccess = UnityEngine.Random.Range(checkTime * 0.1667f, checkTime * 0.8f);
+        float rot = timeToSuccess / checkTime * 360;
         circleRect.eulerAngles = new Vector3(0, 0, -rot);
     }
 

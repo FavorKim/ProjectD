@@ -137,6 +137,7 @@ public class Survivor : PlayableCharacter
             }
         }
     }
+    [SerializeField] float timeToEscape = 12.0f;
 
 
 
@@ -280,9 +281,7 @@ public class Survivor : PlayableCharacter
         OnEscapedFromKiller += OnEscapedFromKiller_StunKiller;
         OnEscapedFromKiller += OnEscapedFromKiller_ResetEscape;
 
-        EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckSuccess += OnEscapeSkillCheckSuccess;
         EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckCritical += OnEscapeSkillCheckCritical;
-        EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckFailed += OnEscapeSkillCheckFailed;
 
         OnHitted += OnHitted_SetAnimation;
 
@@ -327,9 +326,7 @@ public class Survivor : PlayableCharacter
         OnEscapedFromKiller -= OnEscapedFromKiller_StunKiller;
         OnEscapedFromKiller -= OnEscapedFromKiller_SetState;
 
-        EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckFailed -= OnEscapeSkillCheckFailed;
         EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckCritical -= OnEscapeSkillCheckCritical;
-        EscapeSkillCheckManager.GetSkillChecker().OnSkillCheckSuccess -= OnEscapeSkillCheckSuccess;
 
         OnBeingHanged = null;
         OnBeingHeld = null;
@@ -409,6 +406,8 @@ public class Survivor : PlayableCharacter
     {
         OnChangedState(newState);
     }
+
+    
 
     #endregion
     #region Rpc
@@ -676,6 +675,14 @@ public class Survivor : PlayableCharacter
             yield return null;
         }
     }
+    IEnumerator CorIncreaseEscapeGauge()
+    {
+        while (EscapeGauge < 1)
+        {
+            EscapeGauge += Time.deltaTime / timeToEscape;
+            yield return null;
+        }
+    }
     #endregion
 
     #region Event
@@ -706,8 +713,9 @@ public class Survivor : PlayableCharacter
         if (isLocalPlayer)
         {
             Slider_EscapeGauge.gameObject.SetActive(true);
-            EscapeSkillCheckManager.IsSkillChecking = true;
+            EscapeSkillCheckManager.SkillCheckStart();
         }
+        StartCoroutine(CorIncreaseEscapeGauge());
     }
 
     // °É·ÈÀ» ¶§
@@ -776,20 +784,11 @@ public class Survivor : PlayableCharacter
         StartCoroutine(CorJumpFence());
     }
 
-    void OnEscapeSkillCheckSuccess()
+    
+    void OnEscapeSkillCheckCritical()
     {
         EscapeGauge += 0.05f;
         StartCoroutine(CorResistKiller());
-
-    }
-    void OnEscapeSkillCheckCritical()
-    {
-        EscapeGauge += 0.1f;
-        StartCoroutine(CorResistKiller());
-    }
-    void OnEscapeSkillCheckFailed()
-    {
-        EscapeGauge -= 0.05f;
     }
 
     void OnGeneratorFailed()

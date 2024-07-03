@@ -24,7 +24,7 @@ public class SkillChecker : NetworkBehaviour
 
 
     int rotateDir = 1;
-    public float GetCheckerRotateSpeed() {  return CheckerRotateSpeed; }
+    public float GetCheckerRotateSpeed() { return CheckerRotateSpeed; }
 
     private void Start()
     {
@@ -49,6 +49,7 @@ public class SkillChecker : NetworkBehaviour
     private void OnEnable()
     {
         thisRect.eulerAngles = Vector3.zero;
+
         if (!IsHeldSkillChecker)
             StartCoroutine(CorRotateSkillChecker());
         else
@@ -62,7 +63,6 @@ public class SkillChecker : NetworkBehaviour
 
     IEnumerator CorRotateSkillChecker()
     {
-        thisRect.rotation = Quaternion.identity;
         float curTime = 0f;
         bool isClick = false;
         float zVal = 0;
@@ -89,12 +89,12 @@ public class SkillChecker : NetworkBehaviour
         float zVal = 0;
         while (true)
         {
-            zVal = Time.deltaTime * 359.0f / CheckerRotateSpeed * rotateDir;
-            thisRect.rotation = Quaternion.Euler(new Vector3(0f, 180, thisRect.rotation.z + zVal));
+            zVal = Time.deltaTime * 360.0f / CheckerRotateSpeed * rotateDir;
+            thisRect.eulerAngles = new Vector3(0, 0, thisRect.eulerAngles.z - zVal);
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                OnSpaceDown_Held();
                 rotateDir *= -1;
+                OnSpaceDown_Held();
             }
             yield return null;
 
@@ -134,22 +134,26 @@ public class SkillChecker : NetworkBehaviour
         {
             case SkillCheckResult.Success:
                 CmdOnSkillSuccess();
-                Debug.Log("성공");
                 break;
             case SkillCheckResult.Critical:
                 CmdOnSkillCritical();
-                Debug.Log("대성공");
                 break;
             case SkillCheckResult.Failed:
                 CmdOnSkillFailed();
-                Debug.Log("실패");
                 break;
         }
     }
 
     void OnSpaceDown_Held()
     {
+        float thisZ = thisRect.eulerAngles.z;
+        //thisZ = Mathf.Abs(thisZ);
 
+        if (thisZ < 97 && thisZ > 79 || thisZ > 360-97 && thisZ < 360-79)
+        {
+            CmdOnSkillCritical();
+            rotateDir *= -1;
+        }
     }
     SkillCheckResult CheckSkillResult(float inputTime)
     {
@@ -158,15 +162,15 @@ public class SkillChecker : NetworkBehaviour
         float successTime = scM.GetTimeToSuccess();
         float resultTime = inputTime - successTime;
         if (resultTime < 0) return result;
-        else if(resultTime < 0.2825f)
+        else if (resultTime < 0.2825f)
         {
             result = SkillCheckResult.Success;
-            if(resultTime < 0.05f)
+            if (resultTime < 0.05f)
             {
                 result = SkillCheckResult.Critical;
             }
         }
-        
+
         return result;
     }
 
@@ -178,11 +182,11 @@ public class SkillChecker : NetworkBehaviour
     void CmdOnSkillFailed() { RpcInvokeOnSkillFailed(); }
 
     [ClientRpc]
-    void RpcInvokeOnSkillSuccess() { OnSkillCheckSuccess.Invoke(); }
+    void RpcInvokeOnSkillSuccess() { OnSkillCheckSuccess.Invoke(); Debug.Log("성공"); }
     [ClientRpc]
-    void RpcInvokeOnSkillCritical() { OnSkillCheckCritical.Invoke(); }
+    void RpcInvokeOnSkillCritical() { OnSkillCheckCritical.Invoke(); Debug.Log("대성공"); }
     [ClientRpc]
-    void RpcInvokeOnSkillFailed() { OnSkillCheckFailed.Invoke(); }
+    void RpcInvokeOnSkillFailed() { OnSkillCheckFailed.Invoke(); Debug.Log("실패"); }
 
 
     public void InvokeOnSkillCheckEnd()
