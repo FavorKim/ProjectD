@@ -13,7 +13,7 @@ public class KillerBase : PlayableCharacter
     Animator Animator;
     NetworkAnimator netAnim;
     [SerializeField] BoxCollider m_AttackCollider;
-    Survivor m_holdSurvivor;
+    [SerializeField]Survivor m_holdSurvivor;
     public Survivor HoldSurvivor
     {
         get { return m_holdSurvivor; }
@@ -22,6 +22,10 @@ public class KillerBase : PlayableCharacter
             if (m_holdSurvivor != value)
             {
                 m_holdSurvivor = value;
+                if(value == null)
+                {
+                    HangerManager.Instance.TurnHangersXRay(false);
+                }
             }
         }
     }
@@ -281,15 +285,17 @@ public class KillerBase : PlayableCharacter
     }
     public override void Interact(Hanger hanger)
     {
-        if (!isLocalPlayer) return;
-        if (Input.GetKeyDown(KeyCode.Space) && m_holdSurvivor != null && hanger.IsAvailable())
+        if (!isLocalPlayer || HoldSurvivor == null || IsFreeze) return;
+
+        if (Input.GetKeyDown(KeyCode.Space) 
+            && hanger.IsAvailable())
         {
-            HangerManager.Instance.TurnHangersXRay(false);
             SetAnimator_HangOrHold();
-            hanger.HangedSurvivor = m_holdSurvivor;
-            m_holdSurvivor.BeingHanged(hanger);
+            hanger.HangedSurvivor = HoldSurvivor;
+            HoldSurvivor.BeingHanged(hanger);
             hanger.KillerInteract();
-            m_holdSurvivor = null;
+            HoldSurvivor = null;
+            StartCoroutine(CorFreezeWhileSec(0.8f));
         }
     }
     public override void Interact(Lever lever)
@@ -369,14 +375,13 @@ public class KillerBase : PlayableCharacter
     }
     private void OnTriggerStay(Collider other)
     {
-        if (!isLocalPlayer) return;
+        if (!isLocalPlayer || IsFreeze) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (other.TryGetComponent(out Survivor survivor))
             {
                 SetAnimator_HangOrHold();
                 HangerManager.Instance.TurnHangersXRay(true);
-
                 HoldSurvivor = survivor;
                 HoldSurvivor.BeingHeld(this);
             }
