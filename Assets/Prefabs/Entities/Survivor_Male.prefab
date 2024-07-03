@@ -1834,6 +1834,7 @@ MonoBehaviour:
   skillCheckCoolTime: 99999
   isSkillChecking: 0
   IsRotatable: 0
+  timeToSuccess: 0
 --- !u!1 &7634351379921021013
 GameObject:
   m_ObjectHideFlags: 0

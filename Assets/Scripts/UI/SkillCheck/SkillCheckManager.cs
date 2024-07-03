@@ -19,6 +19,9 @@ public class SkillCheckManager : MonoBehaviour
     [SerializeField] bool isSkillChecking;
     [SerializeField] bool IsRotatable;
 
+    [SerializeField]float timeToSuccess;
+    public float GetTimeToSuccess() { return timeToSuccess; }
+
     public bool IsSkillChecking
     {
         get { return isSkillChecking; }
@@ -58,8 +61,9 @@ public class SkillCheckManager : MonoBehaviour
 
     void RotateCircle()
     {
-        float rot = UnityEngine.Random.Range(120f, 320.0f);
-        circleRect.eulerAngles = new Vector3(0.0f, 0.0f, rot);
+        timeToSuccess = UnityEngine.Random.Range(0.6f, skillChecker.GetCheckerRotateSpeed() - 0.1f);
+        float rot = timeToSuccess / skillChecker.GetCheckerRotateSpeed() * 360;
+        circleRect.eulerAngles = new Vector3(0, 0, -rot);
     }
 
     void OnSkillCheckEnd_DisableObject()
