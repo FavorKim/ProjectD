@@ -273,7 +273,7 @@ public class Survivor : PlayableCharacter
         OnBeingHanged += OnBeingHanged_SetPosition;
         OnBeingHanged += OnBeingHanged_SetCorrupt;
         OnBeingHanged += OnBeingHanged_ResetEscape;
-        
+
 
 
         OnSacrificed += OnSacrificed_GoUp;
@@ -333,7 +333,7 @@ public class Survivor : PlayableCharacter
         OnBeingHeld = null;
         OnSacrificed = null;
         OnEscapedFromKiller = null;
-        
+
         OnHitted = null;
     }
     #endregion
@@ -408,7 +408,7 @@ public class Survivor : PlayableCharacter
         OnChangedState(newState);
     }
 
-    
+
 
     #endregion
     #region Rpc
@@ -556,25 +556,37 @@ public class Survivor : PlayableCharacter
     }
     public override void Interact(Hanger hanger)
     {
-        if (!isLocalPlayer || IsFreeze) return;
-        if (Input.GetKeyDown(KeyCode.E))
+        if (!isLocalPlayer) return;
+        if (hanger.HangedSurvivor != null && hanger.HangedSurvivor != this)
         {
-            if (hanger.HangedSurvivor != null && hanger.HangedSurvivor != this)
+            if (Input.GetMouseButton(0))
             {
-                hanger.SurvivorInteract();
-                CorFreeze(1.2f);
+                float resqueTime = 0;
+                resqueTime += Time.deltaTime;
+                IsFreeze = true;
+                if (resqueTime >= 0.8f)
+                {
+                    hanger.SurvivorInteract();
+                    IsFreeze = false;
+                    return;
+                }
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                IsFreeze = false;
             }
         }
+
     }
     public override void Interact(Lever lever)
     {
         if (!isLocalPlayer) return;
-        if (!lever.IsAvailable) 
+        if (!lever.IsAvailable)
         {
             Animator.SetTrigger("PullOver");
             netAnim.SetTrigger("PullOver");
-            IsFreeze = false; 
-            return; 
+            IsFreeze = false;
+            return;
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -686,7 +698,7 @@ public class Survivor : PlayableCharacter
     }
     IEnumerator CorIncreaseEscapeGauge()
     {
-        while (EscapeGauge < 1 && m_healthStateMachine.GetCurState()==HealthStates.Held)
+        while (EscapeGauge < 1 && m_healthStateMachine.GetCurState() == HealthStates.Held)
         {
             EscapeGauge += Time.deltaTime / timeToEscape;
             yield return null;
@@ -750,7 +762,7 @@ public class Survivor : PlayableCharacter
     {
         OnEscapedFromKiller_ResetEscape();
     }
-    
+
 
     void OnEscapedFromKiller_SetState()
     {
@@ -782,7 +794,8 @@ public class Survivor : PlayableCharacter
     }
     void OnSacrificed_GameOver()
     {
-        GameResultManager.Instance.SetGameResult(GameResult.Sacrificed);
+        if (isLocalPlayer)
+            GameResultManager.Instance.SetGameResult(GameResult.Sacrificed);
     }
 
     void OnJumpFence(Vector3 dest)
@@ -795,7 +808,7 @@ public class Survivor : PlayableCharacter
         StartCoroutine(CorJumpFence());
     }
 
-    
+
     void OnEscapeSkillCheckCritical()
     {
         EscapeGauge += 0.05f;

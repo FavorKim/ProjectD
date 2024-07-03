@@ -11,7 +11,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
     [SerializeField] NetworkAnimator netAnim_Door;
     Animator Animator;
     const float MAXGAUGE = 100;
-    [SerializeField/*, SyncVar(hook = nameof(Hook_OnChangedLeverValue))*/]float curGauge;
+    [SerializeField]float curGauge;
     public float CurrentGauge
     {
         get
@@ -69,7 +69,6 @@ public class Lever : NetworkBehaviour, IInteractableObject
 
     void OnOpenDoor()
     {
-        Debug.Log("OnOpenDoor");
         IsAvailable = false;
         OpenDoor();
     }
@@ -78,11 +77,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
     {
         Animator_Door.SetTrigger("Open");
         netAnim_Door.SetTrigger("Open");
+        Slider_Gauge.gameObject.SetActive(false);
     }
 
-
-    void Hook_OnChangedLeverValue(float old, float recent)
-    {
-        curGauge = recent;
-    }
 }
