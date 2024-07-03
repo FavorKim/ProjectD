@@ -259,6 +259,7 @@ public class Survivor : PlayableCharacter
         PlayerUIManager.Instance.CreatePlayerUI(this);
         PlayerPerkManager.SetSurvivorPerk(SelectedPerkManager.EquippedPerkList, this);
         InGamePerkSlot.Instance.SetPerkIcons(SelectedPerkManager.EquippedPerkList);
+        GameResultManager.Instance.OnSurvivorConnected();
     }
 
     private void OnEnable()
@@ -597,7 +598,7 @@ public class Survivor : PlayableCharacter
                 continue;
             }
             PrintFoot();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1.0f);
         }
     }
     IEnumerator CorSprint()
@@ -664,7 +665,7 @@ public class Survivor : PlayableCharacter
         }
         PlayerUIManager.Instance.SetPlayerUIState(m_playerID, PlayerUI.Icons.Killed);
         gameObject.SetActive(false);
-        // 이 부분은 게임 결과 씬으로 옮기는 것으로 대체해야함
+        OnSacrificed_GameOver();
     }
     IEnumerator CorResistKiller()
     {
@@ -774,6 +775,10 @@ public class Survivor : PlayableCharacter
     void OnSacrificed_GoUp()
     {
         StartCoroutine(CorSacrifice());
+    }
+    void OnSacrificed_GameOver()
+    {
+        GameResultManager.Instance.SetGameResult(GameResult.Sacrificed);
     }
 
     void OnJumpFence(Vector3 dest)
@@ -946,6 +951,7 @@ public class Survivor : PlayableCharacter
         if (other.CompareTag("Escape"))
         {
             PlayerUIManager.Instance.SetPlayerUIState(m_playerID, PlayerUI.Icons.Escaped);
+            GameResultManager.Instance.SetGameResult(GameResult.Escape);
         }
     }
     protected override void OnTriggerExit(Collider other)
