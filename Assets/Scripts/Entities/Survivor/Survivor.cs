@@ -559,15 +559,14 @@ public class Survivor : PlayableCharacter
     public override void Interact(Hanger hanger)
     {
         if (!isLocalPlayer) return;
-        if (hanger.HangedSurvivor != null && hanger.HangedSurvivor != this.gameObject)
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
+            if (hanger.HangedSurvivor != null && hanger.HangedSurvivor.gameObject != this.gameObject)
             {
                 hanger.SurvivorInteract();
                 StartCoroutine(CorFreeze(0.5f));
             }
         }
-
     }
     public override void Interact(Lever lever)
     {
@@ -862,7 +861,7 @@ public class Survivor : PlayableCharacter
     {
         if (!isLocalPlayer) return;
         if (m_healDest == null) return;
-        
+
 
         HealSurvivor(m_healDest, this, 0);
     }

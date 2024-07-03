@@ -13,19 +13,16 @@ public class KillerBase : PlayableCharacter
     Animator Animator;
     NetworkAnimator netAnim;
     [SerializeField] BoxCollider m_AttackCollider;
-    [SerializeField]Survivor m_holdSurvivor;
+    [SerializeField] Survivor m_holdSurvivor;
     public Survivor HoldSurvivor
     {
         get { return m_holdSurvivor; }
         set
         {
-            if (m_holdSurvivor != value)
+            m_holdSurvivor = value;
+            if (value == null)
             {
-                m_holdSurvivor = value;
-                if(value == null)
-                {
-                    HangerManager.Instance.TurnHangersXRay(false);
-                }
+                HangerManager.Instance.TurnHangersXRay(false);
             }
         }
     }
@@ -295,11 +292,12 @@ public class KillerBase : PlayableCharacter
             }
         }
     }
+
     public override void Interact(Hanger hanger)
     {
         if (!isLocalPlayer || HoldSurvivor == null || IsFreeze) return;
 
-        if (Input.GetKeyDown(KeyCode.Space) 
+        if (Input.GetKeyDown(KeyCode.Space)
             && hanger.IsAvailable())
         {
             SetAnimator_HangOrHold();
