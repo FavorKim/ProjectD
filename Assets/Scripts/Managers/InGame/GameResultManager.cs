@@ -15,7 +15,7 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
     [SerializeField] Transform Pos_GameResult;
     [SerializeField] GameObject PlayerUI;
 
-    [SerializeField,SyncVar(hook = nameof(Hook_OnChangedPlayerRemaining))]
+    [SerializeField]
     int playerRemaining;
 
     public int PlayerRemaining
@@ -31,7 +31,7 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
             }
         }
     }
-    [SerializeField,SyncVar(hook = nameof(Hook_OnChangedPlayerKilled))]
+    [SerializeField]
     int playerKilled;
     
 
@@ -84,18 +84,11 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
         else SetGameResult(GameResult.ALLKILL);
     }
 
-
-    void Hook_OnChangedPlayerRemaining(int old, int recent)
-    {
-        playerRemaining = recent;
-    }
-    void Hook_OnChangedPlayerKilled(int old, int recent)
-    {
-        playerKilled = recent;
-    }
-
-    public void OnSurvivorConnected()
+    [Command(requiresAuthority =false)]
+    public void CmdIncreaseRemainingPlayer()
     {
         PlayerRemaining++;
     }
+
+
 }

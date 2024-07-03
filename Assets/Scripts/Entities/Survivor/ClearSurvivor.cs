@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,10 +8,22 @@ public class ClearSurvivor : MonoBehaviour
 {
     [SerializeField] Animator anim;
     [SerializeField] Text Text_Result;
-    // Start is called before the first frame update
+    [SerializeField] GameObject Outfit;
+    [SerializeField] CanvasGroup Panel;
+
+
     void Start()
     {
-        anim.SetBool("isRun", true);
+        Panel.DOFade(1, 0.8f).OnComplete(() =>
+        {
+            Panel.DOFade(0, 1.5f);
+            Outfit.SetActive(true);
+            Text_Result.gameObject.SetActive(true);
+
+            anim.SetBool("isRun", true);
+            anim.SetBool("isWalk", true);
+        });
+
     }
 
     public void SetResultText(GameResult result)

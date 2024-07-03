@@ -97,6 +97,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
     {
         OnCompleteHandler += TurnOnLight;
         OnCompleteHandler += CmdXrayOn;
+        OnCompleteHandler += OnComplete_StopSkillCheck;
 
         OnSabotage += DecreaseGauge;
         OnSabotage += PlaySabotageVFX;
@@ -110,6 +111,10 @@ public class Generator : NetworkBehaviour, IInteractableObject
 
     private void OnDisable()
     {
+        SkillCheckManager.GetSkillChecker().OnSkillCheckFailed -= OnSkillCheckFailed;
+        SkillCheckManager.GetSkillChecker().OnSkillCheckCritical -= OnSkillCheckCritical;
+        SkillCheckManager.GetSkillChecker().OnSkillCheckSuccess -= OnSkillCheckSuccess;
+        
         OnEndSabotage -= StopSabotageVFX;
 
         OnSabotage -= PlaySabotageVFX;
@@ -117,12 +122,9 @@ public class Generator : NetworkBehaviour, IInteractableObject
 
         OnCompleteHandler -= CmdXrayOn;
         OnCompleteHandler -= TurnOnLight;
+        OnCompleteHandler -= OnComplete_StopSkillCheck;
 
         OnCompleteHandler = null;
-
-        SkillCheckManager.GetSkillChecker().OnSkillCheckFailed -= OnSkillCheckFailed;
-        SkillCheckManager.GetSkillChecker().OnSkillCheckCritical -= OnSkillCheckCritical;
-        SkillCheckManager.GetSkillChecker().OnSkillCheckSuccess -= OnSkillCheckSuccess;
     }
 
     public void SurvivorInteract()
@@ -274,6 +276,12 @@ public class Generator : NetworkBehaviour, IInteractableObject
     {
         CmdRedLightOn();
         Cmd_ProgressGenerator(-150.0f);
+    }
+
+    void OnComplete_StopSkillCheck()
+    {
+        if(isLocalPlayer)
+        SkillCheckManager.gameObject.SetActive(false);
     }
 
     IEnumerator CorSabotage()
