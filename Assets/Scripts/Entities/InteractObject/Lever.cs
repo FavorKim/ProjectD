@@ -20,12 +20,12 @@ public class Lever : NetworkBehaviour, IInteractableObject
         }
         set
         {
-            if (curGauge >= m_maxGauge)
+            if(CurrentGauge >= 100)
             {
                 OnOpenDoor();
                 return;
             }
-            if (CurrentGauge != value && CurrentGauge < m_maxGauge)
+            if (CurrentGauge != value)
             {
                 curGauge = value;
                 Slider_Gauge.value = CurrentGauge / m_maxGauge;
@@ -43,11 +43,11 @@ public class Lever : NetworkBehaviour, IInteractableObject
 
     public void SurvivorInteract()
     {
-        if (!IsAvailable && CurrentGauge >= m_maxGauge) 
+        if (!IsAvailable || CurrentGauge >= m_maxGauge) 
         {
             Slider_Gauge.gameObject.SetActive(false);
             Animator.SetBool("isUsing", false);
-            return; 
+            return;
         }
 
         if (Input.GetMouseButton(0))
@@ -56,7 +56,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
             CurrentGauge += Time.deltaTime * m_speed;
             Animator.SetBool("isUsing", true);
         }
-        else
+        if(Input.GetMouseButtonUp(0)) 
         {
             Slider_Gauge.gameObject.SetActive(false);
             Animator.SetBool("isUsing", false);

@@ -490,8 +490,8 @@ public class Survivor : PlayableCharacter
     #region Interact
     public override void Interact(Generator generator)
     {
-        if (!isLocalPlayer || IsFreeze) return;
-
+        if (!isLocalPlayer) return;
+        if (m_healthStateMachine.GetCurState() > HealthStates.Injured) return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -567,18 +567,20 @@ public class Survivor : PlayableCharacter
     }
     public override void Interact(Lever lever)
     {
-        if (!isLocalPlayer || IsFreeze) return;
+        if (!isLocalPlayer) return;
         if (!lever.IsAvailable) return;
 
         if (Input.GetMouseButtonDown(0))
         {
             Animator.SetTrigger("Pull");
             netAnim.SetTrigger("Pull");
+            IsFreeze = true;
         }
         else if (Input.GetMouseButtonUp(0))
         {
             Animator.SetTrigger("PullOver");
             netAnim.SetTrigger("PullOver");
+            IsFreeze = false;
         }
         lever.SurvivorInteract();
     }
@@ -817,8 +819,11 @@ public class Survivor : PlayableCharacter
 
     void OnHitted_SetAnimation()
     {
-        Animator.SetTrigger("GetHit");
-        netAnim.SetTrigger("GetHit");
+        if (m_healthStateMachine.GetCurState() == HealthStates.Healthy)
+        {
+            Animator.SetTrigger("GetHit");
+            netAnim.SetTrigger("GetHit");
+        }
     }
 
     #endregion
