@@ -569,7 +569,13 @@ public class Survivor : PlayableCharacter
     public override void Interact(Lever lever)
     {
         if (!isLocalPlayer) return;
-        if (!lever.IsAvailable || lever.CurrentGauge >= 100) return;
+        if (!lever.IsAvailable) 
+        {
+            Animator.SetTrigger("PullOver");
+            netAnim.SetTrigger("PullOver");
+            IsFreeze = false; 
+            return; 
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
