@@ -289,6 +289,7 @@ public class KillerBase : PlayableCharacter
             hanger.HangedSurvivor = m_holdSurvivor;
             m_holdSurvivor.BeingHanged(hanger);
             hanger.KillerInteract();
+            m_holdSurvivor = null;
         }
     }
     public override void Interact(Lever lever)

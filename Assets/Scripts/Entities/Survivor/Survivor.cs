@@ -148,6 +148,7 @@ public class Survivor : PlayableCharacter
 
     [SerializeField] float rotateSpeed;
 
+    float resqueTime = 0;
 
 
 
@@ -447,8 +448,8 @@ public class Survivor : PlayableCharacter
         m_healthStateMachine.ChangeState(HealthStates.Injured);
         IsFreeze = false;
         m_CharacterController.Move(transform.up * -10f);
-        Animator.SetTrigger(Animator.StringToHash("JumpFence"));
-        netAnim.SetTrigger("JumpFence");
+        Animator.SetTrigger(Animator.StringToHash("Resqued"));
+        netAnim.SetTrigger("Resqued");
     }
 
     [ClientRpc]
@@ -561,7 +562,6 @@ public class Survivor : PlayableCharacter
         {
             if (Input.GetMouseButton(0))
             {
-                float resqueTime = 0;
                 resqueTime += Time.deltaTime;
                 IsFreeze = true;
                 if (resqueTime >= 0.8f)
@@ -573,6 +573,7 @@ public class Survivor : PlayableCharacter
             }
             if (Input.GetMouseButtonUp(0))
             {
+                resqueTime = 0;
                 IsFreeze = false;
             }
         }
