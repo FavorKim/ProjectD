@@ -559,7 +559,7 @@ public class Survivor : PlayableCharacter
     public override void Interact(Hanger hanger)
     {
         if (!isLocalPlayer) return;
-        if (hanger.HangedSurvivor != null && hanger.HangedSurvivor != this)
+        if (hanger.HangedSurvivor != null && hanger.HangedSurvivor != this.gameObject)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -862,6 +862,7 @@ public class Survivor : PlayableCharacter
     {
         if (!isLocalPlayer) return;
         if (m_healDest == null) return;
+        
 
         HealSurvivor(m_healDest, this, 0);
     }

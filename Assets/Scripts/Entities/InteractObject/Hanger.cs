@@ -41,7 +41,7 @@ public class Hanger : NetworkBehaviour, IInteractableObject
 
     public void SurvivorInteract() 
     {
-        hangedSurvivor.CmdOnResqued();
+        HangedSurvivor.CmdOnResqued();
         CmdOnXrayOn();
     }
 
