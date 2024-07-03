@@ -568,7 +568,7 @@ public class Survivor : PlayableCharacter
     public override void Interact(Lever lever)
     {
         if (!isLocalPlayer) return;
-        if (!lever.IsAvailable) return;
+        if (!lever.IsAvailable || lever.CurrentGauge >= 100) return;
 
         if (Input.GetMouseButtonDown(0))
         {

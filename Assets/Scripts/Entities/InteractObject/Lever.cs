@@ -10,8 +10,8 @@ public class Lever : NetworkBehaviour, IInteractableObject
     [SerializeField] Animator Animator_Door;
     [SerializeField] NetworkAnimator netAnim_Door;
     Animator Animator;
-    const float m_maxGauge = 100;
-    float curGauge;
+    const float MAXGAUGE = 100;
+    [SerializeField/*, SyncVar(hook = nameof(Hook_OnChangedLeverValue))*/]float curGauge;
     public float CurrentGauge
     {
         get
@@ -20,7 +20,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
         }
         set
         {
-            if(CurrentGauge >= 100)
+            if(curGauge >= MAXGAUGE)
             {
                 OnOpenDoor();
                 return;
@@ -28,7 +28,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
             if (CurrentGauge != value)
             {
                 curGauge = value;
-                Slider_Gauge.value = CurrentGauge / m_maxGauge;
+                Slider_Gauge.value = curGauge / MAXGAUGE;
             }
         }
     }
@@ -43,7 +43,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
 
     public void SurvivorInteract()
     {
-        if (!IsAvailable || CurrentGauge >= m_maxGauge) 
+        if (!IsAvailable) 
         {
             Slider_Gauge.gameObject.SetActive(false);
             Animator.SetBool("isUsing", false);
@@ -69,6 +69,8 @@ public class Lever : NetworkBehaviour, IInteractableObject
 
     void OnOpenDoor()
     {
+        Debug.Log("OnOpenDoor");
+        IsAvailable = false;
         OpenDoor();
     }
 
@@ -76,5 +78,11 @@ public class Lever : NetworkBehaviour, IInteractableObject
     {
         Animator_Door.SetTrigger("Open");
         netAnim_Door.SetTrigger("Open");
+    }
+
+
+    void Hook_OnChangedLeverValue(float old, float recent)
+    {
+        curGauge = recent;
     }
 }
