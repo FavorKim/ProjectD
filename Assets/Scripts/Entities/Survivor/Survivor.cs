@@ -26,6 +26,7 @@ public class Survivor : PlayableCharacter
     SurvivorStateMachine m_StateMachine;
     public SurvivorStateMachine GetMoveState() { return m_StateMachine; }
     SurvivorHealthStateMachine m_healthStateMachine;
+    public SurvivorHealthStateMachine GetHealthStateMachine() { return m_healthStateMachine; }
 
     Survivor m_healDest;
     KillerBase m_holdingKiller;
@@ -560,21 +561,10 @@ public class Survivor : PlayableCharacter
         if (!isLocalPlayer) return;
         if (hanger.HangedSurvivor != null && hanger.HangedSurvivor != this)
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
-                resqueTime += Time.deltaTime;
-                IsFreeze = true;
-                if (resqueTime >= 0.8f)
-                {
-                    hanger.SurvivorInteract();
-                    IsFreeze = false;
-                    return;
-                }
-            }
-            if (Input.GetMouseButtonUp(0))
-            {
-                resqueTime = 0;
-                IsFreeze = false;
+                hanger.SurvivorInteract();
+                StartCoroutine(CorFreeze(0.5f));
             }
         }
 
