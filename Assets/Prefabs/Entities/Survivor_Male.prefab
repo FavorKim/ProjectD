@@ -71,7 +71,7 @@ MonoBehaviour:
   m_healSpeed: 0
   m_entireHealTime: 16
   escapeGauge: 0
-  timeToEscape: 20
+  timeToEscape: 40
   rotateSpeed: 10
   isCorrupted: 0
 --- !u!114 &816875572900217396

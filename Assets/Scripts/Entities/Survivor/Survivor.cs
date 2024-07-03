@@ -137,7 +137,7 @@ public class Survivor : PlayableCharacter
             }
         }
     }
-    [SerializeField] float timeToEscape = 12.0f;
+    [SerializeField] float timeToEscape = 20.0f;
 
 
 
@@ -686,7 +686,7 @@ public class Survivor : PlayableCharacter
     }
     IEnumerator CorIncreaseEscapeGauge()
     {
-        while (EscapeGauge < 1)
+        while (EscapeGauge < 1 && m_healthStateMachine.GetCurState()==HealthStates.Held)
         {
             EscapeGauge += Time.deltaTime / timeToEscape;
             yield return null;
@@ -769,13 +769,11 @@ public class Survivor : PlayableCharacter
     }
     void OnEscapedFromKiller_ResetEscape()
     {
+        StopCoroutine(CorIncreaseEscapeGauge());
         EscapeSkillCheckManager.IsSkillChecking = false;
         EscapeGauge = 0;
         Slider_EscapeGauge.gameObject.SetActive(false);
         EscapeSkillCheckManager.GetSkillChecker().InvokeOnSkillCheckEnd();
-        // 스킬체크매니저 끄기
-
-
     }
 
     void OnSacrificed_GoUp()
