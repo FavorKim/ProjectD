@@ -1,4 +1,5 @@
 using Mirror;
+using Mirror.Discovery;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,8 @@ public class MyNetworkManager : NetworkRoomManager
 
     [SerializeField] GameObject Survivor;
     [SerializeField] GameObject survivorcamPref;
+
+    [SerializeField] NetworkDiscovery discovery;
 
     [SerializeField] private GameObject m_killerSideCam;
 
@@ -43,13 +46,26 @@ public class MyNetworkManager : NetworkRoomManager
 
     public void OnClick_Survivor()
     {
-        StartClient();
+        //StartClient();
+        discovery.StartDiscovery();
     }
     public void OnClick_Killer()
     {
         StartHost();
     }
 
+    public override void Start()
+    {
+        base.Start();
+        discovery = GetComponent<NetworkDiscovery>();
+        discovery.OnServerFound.AddListener(OnServerFound);
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        discovery.AdvertiseServer();
+    }
 
     
 
@@ -93,10 +109,15 @@ public class MyNetworkManager : NetworkRoomManager
         CustomLobbyStartPosition.Instance.OnDiconnected(room.StartPositionIndex);
     }
 
+    void OnServerFound(ServerResponse response)
+    {
+        StartClient();
+    }
 
     public override void OnApplicationQuit()
     {
         PerkSettingModel.Instance.selectedPerkList.Clear();
+        discovery.OnServerFound.RemoveListener(OnServerFound);
         base.OnApplicationQuit();
     }
 

@@ -42,12 +42,10 @@ public class CustomRoomPlayer : NetworkRoomPlayer
         if (SceneManager.GetActiveScene().name == "GameScene")
         {
             SetOutLook(false);
-            showRoomGUI = false;
         }
         else if (SceneManager.GetActiveScene().name == "LobbyScene")
         {
             SetOutLook(true);
-            showRoomGUI = true;
         }
     }
 
