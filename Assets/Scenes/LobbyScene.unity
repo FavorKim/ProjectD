@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1147491683}
-  m_IndirectSpecularColor: {r: 0.008539778, g: 0.008650568, b: 0.011676327, a: 1}
+  m_IndirectSpecularColor: {r: 0.008539544, g: 0.0086541055, b: 0.011674898, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -321,7 +321,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1212228330}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &145036342
 PrefabInstance:
@@ -1284,7 +1284,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1212228330}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &559920657
 PrefabInstance:
@@ -1541,7 +1541,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1212228330}
-  m_RootOrder: 0
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &874861885
 BoxCollider:
@@ -1938,7 +1938,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1212228330}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1202510391
 PrefabInstance:
@@ -2096,6 +2096,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1212228330}
   - component: {fileID: 1212228331}
+  - component: {fileID: 1212228332}
   m_Layer: 0
   m_Name: StartPos
   m_TagString: Untagged
@@ -2115,11 +2116,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 868588002}
-  - {fileID: 60045538}
-  - {fileID: 1000286778}
-  - {fileID: 493203157}
   - {fileID: 1160045101}
+  - {fileID: 493203157}
+  - {fileID: 1000286778}
+  - {fileID: 60045538}
+  - {fileID: 868588002}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2135,6 +2136,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce436f1c3b1074747bc9934007fe3135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1212228332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212228329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 3660839760
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &1243173284
 GameObject:
   m_ObjectHideFlags: 0

@@ -52,7 +52,7 @@ public class MyNetworkManager : NetworkRoomManager
     {
         GameObject roomObj;
 
-        Transform startPos = CustomLobbyStartPosition.GetStartPosition();
+        Transform startPos = CustomLobbyStartPosition.Instance.GetStartPosition();
 
         if(conn.connectionId == 0)
         {
@@ -78,9 +78,9 @@ public class MyNetworkManager : NetworkRoomManager
 
         if(conn.identity.TryGetComponent(out CustomRoomPlayer room))
         {
-            CustomLobbyStartPosition.OnDiconnected(room.transform);
             room.SetOutLook(true);
         }
+        CustomLobbyStartPosition.Instance.OnDiconnected();
     }
 
 

@@ -1,28 +1,64 @@
-using System.Collections;
+using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CustomLobbyStartPosition : MonoBehaviour
+public class CustomLobbyStartPosition : SingletonNetwork<CustomLobbyStartPosition>
 {
-    public static Stack<Transform> StartPositions;
-
+    public List<Transform> StartPositions;
+    [SyncVar(hook = nameof(Hook_OnChangedIndex))]
+    int index;
+    public int GetIndex() {  return index; }
     private void Awake()
     {
-        StartPositions = new Stack<Transform>();
+        StartPositions = new List<Transform>();
         for(int i=0; i<transform.childCount; i++)
         {
-            StartPositions.Push(transform.GetChild(i));
+            StartPositions.Add(transform.GetChild(i));
         }
     }
 
-    public static Transform GetStartPosition()
+    public Transform GetStartPosition()
     {
-        return StartPositions.Pop();
+        var transform = StartPositions[index];
+        index++;
+        return transform;
     }
-    public static void OnDiconnected(Transform pushDest)
+    public void OnDiconnected()
     {
-        StartPositions.Push(pushDest);
+        index--;
     }
 
-    
+    void Hook_OnChangedIndex(int old, int recent)
+    {
+        index = recent;
+    }
+    /*
+    [ClientRpc]
+    void RpcSetStartPosIsAvailable(int index, bool isAvailable)
+    {
+        StartPositions[index].SetIsAvailable(isAvailable);
+    }
+    */
 }
+/*
+public class StartPos
+{
+    Transform transform;
+    bool isAvailable;
+
+    public StartPos(Transform transform)
+    {
+        this.transform = transform;
+        isAvailable = true;
+    }
+
+    public Transform GetTransform()
+    {
+        isAvailable = false;
+        return transform;
+    }
+    public void SetIsAvailable(bool isAvailable)
+    {
+        this.isAvailable = isAvailable;
+    }
+}*/

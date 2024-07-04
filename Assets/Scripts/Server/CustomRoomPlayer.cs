@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class CustomRoomPlayer : NetworkRoomPlayer
 {
     GameObject OutLook;
+    public int StartPositionIndex { get; set; }
 
     private void Awake()
     {
