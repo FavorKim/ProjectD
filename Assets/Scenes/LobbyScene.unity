@@ -3500,6 +3500,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1974711167}
+  - component: {fileID: 1974711168}
   m_Layer: 5
   m_Name: ReadyCheck
   m_TagString: Untagged
@@ -3532,6 +3533,21 @@ RectTransform:
   m_AnchoredPosition: {x: 729, y: -400}
   m_SizeDelta: {x: -1820, y: -980}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1974711168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1974711166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22f84de39f54e9b4b8c8c3e065dd084a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!1 &1993676453
 GameObject:
   m_ObjectHideFlags: 0

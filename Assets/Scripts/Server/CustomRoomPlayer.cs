@@ -11,7 +11,7 @@ public class CustomRoomPlayer : NetworkRoomPlayer
     {
         get; set;
     }
-    [SyncVar]
+
     public bool isReady = false;
 
     Button Btn_Ready;
@@ -67,7 +67,7 @@ public class CustomRoomPlayer : NetworkRoomPlayer
     {
         var manager = NetworkRoomManager.singleton as MyNetworkManager;
 
-        if (connectionToClient.connectionId == 0)
+        if (isServer)
         {
             manager.KillerSideCam.SetActive(true);
             manager.SurvivorSideCam.SetActive(false);
@@ -88,16 +88,16 @@ public class CustomRoomPlayer : NetworkRoomPlayer
     [Command]
     void CmdSetReady()
     {
-        isReady = true;
+        RpcSetReady();
+        
+    }
+    [ClientRpc]
+    void RpcSetReady()
+    {
+        isReady = !isReady;
+        ReadyStateHUD.Instance.RpcSetImageColor(StartPositionIndex, isReady);
         var lobbyManager = (MyNetworkManager)NetworkManager.singleton;
         lobbyManager.CheckAllReady();
     }
 
-    //void OnReadyStatusChanged(bool oldValue, bool newValue)
-    //{
-    //    if (isLocalPlayer)
-    //    {
-    //        Btn_Ready.interactable = !newValue;
-    //    }
-    //}
 }
