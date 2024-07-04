@@ -68,20 +68,21 @@ public class MyNetworkManager : NetworkRoomManager
         return roomObj;
     }
 
-    
+
     public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
     {
         base.OnRoomServerDisconnect(conn);
 
-        CustomLobbyStartPosition.OnDiconnected(conn.identity.transform);
-        Destroy(conn.identity);
+        //CustomLobbyStartPosition.OnDiconnected(conn.identity.transform);
+        //CustomRoomPlayer room = conn.identity.GetComponent<CustomRoomPlayer>();
+
+        if(conn.identity.TryGetComponent(out CustomRoomPlayer room))
+        {
+            CustomLobbyStartPosition.OnDiconnected(room.transform);
+            room.SetOutLook(true);
+        }
     }
 
-    public override void OnRoomClientDisconnect()
-    {
-        base.OnRoomClientDisconnect();
-    }
-    
 
     public override void OnApplicationQuit()
     {

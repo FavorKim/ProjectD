@@ -1,15 +1,21 @@
 using Michsky.UI.Dark;
 using Mirror;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CustomRoomPlayer : NetworkRoomPlayer
 {
     GameObject OutLook;
 
+    private void Awake()
+    {
+        OutLook = gameObject.transform.GetChild(0).gameObject;
+    }
 
     public override void OnClientEnterRoom()
     {
         base.OnClientEnterRoom();
+        OutLook.SetActive(true);
         if (!isLocalPlayer) return;
         var manager = NetworkRoomManager.singleton as MyNetworkManager;
         if (isServer)
@@ -27,8 +33,20 @@ public class CustomRoomPlayer : NetworkRoomPlayer
 
     public override void OnClientExitRoom()
     {
+        
         base.OnClientExitRoom();
-        OutLook = gameObject.transform.GetChild(0).gameObject;
-        OutLook.SetActive(false);
+        if (SceneManager.GetActiveScene().name == "GameScene")
+        {
+            //OutLook = gameObject.transform.GetChild(0).gameObject;
+            OutLook.SetActive(false);
+        }
     }
+
+    public void SetOutLook(bool onOff)
+    {
+        if(OutLook== null)
+            OutLook = gameObject.transform.GetChild(0).gameObject;
+        OutLook.SetActive(onOff);
+    }
+    
 }
