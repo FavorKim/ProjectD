@@ -9,6 +9,7 @@ public class CustomStartPosition : NetworkBehaviour
     private void Start()
     {
         isAvailable = true;
+        
     }
 
     [Command(requiresAuthority = false)]

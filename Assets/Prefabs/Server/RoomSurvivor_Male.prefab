@@ -70,6 +70,7 @@ MonoBehaviour:
   showRoomGUI: 1
   readyToBegin: 0
   index: 0
+  isReady: 0
 --- !u!114 &4143639026481468281
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,7 +1,7 @@
-using Michsky.UI.Dark;
 using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CustomRoomPlayer : NetworkRoomPlayer
 {
@@ -9,25 +9,69 @@ public class CustomRoomPlayer : NetworkRoomPlayer
 
     public int StartPositionIndex
     {
-        get;set;
+        get; set;
     }
+    [SyncVar]
+    public bool isReady = false;
 
-    private void Awake()
+    Button Btn_Ready;
+
+    public override void Start()
     {
-        OutLook = gameObject.transform.GetChild(0).gameObject;
+        base.Start();
+        if (Btn_Ready == null)
+        {
+            Btn_Ready = GameObject.Find("LobbySetting/Btn_Ready").GetComponent<Button>();
+            Btn_Ready.onClick.AddListener(OnReadyButtonClick);
+        }
     }
 
     public override void OnClientEnterRoom()
     {
         base.OnClientEnterRoom();
-        OutLook.SetActive(true);
+        SetOutLook(true);
         if (!isLocalPlayer) return;
+
+        SetLobbyCamera();
+    }
+
+    public override void OnClientExitRoom()
+    {
+
+        base.OnClientExitRoom();
+        if (SceneManager.GetActiveScene().name == "GameScene")
+        {
+            SetOutLook(false);
+            showRoomGUI = false;
+        }
+        else if (SceneManager.GetActiveScene().name == "LobbyScene")
+        {
+            SetOutLook(true);
+            showRoomGUI = true;
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        Btn_Ready.onClick.RemoveListener(OnReadyButtonClick);
+    }
+
+    public void SetOutLook(bool onOff)
+    {
+        if (OutLook == null)
+            OutLook = gameObject.transform.GetChild(0).gameObject;
+        OutLook.SetActive(onOff);
+    }
+
+    void SetLobbyCamera()
+    {
         var manager = NetworkRoomManager.singleton as MyNetworkManager;
-        if (isServer)
+
+        if (connectionToClient.connectionId == 0)
         {
             manager.KillerSideCam.SetActive(true);
             manager.SurvivorSideCam.SetActive(false);
-
+            
         }
         else
         {
@@ -36,22 +80,24 @@ public class CustomRoomPlayer : NetworkRoomPlayer
         }
     }
 
-    public override void OnClientExitRoom()
+    void OnReadyButtonClick()
     {
-        
-        base.OnClientExitRoom();
-        if (SceneManager.GetActiveScene().name == "GameScene")
-        {
-            //OutLook = gameObject.transform.GetChild(0).gameObject;
-            OutLook.SetActive(false);
-        }
+        CmdSetReady();
     }
 
-    public void SetOutLook(bool onOff)
+    [Command]
+    void CmdSetReady()
     {
-        if(OutLook== null)
-            OutLook = gameObject.transform.GetChild(0).gameObject;
-        OutLook.SetActive(onOff);
+        isReady = true;
+        var lobbyManager = (MyNetworkManager)NetworkManager.singleton;
+        lobbyManager.CheckAllReady();
     }
-    
+
+    //void OnReadyStatusChanged(bool oldValue, bool newValue)
+    //{
+    //    if (isLocalPlayer)
+    //    {
+    //        Btn_Ready.interactable = !newValue;
+    //    }
+    //}
 }

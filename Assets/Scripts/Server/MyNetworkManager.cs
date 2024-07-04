@@ -2,6 +2,7 @@ using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MyNetworkManager : NetworkRoomManager
 {
@@ -12,6 +13,7 @@ public class MyNetworkManager : NetworkRoomManager
     [SerializeField] GameObject survivorcamPref;
 
     [SerializeField] private GameObject m_killerSideCam;
+
     public GameObject KillerSideCam
     {
         get
@@ -47,6 +49,10 @@ public class MyNetworkManager : NetworkRoomManager
     {
         StartHost();
     }
+
+
+    
+
 
     public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnectionToClient conn)
     {
@@ -92,5 +98,24 @@ public class MyNetworkManager : NetworkRoomManager
     {
         PerkSettingModel.Instance.selectedPerkList.Clear();
         base.OnApplicationQuit();
+    }
+
+    public void CheckAllReady()
+    {
+        bool allReady = true;
+        foreach (var conn in NetworkServer.connections)
+        {
+            var player = conn.Value.identity.GetComponent<CustomRoomPlayer>();
+            if (player != null && !player.isReady)
+            {
+                allReady = false;
+                break;
+            }
+        }
+
+        if (allReady)
+        {
+            ServerChangeScene("GameScene");
+        }
     }
 }
