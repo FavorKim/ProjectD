@@ -52,18 +52,22 @@ public class MyNetworkManager : NetworkRoomManager
     {
         GameObject roomObj;
 
-        Transform startPos = CustomLobbyStartPosition.Instance.GetStartPosition();
+        
 
         if(conn.connectionId == 0)
         {
+            Transform startPos = CustomLobbyStartPosition.Instance.GetStartPosition(true,out int index);
             roomObj = Instantiate(Killer,startPos.position,startPos.rotation);
+            roomObj.GetComponent<CustomRoomPlayer>().StartPositionIndex = index;
         }
         else
         {
+            Transform startPos = CustomLobbyStartPosition.Instance.GetStartPosition(false, out int index);
             roomObj = Instantiate(Survivor, startPos.position, startPos.rotation);
+            roomObj.GetComponent<CustomRoomPlayer>().StartPositionIndex = index;
         }
 
-        
+
 
         return roomObj;
     }
@@ -80,7 +84,7 @@ public class MyNetworkManager : NetworkRoomManager
         {
             room.SetOutLook(true);
         }
-        CustomLobbyStartPosition.Instance.OnDiconnected();
+        CustomLobbyStartPosition.Instance.OnDiconnected(room.StartPositionIndex);
     }
 
 

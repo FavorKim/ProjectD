@@ -4,34 +4,48 @@ using UnityEngine;
 
 public class CustomLobbyStartPosition : SingletonNetwork<CustomLobbyStartPosition>
 {
-    public List<Transform> StartPositions;
-    [SyncVar(hook = nameof(Hook_OnChangedIndex))]
-    int index;
-    public int GetIndex() {  return index; }
+    public CustomStartPosition[] StartPositions;
     private void Awake()
     {
-        StartPositions = new List<Transform>();
+        
         for(int i=0; i<transform.childCount; i++)
         {
-            StartPositions.Add(transform.GetChild(i));
+            StartPositions = GetComponentsInChildren<CustomStartPosition>();
         }
     }
+    
+    public Transform GetStartPosition(bool isHost, out int index)
+    {
+        Transform pos = default;
+        if (isHost)
+        {
+            index = 0;
+            pos = StartPositions[0].transform;
+            return pos;
+        }
+        else
+        {
+            for (int i = 0; i < StartPositions.Length; i++)
+            {
+                if (i == 0) continue;
+                if (StartPositions[i].GetIsAvailable())
+                {
+                    pos = StartPositions[i].transform;
+                    StartPositions[i].CmdSetIsAvailable(false);
+                    index = i;
+                    return pos;
+                }
+            }
+        }
+        index = 999;
+        return pos;
+    }
+    
+    public void OnDiconnected(int index)
+    {
+        StartPositions[index].CmdSetIsAvailable(true);
+    }
 
-    public Transform GetStartPosition()
-    {
-        var transform = StartPositions[index];
-        index++;
-        return transform;
-    }
-    public void OnDiconnected()
-    {
-        index--;
-    }
-
-    void Hook_OnChangedIndex(int old, int recent)
-    {
-        index = recent;
-    }
     /*
     [ClientRpc]
     void RpcSetStartPosIsAvailable(int index, bool isAvailable)
