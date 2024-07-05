@@ -21,35 +21,37 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
     public int PlayerRemaining
     {
         get { return playerRemaining; }
-        private set
+        set
         {
-            if (playerRemaining != value)
+            if(playerRemaining != value)
             {
                 playerRemaining = value;
-                if (playerRemaining == 0)
-                    SetPlayerNoRemaining();
+                CmdSetPlayerRemaining(playerRemaining);
             }
         }
     }
     [SerializeField]
     int playerKilled;
-    
-
-
-    private void Awake()
+    public int PlayerKilled
     {
-        PlayerRemaining = 0;
-        playerKilled = 0;
+        get { return playerKilled; }
+        set 
+        {
+            if (playerKilled != value)
+            {
+                playerKilled = value;
+                CmdSetPlayerKilled(playerKilled);
+            }
+        }
     }
-
     private void Start()
     {
         if(instance != null && instance.gameObject !=this.gameObject)
             DestroyImmediate(instance.gameObject);
         instance = this;
-
+        playerRemaining = 0;
+        playerKilled = 0;
     }
-
 
     public void SetGameResult(GameResult result)
     {
@@ -62,7 +64,7 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
             {
                 survivor.SetResultText(result);
                 PlayerRemaining--;
-                if (result == GameResult.Sacrificed) playerKilled++;
+                if (result == GameResult.Sacrificed) PlayerKilled++;
                 
             }
         }
@@ -79,15 +81,23 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
     [Command(requiresAuthority =false)]
     void SetPlayerNoRemaining()
     {
-        if (playerKilled == 0) SetGameResult(GameResult.NoKill);
-        else if (playerKilled < 4) SetGameResult(GameResult.SOSO);
+        if (PlayerKilled == 0) SetGameResult(GameResult.NoKill);
+        else if (PlayerKilled < 4) SetGameResult(GameResult.SOSO);
         else SetGameResult(GameResult.ALLKILL);
     }
 
     [Command(requiresAuthority =false)]
-    public void CmdIncreaseRemainingPlayer()
+    void CmdSetPlayerRemaining(int val)
     {
-        PlayerRemaining++;
+        playerRemaining = val;
+        if (playerRemaining == 0)
+            SetPlayerNoRemaining();
+    }
+
+    [Command(requiresAuthority =false)]
+    void CmdSetPlayerKilled(int val)
+    {
+        playerKilled = val;
     }
 
 

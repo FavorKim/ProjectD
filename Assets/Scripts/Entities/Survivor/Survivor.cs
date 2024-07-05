@@ -261,7 +261,7 @@ public class Survivor : PlayableCharacter
         PlayerUIManager.Instance.CreatePlayerUI(this);
         PlayerPerkManager.SetSurvivorPerk(SelectedPerkManager.EquippedPerkList, this);
         InGamePerkSlot.Instance.SetPerkIcons(SelectedPerkManager.EquippedPerkList);
-        GameResultManager.Instance.CmdIncreaseRemainingPlayer();
+        GameResultManager.Instance.PlayerRemaining++;
     }
 
     private void OnEnable()
@@ -961,6 +961,7 @@ public class Survivor : PlayableCharacter
             PlayerUIManager.Instance.SetPlayerUIState(m_playerID, PlayerUI.Icons.Escaped);
             if (isLocalPlayer)
                 GameResultManager.Instance.SetGameResult(GameResult.Escape);
+            gameObject.SetActive(false);
         }
     }
     protected override void OnTriggerExit(Collider other)

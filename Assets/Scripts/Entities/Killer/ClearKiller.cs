@@ -8,19 +8,21 @@ public class ClearKiller : MonoBehaviour
     [SerializeField] Text Text_Result;
     [SerializeField] CanvasGroup Panel_Fade;
     [SerializeField] GameObject OutFit;
-    
+    [SerializeField] GameObject Panel_ButtonHolder;
 
     void Start()
     {
 
-        Panel_Fade.DOFade(1, 0.8f).OnComplete(() =>
+        Panel_Fade.DOFade(1, 0.5f).OnComplete(() =>
         {
             Panel_Fade.DOFade(0, 1.5f);
             Text_Result.gameObject.SetActive(true);
             OutFit.gameObject.SetActive(true);
+            Panel_ButtonHolder.SetActive(true);
         });
 
         anim.SetBool("isMoving", true);
+        anim.SetFloat("inputY", 1);
     }
 
     public void SetResultText(GameResult result)
@@ -44,4 +46,8 @@ public class ClearKiller : MonoBehaviour
         }
     }
 
+    public void OnClick_ToMain()
+    {
+        MyNetworkManager.singleton.StopClient();
+    }
 }
