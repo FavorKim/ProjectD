@@ -48,6 +48,7 @@ public class MyNetworkManager : NetworkRoomManager
     {
         //StartClient();
         discovery.StartDiscovery();
+        
     }
     public void OnClick_Killer()
     {

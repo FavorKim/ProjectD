@@ -5,6 +5,16 @@ using UnityEngine;
 public class CustomLobbyStartPosition : SingletonNetwork<CustomLobbyStartPosition>
 {
     public CustomStartPosition[] StartPositions;
+
+    private void Start()
+    {
+        if (instance != null && instance !=this)
+        {
+            DestroyImmediate(instance.gameObject);
+        }
+        instance = this;
+    }
+
     private void Awake()
     {
         
