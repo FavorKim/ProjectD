@@ -55,7 +55,6 @@ public class PerkSettingModel
 
     public void EquipPerk(PerkData perkToChange)
     {
-        
         if(selectedPerk.perk == perkToChange)
         {
             selectedPerk.perk = null;

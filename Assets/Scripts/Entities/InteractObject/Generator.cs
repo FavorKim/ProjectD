@@ -275,7 +275,8 @@ public class Generator : NetworkBehaviour, IInteractableObject
     void OnSkillCheckFailed()
     {
         CmdRedLightOn();
-        Cmd_ProgressGenerator(-150.0f);
+        OnGeneratorFailed.Invoke();
+        Cmd_ProgressGenerator(-70.0f);
     }
 
     void OnComplete_StopSkillCheck()

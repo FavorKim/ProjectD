@@ -19,10 +19,10 @@ namespace PerkVMExtension
 
         public static void OnResponseEquip(this SelectedPerkViewModel vm, PerkData perk, int index)
         {
-            if (perk != vm.PerkSCO)
+            if (perk != vm.PerkData)
             {
                 if (index == vm.index)
-                    vm.PerkSCO = perk;
+                    vm.PerkData = perk;
             }
         }
 
@@ -35,3 +35,41 @@ namespace PerkVMExtension
         }
     }
 }
+/*
+ * 
+ DataManager
+
+Data[] m_data;
+
+Data curData;
+event Action<data> OnClick;
+
+
+void OnClickBtn(data d){
+ curData = d;
+}
+
+foreach data d in m_data
+
+d.onclick += onclickbtn;
+
+
+Data
+
+
+event Action<Data> onclick;
+
+void onclick(Data d)
+{
+   
+}
+
+Button(UI) OnClick()
++=
+
+public void Onclick_Btn()
+{
+    onclick(this);
+}
+
+ */

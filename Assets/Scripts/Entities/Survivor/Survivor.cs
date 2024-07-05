@@ -149,7 +149,6 @@ public class Survivor : PlayableCharacter
 
     [SerializeField] float rotateSpeed;
 
-    float resqueTime = 0;
 
 
 

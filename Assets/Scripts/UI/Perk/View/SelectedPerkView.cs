@@ -54,8 +54,8 @@ public class SelectedPerkView : MonoBehaviour
                 SetMarkerActive(vm.IsSelected);
                 break;
 
-            case nameof(vm.PerkSCO):
-                perk.Init(vm.PerkSCO);
+            case nameof(vm.PerkData):
+                perk.Init(vm.PerkData);
                 break;
         }
     }

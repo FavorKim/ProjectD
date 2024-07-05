@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PerkTable>
+  <dataCategory>
+    <data Owner="Killer" PerkName="Brutal" IconName="Brutal" EffectTarget="BreakSpeed" ValuePercentage="30" CoolTime="0" Duration="0" PerkType="Passive" Description="판자를 부수는 속도와 발전기를 사보타지 하는 속도가 &lt;color=green&gt;{0}%&lt;/color&gt; 만큼 빨라집니다." />
+    <data Owner="Killer" PerkName="Bamboozle" IconName="Bamboozle" EffectTarget="JumpSpeed" ValuePercentage="20" CoolTime="0" Duration="0" PerkType="Passive" Description="펜스를 넘어가는 속도가 &lt;color=green&gt;{0}%&lt;/color&gt; 만큼 빨라집니다." />
+    <data Owner="Killer" PerkName="Enduring" IconName="Enduring" EffectTarget="StunRecover" ValuePercentage="50" CoolTime="0" Duration="0" PerkType="Passive" Description="기절 지속시간이 &lt;color=green&gt;{0}%&lt;/color&gt; 만큼 감소합니다." />
+    <data Owner="Killer" PerkName="Unrelenting" IconName="Unrelenting" EffectTarget="AttackSpeed" ValuePercentage="15" CoolTime="0" Duration="0" PerkType="Passive" Description="공격 속도가 &lt;color=green&gt;{0}%&lt;/color&gt; 만큼 빨라집니다." />
+    <data Owner="Survivor" PerkName="Sprint" IconName="Sprint" EffectTarget="MoveSpeed" ValuePercentage="150" CoolTime="20" Duration="3" PerkType="Exhaust" Description="달릴 때 &lt;color=yellow&gt;{2}초&lt;/color&gt; 동안 이동속도가 &lt;color=green&gt;{0}%&lt;/color&gt; 만큼 빨라집니다. &lt;color=red&gt;{1}&lt;/color&gt;초의 대기시간이 주어집니다." />
+    <data Owner="Survivor" PerkName="SelfCare" IconName="SelfCare" EffectTarget="HealSpeed" ValuePercentage="-20" CoolTime="0" Duration="0" PerkType="Passive" Description="&lt;color=green&gt;{0}%&lt;/color&gt; 낮은 속도로 스스로 치유가 가능해집니다." />
+    <data Owner="Survivor" PerkName="Urban" IconName="Urban" EffectTarget="CrouchSpeed" ValuePercentage="100" CoolTime="0" Duration="0" PerkType="Passive" Description="앉을 때의 이동속도가 &lt;color=green&gt;{0}%&lt;/color&gt; 만큼 빨라집니다." />
+    <data Owner="Survivor" PerkName="Botany" IconName="Botany" EffectTarget="HealSpeed" ValuePercentage="30" CoolTime="0" Duration="0" PerkType="Passive" Description="치료속도가 &lt;color=green&gt;{0}%&lt;/color&gt; 만큼 빨라집니다." />
+  </dataCategory>
+</PerkTable>
