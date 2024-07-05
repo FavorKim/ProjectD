@@ -38,7 +38,7 @@ public class KillerBase : PlayableCharacter
 
     [SerializeField] float m_rotateSpeed;
     [SerializeField] float m_attackCool;
-    [SerializeField] float m_stunLength;
+    float m_stunLength = 2.0f;
     public float StunLength
     {
         get
@@ -125,8 +125,8 @@ public class KillerBase : PlayableCharacter
     }
     bool isAttacking = false;
     bool canAttack = true;
-    bool isStunable = true;
-
+    [SerializeField] bool isStunable = true;
+    [SerializeField]bool isStun = false;
 
     public bool IsAttacking
     {
@@ -220,6 +220,8 @@ public class KillerBase : PlayableCharacter
     }
     void KillerAttack()
     {
+        if (isStun) return;
+
         if (Input.GetMouseButton(0) && canAttack && m_lungeLength < 0.5f)
         {
             IsAttacking = true;
@@ -356,10 +358,12 @@ public class KillerBase : PlayableCharacter
     IEnumerator CorStunCool()
     {
         isStunable = false;
+        isStun = true;
         yield return new WaitForSeconds(StunLength);
         Animator.SetTrigger("StunOver");
         netAnim.SetTrigger("StunOver");
         isStunable = true;
+        isStun = false;
     }
     IEnumerator CorWeaponColliderSet()
     {
@@ -372,6 +376,7 @@ public class KillerBase : PlayableCharacter
     {
         base.OnTriggerEnter(collision);
 
+        
 
         //var survivor = collision.GetComponent<Survivor>();
         if (collision.TryGetComponent(out Survivor survivor))
@@ -380,15 +385,30 @@ public class KillerBase : PlayableCharacter
             {
                 IsAttacking = false;
             }
-
-
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (!isLocalPlayer || IsFreeze) return;
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!isLocalPlayer) return;
+
+        if (IsAttacking)
+        {
+            if (other.CompareTag("Wall"))
+            {
+                if (other.TryGetComponent(out Palete pal))
+                {
+                    if (pal.isUsed)
+                    {
+                        OnStunCall();
+                    }
+                }
+                else
+                    OnStunCall();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && !IsFreeze)
         {
             if (other.TryGetComponent(out Survivor survivor))
             {
@@ -412,16 +432,21 @@ public class KillerBase : PlayableCharacter
         RpcOnStunCall();
     }
     [ClientRpc]
-    public void RpcOnStunCall() { OnStun(); }
+    public void RpcOnStunCall() 
+    {
+        if (isStunable)
+            OnStun();
+    }
 
     void OnStun_GetHit()
     {
-        if (!isLocalPlayer) return;
-        if (!isStunable) return;
+        //if (!isLocalPlayer) return;
+        IsAttacking = false;
+        StartCoroutine(CorStunCool());
+        StartCoroutine(CorFreezeWhileSec(StunLength));
+        m_AttackCollider.enabled = false;
         Animator.SetTrigger("GetHit");
         netAnim.SetTrigger("GetHit");
-        StartCoroutine(CorFreezeWhileSec(StunLength));
-        StartCoroutine(CorStunCool());
     }
     void OnStun_RevealSurvivor()
     {

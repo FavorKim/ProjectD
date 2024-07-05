@@ -9,6 +9,7 @@ public class Palete : NetworkBehaviour, IInteractableObject
     [SerializeField] GameObject VFX_GibletPref;
     Animator m_anim;
     NetworkAnimator netAnim;
+    [SerializeField] BoxCollider triggerZone;
     public bool isUsed = false;
     [SerializeField]bool isAttack = false;
     public bool IsAttack { get { return isAttack; } private set { isAttack = value; } }

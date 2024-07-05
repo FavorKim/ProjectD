@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: -6441846297463922865}
   m_Layer: 0
   m_Name: Killer_Skeleton
-  m_TagString: Untagged
+  m_TagString: Killer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,11 +111,12 @@ MonoBehaviour:
   Prefab_KillerCam: {fileID: 7236142770976030694, guid: 3e90230c286136b47825ee9143023d00, type: 3}
   m_rotateSpeed: 1
   m_attackCool: 1.2
-  m_stunLength: 0
   m_stunRecover: 0
   m_jumpSpeed: 0
   m_breakSpeed: 0
   m_attackSpeed: 0
+  isStunable: 1
+  isStun: 0
 --- !u!114 &1879315202919675952
 MonoBehaviour:
   m_ObjectHideFlags: 0

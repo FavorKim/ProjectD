@@ -12,6 +12,7 @@ TagManager:
   - Window
   - Missile
   - Escape
+  - Wall
   layers:
   - Default
   - TransparentFX

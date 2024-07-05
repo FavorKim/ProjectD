@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 481380}
   m_Layer: 0
   m_Name: Wood_Fence_01
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 6579966}
   m_Layer: 0
   m_Name: Mesh1_Wood_Fence_Model
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647

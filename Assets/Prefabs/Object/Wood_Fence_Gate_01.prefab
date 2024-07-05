@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 736711328809913217}
   m_Layer: 0
   m_Name: Wood_Fence_Gate_01
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 2706271722537468240}
   m_Layer: 0
   m_Name: Mesh1_Wood_Fence_Gate_Model
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 1323483142488391323}
   m_Layer: 0
   m_Name: Mesh2_Wood_Fence_Gate_Model
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
