@@ -275,7 +275,8 @@ public class KillerBase : PlayableCharacter
     }
     public override void Interact(Palete palete)
     {
-
+        if (palete.IsAttack && isStunable)
+            OnStun.Invoke();
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
