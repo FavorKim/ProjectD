@@ -45,7 +45,7 @@ public class MyNetworkManager : NetworkRoomManager
             return m_survivorSideCam;
         }
     }
-
+    /* 포트를 구해야하는 네트워킹
     public string CentralServerIPAddress = "3.38.185.62";
     [SerializeField] int CentralServerPort = 7777;
     Dictionary<string, NetworkConnectionToClient> connectedClients = new();
@@ -53,7 +53,7 @@ public class MyNetworkManager : NetworkRoomManager
     ushort hostPort;
     bool isMatching = false;
 
-
+    
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -164,7 +164,7 @@ public class MyNetworkManager : NetworkRoomManager
 
 
 
-
+    
     public void OnClick_Survivor()
     {
         isMatching = !isMatching;
@@ -183,13 +183,35 @@ public class MyNetworkManager : NetworkRoomManager
         KcpTransport port = Transport.active as KcpTransport;
         port.port = 1;
         StartHost();
-        
-        
+    }
+    */
+
+    public override void Start()
+    {
+        base.Start();
+        discovery = GetComponent<NetworkDiscovery>();
+        discovery.OnServerFound.AddListener(OnServerFound);
     }
 
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        discovery.AdvertiseServer();
+    }
 
+    public void OnClick_Survivor()
+    {
+        discovery.StartDiscovery();
+    }
+    public void OnClick_Killer()
+    {
+        StartHost();
+    }
 
-
+    void OnServerFound(ServerResponse response)
+    {
+        StartClient();
+    }
 
 
     public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnectionToClient conn)
@@ -235,6 +257,7 @@ public class MyNetworkManager : NetworkRoomManager
     public override void OnApplicationQuit()
     {
         PerkSettingModel.Instance.selectedPerkList.Clear();
+        discovery.OnServerFound.RemoveAllListeners();
         base.OnApplicationQuit();
     }
 
@@ -257,8 +280,8 @@ public class MyNetworkManager : NetworkRoomManager
         }
     }
 }
-
-public struct RegisterClientMessage : NetworkMessage
+/* 포트를 구해야하는 네트워킹
+ public struct RegisterClientMessage : NetworkMessage
 {
     public string clientId;
 }
@@ -276,3 +299,4 @@ public struct HostInfoMessage : NetworkMessage
     public string hostAddress;
     public ushort hostPort;
 }
+*/

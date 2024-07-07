@@ -9,7 +9,7 @@ public class CustomNetworkClient : MonoBehaviour
     {
         //ConnectToServer();
     }
-
+    /*
     void ConnectToServer()
     {
         var manager = MyNetworkManager.singleton as MyNetworkManager;
@@ -17,4 +17,5 @@ public class CustomNetworkClient : MonoBehaviour
         manager.networkAddress = manager.CentralServerIPAddress;
         manager.StartClient();
     }
+    */
 }
