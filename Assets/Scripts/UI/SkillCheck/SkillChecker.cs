@@ -63,6 +63,7 @@ public class SkillChecker : NetworkBehaviour
 
     IEnumerator CorRotateSkillChecker()
     {
+        yield return new WaitForSeconds(0.5f);
         float curTime = 0f;
         bool isClick = false;
         float zVal = 0;

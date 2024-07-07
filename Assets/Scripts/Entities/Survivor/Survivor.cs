@@ -13,7 +13,6 @@ public class Survivor : PlayableCharacter
     #region Class
     CharacterController m_CharacterController;
 
-    // 해시로 애니메이터 다뤄보기 (최적화)
     [SerializeField] Animator Animator;
     NetworkAnimator netAnim;
     [SerializeField] Slider Slider_HealGauge;
@@ -32,6 +31,7 @@ public class Survivor : PlayableCharacter
     KillerBase m_holdingKiller;
 
     [SerializeField] SkillCheckManager EscapeSkillCheckManager;
+    [SerializeField] SkillCheckManager HealSkillCheckManager;
 
     #endregion
     #region Vector
@@ -287,6 +287,9 @@ public class Survivor : PlayableCharacter
 
         OnHitted += OnHitted_SetAnimation;
 
+        HealSkillCheckManager.RegisterOnSkillSuccess(OnHealSkillCheckSuccess);
+        HealSkillCheckManager.RegisterOnSkillCritical(OnHealSkillCheckCritical);
+        HealSkillCheckManager.RegisterOnSkillFailed(OnHealSkillCheckFailed);
     }
 
     protected override void Update()
@@ -309,6 +312,10 @@ public class Survivor : PlayableCharacter
     {
         m_healthStateMachine.UnRegisterEvent();
         OnHitted = null;
+
+        HealSkillCheckManager.UnRegisterOnSkillFailed(OnHealSkillCheckFailed);
+        HealSkillCheckManager.UnRegisterOnSkillCritical(OnHealSkillCheckCritical);
+        HealSkillCheckManager.UnRegisterOnSkillSuccess(OnHealSkillCheckSuccess);
 
         OnHitted -= OnHitted_SetAnimation;
 
@@ -409,7 +416,11 @@ public class Survivor : PlayableCharacter
         OnChangedState(newState);
     }
 
-
+    [Command(requiresAuthority =false)]
+    void CmdSetSurvivorHealGauge(Survivor dest, float value)
+    {
+        RpcOnSetSurvivorHealGauge(dest, value);
+    }
 
     #endregion
     #region Rpc
@@ -485,6 +496,12 @@ public class Survivor : PlayableCharacter
     void OnChangedState(HealthStates newState)
     {
         m_healthStateMachine.ChangeState(newState);
+    }
+
+    [ClientRpc]
+    void RpcOnSetSurvivorHealGauge(Survivor dest, float value)
+    {
+        dest.HealGauge = value;
     }
     #endregion
 
@@ -702,6 +719,7 @@ public class Survivor : PlayableCharacter
     public event Action OnSacrificed;
     public event Action OnChangedRunSpeed;
     public event Action OnEscapedFromKiller;
+    
 
     // 들렸을 때
     void OnBeingHeld_SetState(KillerBase killer)
@@ -837,6 +855,22 @@ public class Survivor : PlayableCharacter
         }
     }
 
+    void OnHealSkillCheckSuccess()
+    {
+        if (m_healDest != null)
+            CmdSetSurvivorHealGauge(m_healDest, m_healDest.HealGauge);
+    }
+    void OnHealSkillCheckCritical()
+    {
+        if(m_healDest!=null)
+            CmdSetSurvivorHealGauge(m_healDest, m_healDest.HealGauge + 0.1f);
+    }
+    void OnHealSkillCheckFailed()
+    {
+        if (m_healDest != null) 
+            CmdSetSurvivorHealGauge(m_healDest, m_healDest.HealGauge - 0.1f);
+    }
+
     #endregion
 
     #region Methods
@@ -868,6 +902,7 @@ public class Survivor : PlayableCharacter
     {
         if (IsSelfCare && isLocalPlayer && m_healthStateMachine.GetCurState() != HealthStates.Down)
         {
+            m_healDest = this;
             HealSurvivor(this, this, 1);
         }
     }
@@ -881,6 +916,8 @@ public class Survivor : PlayableCharacter
         }
         if (Input.GetMouseButtonDown(mouseIndex))
         {
+
+            healer.HealSkillCheckManager.SkillCheckStart();
             healer.IsFreeze = true;
             healer.Animator.SetBool("isHeal", true);
             if (dest == healer)
@@ -904,8 +941,14 @@ public class Survivor : PlayableCharacter
         }
         if (Input.GetMouseButtonUp(mouseIndex))
         {
+            // 스킬체크 끄기
+            healer.HealSkillCheckManager.SkillCheckStop();
             dest.CmdOnStopHeal();
             healer.CmdOnStopHeal();
+            if(dest == healer)
+            {
+                m_healDest = null;
+            }
         }
     }
 

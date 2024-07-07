@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
-using MySql.Data.MySqlClient;
+
+//using MySql.Data.MySqlClient;
 
 
 
@@ -9,9 +11,9 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
 {
     public Dictionary<string, PerkData> LoadedPerkList;
 
-    //public readonly string rootPath = "C:/Users/KGA/Desktop/ProjectD_Data";
+    public readonly string rootPath = "C:/Users/KGA/Desktop/ProjectD_Data";
 
-    public string connectionString = "server=localhost;database=projectd;user=root;password=3010";
+    //public string connectionString = "server=localhost;database=projectd;user=root;password=3010";
     
 
     private void Awake()
@@ -20,6 +22,7 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
         DontDestroyOnLoad(gameObject);
         LoadAllPerkData();
     }
+    /*
     void LoadAllPerkData()
     {
         LoadedPerkList = new Dictionary<string, PerkData>();
@@ -53,7 +56,8 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
             }
         }
     }
-    /*
+    */
+    
     void LoadAllPerkData()
     {
         LoadedPerkList = new Dictionary<string, PerkData>();
@@ -77,7 +81,7 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
             LoadedPerkList.Add(tempPerk.PerkName, tempPerk);
         }
     }
-    */
+    
     public PerkData GetPerkByName(string perkName)
     {
         var perk = LoadedPerkList[perkName];

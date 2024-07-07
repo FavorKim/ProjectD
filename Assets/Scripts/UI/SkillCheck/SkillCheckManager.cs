@@ -57,6 +57,10 @@ public class SkillCheckManager : MonoBehaviour
             RotateCircle();
         skillCheckObject.SetActive(true);
     }
+    public void SkillCheckStop()
+    {
+        skillCheckObject.SetActive(false);
+    }
 
 
     void RotateCircle()
@@ -93,5 +97,30 @@ public class SkillCheckManager : MonoBehaviour
         return skillChecker;
     }
 
+    public void RegisterOnSkillSuccess(Action onSkillSuccess)
+    {
+        skillChecker.OnSkillCheckSuccess += onSkillSuccess;
+    }
+    public void RegisterOnSkillCritical(Action onSkillCritical)
+    {
+        skillChecker.OnSkillCheckCritical += onSkillCritical;
+    }
+    public void RegisterOnSkillFailed(Action onSkillFailed)
+    {
+        skillChecker.OnSkillCheckFailed += onSkillFailed;
+    }
+
+    public void UnRegisterOnSkillSuccess(Action onSkillSuccess)
+    {
+        skillChecker.OnSkillCheckSuccess -= onSkillSuccess;
+    }
+    public void UnRegisterOnSkillCritical(Action onSkillCritical)
+    {
+        skillChecker.OnSkillCheckCritical -= onSkillCritical;
+    }
+    public void UnRegisterOnSkillFailed(Action onSkillFailed)
+    {
+        skillChecker.OnSkillCheckFailed -= onSkillFailed;
+    }
 }
 
