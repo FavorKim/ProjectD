@@ -21,7 +21,9 @@ public class SkillChecker : NetworkBehaviour
     SkillCheckManager scM;
     [SerializeField] bool IsHeldSkillChecker;
     Image Img_Checker;
-
+    AudioSource audioSource;
+    [SerializeField] AudioClip Audio_skillCheckSuccess;
+    [SerializeField] AudioClip Audio_skillCheckCritical;
 
     int rotateDir = 1;
     public float GetCheckerRotateSpeed() { return CheckerRotateSpeed; }
@@ -30,6 +32,7 @@ public class SkillChecker : NetworkBehaviour
     {
         Img_Checker = GetComponentInChildren<Image>();
         thisRect = GetComponent<RectTransform>();
+        audioSource = GetComponent<AudioSource>();
         if (!IsHeldSkillChecker)
             StartCoroutine(CorRotateSkillChecker());
         else
@@ -38,6 +41,9 @@ public class SkillChecker : NetworkBehaviour
             OnSkillCheckSuccess += OnHeldCheckerSkillSuccess;
             StartCoroutine(CorRotateHeldSkillChecker());
         }
+
+        OnSkillCheckSuccess += OnSkillCheckSuccess_PlaySFX;
+        OnSkillCheckCritical += OnSkillCheckCritical_PlaySFX;
     }
 
     public void InitCircle(SkillCheckManager SCM)
@@ -63,7 +69,6 @@ public class SkillChecker : NetworkBehaviour
 
     IEnumerator CorRotateSkillChecker()
     {
-        yield return new WaitForSeconds(0.5f);
         float curTime = 0f;
         bool isClick = false;
         float zVal = 0;
@@ -119,6 +124,9 @@ public class SkillChecker : NetworkBehaviour
 
     private void OnApplicationQuit()
     {
+        OnSkillCheckCritical -= OnSkillCheckCritical_PlaySFX;
+        OnSkillCheckSuccess -= OnSkillCheckSuccess_PlaySFX;
+
         OnSkillCheckSuccess -= OnHeldCheckerSkillSuccess;
         OnSkillCheckCritical -= OnHeldCheckerSkillSuccess;
 
@@ -183,12 +191,24 @@ public class SkillChecker : NetworkBehaviour
     void CmdOnSkillFailed() { RpcInvokeOnSkillFailed(); }
 
     [ClientRpc]
-    void RpcInvokeOnSkillSuccess() { OnSkillCheckSuccess.Invoke(); Debug.Log("성공"); }
+    void RpcInvokeOnSkillSuccess() { OnSkillCheckSuccess.Invoke(); }
     [ClientRpc]
-    void RpcInvokeOnSkillCritical() { OnSkillCheckCritical.Invoke(); Debug.Log("대성공"); }
+    void RpcInvokeOnSkillCritical() { OnSkillCheckCritical.Invoke(); }
     [ClientRpc]
-    void RpcInvokeOnSkillFailed() { OnSkillCheckFailed.Invoke(); Debug.Log("실패"); }
+    void RpcInvokeOnSkillFailed() { OnSkillCheckFailed.Invoke(); }
 
+    void OnSkillCheckSuccess_PlaySFX()
+    {
+        if (!isLocalPlayer) return;
+        audioSource.clip = Audio_skillCheckSuccess;
+        audioSource.Play();
+    }
+    void OnSkillCheckCritical_PlaySFX()
+    {
+        if (!isLocalPlayer) return;
+        audioSource.clip = Audio_skillCheckCritical;
+        audioSource.Play();
+    }
 
     public void InvokeOnSkillCheckEnd()
     {
@@ -200,14 +220,3 @@ public class SkillChecker : NetworkBehaviour
     public event Action OnSkillCheckFailed;
     public event Action OnSkillCheckEnd;
 }
-/*
-t초에 한 바퀴(360도) 도는 객체 a와, 60와 275중 사이의 회전값 r을 갖는 객체 b가 있을 때
-a의 회전 값인 p와 r이 같아지는 시간 s를 구해야 한다.
-
-
-0.6초에서 1.5초 사이의 시간을 갖는 시간 s가 있다
-1.5초에 한 바퀴 도는 객체 a와, 임의의 회전값 r을 갖는 객체 b가 있을 때,
-a의 회전 값인 p가 s초 후 회전 값 r과 같아지려고 하려면 어떻게 해야하는가?
- 
- 
- */

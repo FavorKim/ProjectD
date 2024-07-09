@@ -12,6 +12,9 @@ public class SkillCheckManager : MonoBehaviour
     [SerializeField] SkillChecker skillChecker;
     public List<GameObject> CriticalArea;
     public List<GameObject> NormalArea;
+    [SerializeField] AudioSource skillCheck;
+    [SerializeField] AudioClip Audio_skillCheckStart;
+    
 
 
     [SerializeField] float skillCheckCoolTime;
@@ -55,8 +58,15 @@ public class SkillCheckManager : MonoBehaviour
     {
         if (IsRotatable)
             RotateCircle();
+        skillCheck.Play();
+        Invoke(nameof(StartSkillCheck), 0.3f);
+    }
+
+    void StartSkillCheck()
+    {
         skillCheckObject.SetActive(true);
     }
+
     public void SkillCheckStop()
     {
         skillCheckObject.SetActive(false);
@@ -87,8 +97,9 @@ public class SkillCheckManager : MonoBehaviour
                 yield return null;
                 continue;
             }
+            if (!IsRotatable)
+                yield return new WaitForSeconds(skillCheckCoolTime);
             SkillCheckStart();
-            yield return new WaitForSeconds(skillCheckCoolTime);
         }
     }
 

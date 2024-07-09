@@ -878,6 +878,7 @@ public class Survivor : PlayableCharacter
     {
         IsFreeze = false;
         Animator.SetBool("isHeal", false);
+        HealSkillCheckManager.SkillCheckStop();
 
 
         if (m_healDest != null)
@@ -941,8 +942,6 @@ public class Survivor : PlayableCharacter
         }
         if (Input.GetMouseButtonUp(mouseIndex))
         {
-            // 스킬체크 끄기
-            healer.HealSkillCheckManager.SkillCheckStop();
             dest.CmdOnStopHeal();
             healer.CmdOnStopHeal();
             if(dest == healer)
