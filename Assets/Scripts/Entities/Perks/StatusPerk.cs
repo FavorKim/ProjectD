@@ -86,7 +86,7 @@ public abstract class StatusPerk : MonoBehaviour
 
 
 
-    protected IEnumerator CorCoolTime()
+    protected virtual IEnumerator CorCoolTime()
     {
         while (true)
         {

@@ -1,4 +1,7 @@
 
+using System.Collections;
+using UnityEngine;
+
 public class Sprint : StatusPerk
 {
     protected float m_moveSpeed;
@@ -18,6 +21,16 @@ public class Sprint : StatusPerk
         m_curCoolTime = m_maxCoolTime;
         m_owner = owner;
         PerkType = type;
+    }
+
+    protected override IEnumerator CorCoolTime()
+    {
+        while (true)
+        {
+            if (m_owner.GetMoveState().CurStateIs(SurvivorStateMachine.StateName.Run)) continue;
+            CurCoolTime += Time.deltaTime;
+            yield return null;
+        }
     }
 
     protected override void OnEnable()
