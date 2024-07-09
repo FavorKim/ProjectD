@@ -741,7 +741,7 @@ public class Survivor : PlayableCharacter
         if (isLocalPlayer)
         {
             Slider_EscapeGauge.gameObject.SetActive(true);
-            EscapeSkillCheckManager.SkillCheckStart();
+            EscapeSkillCheckManager.IsSkillChecking = true;
         }
         StartCoroutine(CorIncreaseEscapeGauge());
     }
@@ -878,7 +878,7 @@ public class Survivor : PlayableCharacter
     {
         IsFreeze = false;
         Animator.SetBool("isHeal", false);
-        HealSkillCheckManager.SkillCheckStop();
+        HealSkillCheckManager.IsSkillChecking = false;
 
 
         if (m_healDest != null)
@@ -918,7 +918,7 @@ public class Survivor : PlayableCharacter
         if (Input.GetMouseButtonDown(mouseIndex))
         {
 
-            healer.HealSkillCheckManager.SkillCheckStart();
+            healer.HealSkillCheckManager.IsSkillChecking = true;
             healer.IsFreeze = true;
             healer.Animator.SetBool("isHeal", true);
             if (dest == healer)

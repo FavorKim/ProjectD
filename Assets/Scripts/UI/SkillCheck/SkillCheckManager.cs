@@ -54,7 +54,7 @@ public class SkillCheckManager : MonoBehaviour
         skillChecker.OnSkillCheckEnd -= OnSkillCheckEnd_DisableObject;
     }
 
-    public void SkillCheckStart()
+    void SkillCheckStart()
     {
         if (IsRotatable)
             RotateCircle();
@@ -67,7 +67,7 @@ public class SkillCheckManager : MonoBehaviour
         skillCheckObject.SetActive(true);
     }
 
-    public void SkillCheckStop()
+    void SkillCheckStop()
     {
         skillCheckObject.SetActive(false);
     }

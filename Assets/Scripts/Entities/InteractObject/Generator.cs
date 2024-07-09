@@ -41,6 +41,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
     [SerializeField] ParticleSystem VFX_Steam;
 
     Animator anim;
+    AudioSource audioSource;
 
     [SerializeField] SkillCheckManager SkillCheckManager;
 
@@ -82,15 +83,18 @@ public class Generator : NetworkBehaviour, IInteractableObject
         }
     }
 
+
     public override void OnStartServer()
     {
         base.OnStartServer();
         Xray_Silhouette.SetActive(true);
+        CmdStartSFXCoroutine();
     }
 
     private void Start()
     {
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnEnable()
@@ -236,6 +240,11 @@ public class Generator : NetworkBehaviour, IInteractableObject
     {
         RpcRedLightOn();
     }
+    [Command(requiresAuthority = false)]
+    void CmdStartSFXCoroutine()
+    {
+        RpcStartSFXCoroutine();
+    }
 
 
 
@@ -255,6 +264,11 @@ public class Generator : NetworkBehaviour, IInteractableObject
     void RpcRedLightOn()
     {
         StartCoroutine(CorShowRedXray());
+    }
+    [ClientRpc]
+    void RpcStartSFXCoroutine()
+    {
+        StartCoroutine(CorPlaySFX());
     }
 
 
@@ -308,5 +322,14 @@ public class Generator : NetworkBehaviour, IInteractableObject
         yield return new WaitForSeconds(XrayShowDuration);
         Xray_Silhouette.SetActive(false);
         XrayRedLight.SetActive(false);
+    }
+    IEnumerator CorPlaySFX()
+    {
+        while (true)
+        {
+            if (curGauge == 0) continue;
+            audioSource.Play();
+            yield return new WaitForSeconds(maxGauge / curGauge * 10);
+        }
     }
 }

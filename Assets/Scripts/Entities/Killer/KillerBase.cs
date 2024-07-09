@@ -33,6 +33,8 @@ public class KillerBase : PlayableCharacter
 
     public Transform GetHoldPosition() { return Pos_HoldSurvivor; }
 
+    [SerializeField] AudioSource heartBeat;
+
     Vector3 m_moveDir;
 
 
@@ -166,7 +168,7 @@ public class KillerBase : PlayableCharacter
         cam.LookAt = transform;
         PlayerPerkManager.SetKillerPerk(SelectedPerkManager.EquippedPerkList, this);
         InGamePerkSlot.Instance.SetPerkIcons(SelectedPerkManager.EquippedPerkList);
-
+        heartBeat.enabled = false;
     }
 
     // Start is called before the first frame update
@@ -174,7 +176,7 @@ public class KillerBase : PlayableCharacter
     {
         m_controller = GetComponent<CharacterController>();
         Animator = GetComponentInChildren<Animator>();
-        netAnim = Animator.gameObject.GetComponent<NetworkAnimator>();
+        netAnim = Animator.gameObject.GetComponentInChildren<NetworkAnimator>();
     }
 
     private void OnEnable()
