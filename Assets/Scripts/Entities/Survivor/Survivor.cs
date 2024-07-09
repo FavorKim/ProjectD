@@ -261,6 +261,8 @@ public class Survivor : PlayableCharacter
         PlayerPerkManager.SetSurvivorPerk(SelectedPerkManager.EquippedPerkList, this);
         InGamePerkSlot.Instance.SetPerkIcons(SelectedPerkManager.EquippedPerkList);
         GameResultManager.Instance.PlayerRemaining++;
+        AudioListener listener = GetComponent<AudioListener>();
+        listener.enabled = true;
     }
 
     private void OnEnable()
@@ -519,7 +521,7 @@ public class Survivor : PlayableCharacter
 
             Animator.SetBool("isGenerating", true);
 
-            generator.OnGeneratorFailed += OnGeneratorFailed;
+            //generator.RegisterOnGeneratorFailed(OnGeneratorFailed);
         }
         if (Input.GetMouseButton(0))
         {
@@ -534,7 +536,7 @@ public class Survivor : PlayableCharacter
         if (Input.GetMouseButtonUp(0))
         {
             Animator.SetBool("isGenerating", false);
-            generator.OnGeneratorFailed -= OnGeneratorFailed;
+            //generator.UnRegisterOnGeneratorFailed(OnGeneratorFailed);
             isFreeze = false;
         }
         generator.SurvivorInteract();

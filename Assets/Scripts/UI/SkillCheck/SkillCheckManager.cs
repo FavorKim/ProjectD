@@ -14,7 +14,7 @@ public class SkillCheckManager : MonoBehaviour
     public List<GameObject> NormalArea;
     [SerializeField] AudioSource skillCheck;
     [SerializeField] AudioClip Audio_skillCheckStart;
-    
+
 
 
     [SerializeField] float skillCheckCoolTime;
@@ -22,7 +22,7 @@ public class SkillCheckManager : MonoBehaviour
     [SerializeField] bool isSkillChecking;
     [SerializeField] bool IsRotatable;
 
-    [SerializeField]float timeToSuccess;
+    [SerializeField] float timeToSuccess;
     public float GetTimeToSuccess() { return timeToSuccess; }
 
     public bool IsSkillChecking
@@ -58,8 +58,9 @@ public class SkillCheckManager : MonoBehaviour
     {
         if (IsRotatable)
             RotateCircle();
+
         skillCheck.Play();
-        Invoke(nameof(StartSkillCheck), 0.3f);
+        Invoke(nameof(StartSkillCheck), 0.5f);
     }
 
     void StartSkillCheck()

@@ -53,6 +53,7 @@ GameObject:
   - component: {fileID: 148356509811951000}
   - component: {fileID: 7649008447551722753}
   - component: {fileID: -2177766952558583004}
+  - component: {fileID: 6524492049521544839}
   m_Layer: 6
   m_Name: Survivor_Male
   m_TagString: Untagged
@@ -298,6 +299,14 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
+--- !u!81 &6524492049521544839
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816875572900217393}
+  m_Enabled: 0
 --- !u!1 &816875573155644668
 GameObject:
   m_ObjectHideFlags: 0

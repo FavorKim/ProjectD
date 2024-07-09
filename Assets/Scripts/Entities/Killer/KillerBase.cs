@@ -169,6 +169,8 @@ public class KillerBase : PlayableCharacter
         PlayerPerkManager.SetKillerPerk(SelectedPerkManager.EquippedPerkList, this);
         InGamePerkSlot.Instance.SetPerkIcons(SelectedPerkManager.EquippedPerkList);
         heartBeat.enabled = false;
+        AudioListener listener = GetComponent<AudioListener>();
+        listener.enabled = true;
     }
 
     // Start is called before the first frame update

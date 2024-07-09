@@ -94,7 +94,6 @@ public class Generator : NetworkBehaviour, IInteractableObject
     public override void OnStartClient()
     {
         base.OnStartClient();
-        //CmdStartSFXCoroutine();
     }
 
     private void Start()
@@ -228,7 +227,6 @@ public class Generator : NetworkBehaviour, IInteractableObject
     private event Action OnSabotage;
     private event Action OnEndSabotage;
     public event Action OnCompleteHandler;
-    public event Action OnGeneratorFailed;
 
     [Command(requiresAuthority = false)]
     private void CmdOnSabotage() { RpcOnSabotage(); }
@@ -245,11 +243,6 @@ public class Generator : NetworkBehaviour, IInteractableObject
     void CmdRedLightOn()
     {
         RpcRedLightOn();
-    }
-    [Command(requiresAuthority = false)]
-    void CmdStartSFXCoroutine()
-    {
-        RpcStartSFXCoroutine();
     }
 
 
@@ -271,11 +264,6 @@ public class Generator : NetworkBehaviour, IInteractableObject
     {
         StartCoroutine(CorShowRedXray());
     }
-    [ClientRpc]
-    void RpcStartSFXCoroutine()
-    {
-        StartCoroutine(CorPlaySFX());
-    }
 
 
     void Hook_OnChangedProgress(float old, float recent)
@@ -294,8 +282,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
     }
     void OnSkillCheckFailed()
     {
-        CmdRedLightOn();
-        OnGeneratorFailed.Invoke();
+        RpcRedLightOn();
         Cmd_ProgressGenerator(-70.0f);
     }
 
@@ -328,27 +315,5 @@ public class Generator : NetworkBehaviour, IInteractableObject
         yield return new WaitForSeconds(XrayShowDuration);
         Xray_Silhouette.SetActive(false);
         XrayRedLight.SetActive(false);
-    }
-    IEnumerator CorPlaySFX()
-    {
-        float elapsedTime = 0f;
-        float delay = 1f; // 초기 호출 주기
-
-        while (true)
-        {
-            elapsedTime += Time.deltaTime;
-
-            // 진척도에 따라 호출 주기를 업데이트
-            delay = Mathf.Lerp(5f, 0.1f, (float)CurGauge / maxGauge);
-
-            // 호출 주기에 따라 동작 수행
-            if (elapsedTime >= delay)
-            {
-                audioSource.Play();
-                elapsedTime = 0f; // 시간 초기화
-            }
-
-            yield return null; // 다음 프레임까지 기다림
-        }
     }
 }
