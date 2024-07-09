@@ -45,8 +45,10 @@ public class MyNetworkManager : NetworkRoomManager
             return m_survivorSideCam;
         }
     }
+
+
     /* 포트를 구해야하는 네트워킹
-    public string CentralServerIPAddress = "3.38.185.62";
+    public string CentralServerIPAddress = "3.38.93.14";
     [SerializeField] int CentralServerPort = 7777;
     Dictionary<string, NetworkConnectionToClient> connectedClients = new();
     string hostClientId;
