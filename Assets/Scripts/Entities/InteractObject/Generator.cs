@@ -2,6 +2,7 @@ using Mirror;
 using System;
 using System.Collections;
 using Unity.VisualScripting.FullSerializer;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -88,7 +89,12 @@ public class Generator : NetworkBehaviour, IInteractableObject
     {
         base.OnStartServer();
         Xray_Silhouette.SetActive(true);
-        CmdStartSFXCoroutine();
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        //CmdStartSFXCoroutine();
     }
 
     private void Start()
@@ -118,7 +124,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
         SkillCheckManager.GetSkillChecker().OnSkillCheckFailed -= OnSkillCheckFailed;
         SkillCheckManager.GetSkillChecker().OnSkillCheckCritical -= OnSkillCheckCritical;
         SkillCheckManager.GetSkillChecker().OnSkillCheckSuccess -= OnSkillCheckSuccess;
-        
+
         OnEndSabotage -= StopSabotageVFX;
 
         OnSabotage -= PlaySabotageVFX;
@@ -295,8 +301,8 @@ public class Generator : NetworkBehaviour, IInteractableObject
 
     void OnComplete_StopSkillCheck()
     {
-        if(isLocalPlayer)
-        SkillCheckManager.gameObject.SetActive(false);
+        if (isLocalPlayer)
+            SkillCheckManager.gameObject.SetActive(false);
     }
 
     IEnumerator CorSabotage()
@@ -325,11 +331,24 @@ public class Generator : NetworkBehaviour, IInteractableObject
     }
     IEnumerator CorPlaySFX()
     {
+        float elapsedTime = 0f;
+        float delay = 1f; // 초기 호출 주기
+
         while (true)
         {
-            if (curGauge == 0) continue;
-            audioSource.Play();
-            yield return new WaitForSeconds(maxGauge / curGauge * 10);
+            elapsedTime += Time.deltaTime;
+
+            // 진척도에 따라 호출 주기를 업데이트
+            delay = Mathf.Lerp(5f, 0.1f, (float)CurGauge / maxGauge);
+
+            // 호출 주기에 따라 동작 수행
+            if (elapsedTime >= delay)
+            {
+                audioSource.Play();
+                elapsedTime = 0f; // 시간 초기화
+            }
+
+            yield return null; // 다음 프레임까지 기다림
         }
     }
 }

@@ -97,9 +97,13 @@ public class SkillCheckManager : MonoBehaviour
                 yield return null;
                 continue;
             }
+            if (IsRotatable)
+                yield return new WaitForSeconds(skillCheckCoolTime);
+
+            SkillCheckStart();
+
             if (!IsRotatable)
                 yield return new WaitForSeconds(skillCheckCoolTime);
-            SkillCheckStart();
         }
     }
 

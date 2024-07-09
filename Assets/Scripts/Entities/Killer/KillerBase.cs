@@ -280,7 +280,11 @@ public class KillerBase : PlayableCharacter
     public override void Interact(Palete palete)
     {
         if (palete.IsAttack && isStunable)
+        {
+            var dist = (transform.forward - palete.transform.right) / (transform.forward - palete.transform.right).magnitude;
+            m_controller.Move(dist * -2.5f);
             OnStun.Invoke();
+        }
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
