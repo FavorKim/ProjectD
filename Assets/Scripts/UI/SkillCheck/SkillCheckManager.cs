@@ -101,6 +101,12 @@ public class SkillCheckManager : MonoBehaviour
             if (IsRotatable)
                 yield return new WaitForSeconds(skillCheckCoolTime);
 
+            if (!IsSkillChecking)
+            {
+                yield return null;
+                continue;
+            }
+
             SkillCheckStart();
 
             if (!IsRotatable)

@@ -42,7 +42,6 @@ public class Generator : NetworkBehaviour, IInteractableObject
     [SerializeField] ParticleSystem VFX_Steam;
 
     Animator anim;
-    AudioSource audioSource;
 
     [SerializeField] SkillCheckManager SkillCheckManager;
 
@@ -99,7 +98,6 @@ public class Generator : NetworkBehaviour, IInteractableObject
     private void Start()
     {
         anim = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnEnable()

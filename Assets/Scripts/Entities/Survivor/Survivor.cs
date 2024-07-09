@@ -260,7 +260,6 @@ public class Survivor : PlayableCharacter
         PlayerUIManager.Instance.CreatePlayerUI(this);
         PlayerPerkManager.SetSurvivorPerk(SelectedPerkManager.EquippedPerkList, this);
         InGamePerkSlot.Instance.SetPerkIcons(SelectedPerkManager.EquippedPerkList);
-        GameResultManager.Instance.PlayerRemaining++;
         AudioListener listener = GetComponent<AudioListener>();
         listener.enabled = true;
     }
@@ -896,16 +895,15 @@ public class Survivor : PlayableCharacter
     void HealOtherSurvivor()
     {
         if (!isLocalPlayer) return;
-        if (m_healDest == null) return;
+        if (m_healDest == null || m_healDest == this) return;
 
 
         HealSurvivor(m_healDest, this, 0);
     }
     void SelfCare()
     {
-        if (IsSelfCare && isLocalPlayer && m_healthStateMachine.GetCurState() != HealthStates.Down)
+        if (IsSelfCare && isLocalPlayer && m_healthStateMachine.GetCurState() == HealthStates.Injured)
         {
-            m_healDest = this;
             HealSurvivor(this, this, 1);
         }
     }
@@ -919,6 +917,8 @@ public class Survivor : PlayableCharacter
         }
         if (Input.GetMouseButtonDown(mouseIndex))
         {
+            if (healer == dest)
+                healer.m_healDest = dest;
 
             healer.HealSkillCheckManager.IsSkillChecking = true;
             healer.IsFreeze = true;
@@ -982,6 +982,7 @@ public class Survivor : PlayableCharacter
     {
         m_holdingKiller.MoveToDirection(m_holdingKiller.transform.right * resistDir * Time.deltaTime * 1.5f);
     }
+
     #endregion
 
 
@@ -1012,6 +1013,7 @@ public class Survivor : PlayableCharacter
         base.OnTriggerExit(other);
         if (other.TryGetComponent(out Survivor survivor) && survivor.gameObject != this.gameObject)
         {
+            m_healDest = null;
             StopHeal();
         }
     }

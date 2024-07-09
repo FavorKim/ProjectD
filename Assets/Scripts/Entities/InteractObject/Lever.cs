@@ -11,7 +11,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
     [SerializeField] NetworkAnimator netAnim_Door;
     Animator Animator;
     const float MAXGAUGE = 100;
-    [SerializeField]float curGauge;
+    [SerializeField, SyncVar(hook = nameof(Hook_OnChangedValue))]float curGauge;
     public float CurrentGauge
     {
         get
@@ -22,7 +22,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
         {
             if(curGauge >= MAXGAUGE)
             {
-                OnOpenDoor();
+                CmdOnOpenDoor();
                 return;
             }
             if (CurrentGauge != value)
@@ -66,7 +66,13 @@ public class Lever : NetworkBehaviour, IInteractableObject
     {
 
     }
+    [Command(requiresAuthority =false)]
+    void CmdOnOpenDoor()
+    {
+        OnOpenDoor();
+    }
 
+    [ClientRpc]
     void OnOpenDoor()
     {
         IsAvailable = false;
@@ -80,4 +86,9 @@ public class Lever : NetworkBehaviour, IInteractableObject
         Slider_Gauge.gameObject.SetActive(false);
     }
 
+
+    void Hook_OnChangedValue(float old, float recent)
+    {
+        curGauge = recent;
+    }
 }

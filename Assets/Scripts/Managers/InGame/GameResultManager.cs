@@ -18,20 +18,8 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
     [SerializeField]
     int playerRemaining;
 
-    public int PlayerRemaining
-    {
-        get { return playerRemaining; }
-        set
-        {
-            if(playerRemaining != value)
-            {
-                playerRemaining = value;
-                CmdSetPlayerRemaining(playerRemaining);
-            }
-        }
-    }
     [SerializeField]
-    int playerKilled;
+    int playerKilled = 0;
     public int PlayerKilled
     {
         get { return playerKilled; }
@@ -40,7 +28,7 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
             if (playerKilled != value)
             {
                 playerKilled = value;
-                CmdSetPlayerKilled(playerKilled);
+                CmdSetPlayerKilled(value);
             }
         }
     }
@@ -49,8 +37,18 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
         if(instance != null && instance.gameObject !=this.gameObject)
             DestroyImmediate(instance.gameObject);
         instance = this;
-        playerRemaining = 0;
-        playerKilled = 0;
+        PlayerKilled = 0;
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        Invoke(nameof(SetPlayerRemaining), 10);
+    }
+
+    void SetPlayerRemaining()
+    {
+        playerRemaining = NetworkServer.connections.Count - 1;
     }
 
     public void SetGameResult(GameResult result)
@@ -63,8 +61,11 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
             if (survivor != null)
             {
                 survivor.SetResultText(result);
-                PlayerRemaining--;
-                if (result == GameResult.Sacrificed) PlayerKilled++;
+                CmdDecreasePlayerRemaining();
+                if (result == GameResult.Sacrificed) 
+                {
+                    PlayerKilled = playerKilled + 1;
+                }
                 
             }
         }
@@ -87,9 +88,9 @@ public class GameResultManager : SingletonNetwork<GameResultManager>
     }
 
     [Command(requiresAuthority =false)]
-    void CmdSetPlayerRemaining(int val)
+    void CmdDecreasePlayerRemaining()
     {
-        playerRemaining = val;
+        playerRemaining--;
         if (playerRemaining == 0)
             SetPlayerNoRemaining();
     }
