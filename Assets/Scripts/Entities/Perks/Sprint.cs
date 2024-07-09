@@ -16,7 +16,7 @@ public class Sprint : StatusPerk
     public void Init(float speed, float cool, float duration, Survivor owner, PerkType type)
     {
         m_duration = duration;
-        m_moveSpeed = owner.RunSpeed * speed * 0.01f;
+        m_moveSpeed = owner.RunSpeed * (speed - 100) * 0.01f;
         m_maxCoolTime = cool;
         m_curCoolTime = m_maxCoolTime;
         m_owner = owner;
@@ -27,8 +27,13 @@ public class Sprint : StatusPerk
     {
         while (true)
         {
-            if (m_owner.GetMoveState().CurStateIs(SurvivorStateMachine.StateName.Run)) continue;
             CurCoolTime += Time.deltaTime;
+
+            if (m_owner.GetMoveState().CurStateIs(SurvivorStateMachine.StateName.Run))
+            {
+                CurCoolTime -= Time.deltaTime;
+            }
+            
             yield return null;
         }
     }
