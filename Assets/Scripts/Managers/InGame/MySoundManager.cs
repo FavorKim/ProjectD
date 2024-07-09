@@ -29,11 +29,11 @@ public class MySoundManager : SingletonMono<MySoundManager>
 
     public void OnChangedValue_MasterSound(Single value)
     {
-        audioMixer.SetFloat("Master", value * 100 - 80);
+        audioMixer.SetFloat("Master", value * 80 - 80);
     }
 
     public void OnChangedValue_SFXSound(Single value)
     {
-        audioMixer.SetFloat("SFX", value * 100 - 80);
+        audioMixer.SetFloat("SFX", value * 80 - 80);
     }
 }
