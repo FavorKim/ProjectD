@@ -1,6 +1,7 @@
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
     [SerializeField] NetworkAnimator netAnim_Door;
     Animator Animator;
     const float MAXGAUGE = 100;
-    [SerializeField, SyncVar(hook = nameof(Hook_OnChangedValue))]float curGauge;
+    [SerializeField]float curGauge;
     public float CurrentGauge
     {
         get
@@ -53,7 +54,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
         if (Input.GetMouseButton(0))
         {
             Slider_Gauge.gameObject.SetActive(true);
-            CurrentGauge += Time.deltaTime * m_speed;
+            CmdSetCurGauge(curGauge + Time.deltaTime * m_speed);// CurrentGauge += Time.deltaTime * m_speed;
             Animator.SetBool("isUsing", true);
         }
         if(Input.GetMouseButtonUp(0)) 
@@ -79,6 +80,19 @@ public class Lever : NetworkBehaviour, IInteractableObject
         OpenDoor();
     }
 
+    [Command(requiresAuthority =false)]
+    void CmdSetCurGauge(float value)
+    {
+        curGauge = value;
+        RpcSetCurGauge(curGauge);
+    }
+
+    [ClientRpc]
+    void RpcSetCurGauge(float value)
+    {
+        CurrentGauge = value;
+    }
+
     void OpenDoor()
     {
         Animator_Door.SetTrigger("Open");
@@ -87,8 +101,4 @@ public class Lever : NetworkBehaviour, IInteractableObject
     }
 
 
-    void Hook_OnChangedValue(float old, float recent)
-    {
-        curGauge = recent;
-    }
 }
