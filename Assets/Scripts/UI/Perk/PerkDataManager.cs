@@ -15,7 +15,7 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
 
     //public readonly string rootPath = "C:/Users/KGA/Desktop/ProjectD_Data";
 
-    public string connectionString = "server=3.38.93.14;database=projectd;user=root;password=1234";
+    public string connectionString = "server=3.36.69.87;database=projectd;user=root;password=1234";
     
 
     private void Awake()
