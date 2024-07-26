@@ -34,7 +34,7 @@ public class PerkDataManager : SingletonMono<PerkDataManager>
             
             connection.Open();
 
-            string query = "SELECT * FROM perktable";
+            string query = "SELECT * FROM parseddata";
             using (MySqlCommand cmd = new MySqlCommand(query, connection))
             {
                 using (MySqlDataReader reader = cmd.ExecuteReader())
