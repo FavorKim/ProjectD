@@ -1,46 +1,46 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36" version="24.7.6">
   <diagram name="페이지-1" id="o0APWfUMKUU7ITL8NAqE">
-    <mxGraphModel dx="690" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="690" dy="737" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#000000" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-1" value="상호작용 가능한&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;오브젝트&lt;/span&gt;&lt;div&gt;&lt;br&gt;&lt;div&gt;함수 1 - 살인마 상호작용시 행동&lt;/div&gt;&lt;div&gt;함수 2 - 생존자 상호작용시 행동&lt;/div&gt;&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-1" value="상호작용 가능한&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;오브젝트&lt;/span&gt;&lt;div&gt;&lt;br&gt;&lt;div&gt;함수 1 - 살인마 상호작용시 행동&lt;/div&gt;&lt;div&gt;함수 2 - 생존자 상호작용시 행동&lt;/div&gt;&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="250" y="240" width="220" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-2" target="HwlPlYfOWSaUj1gYbrh8-1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;labelBackgroundColor=none;strokeColor=#FFFFFF;fontColor=default;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-2" target="HwlPlYfOWSaUj1gYbrh8-1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-2" value="판자&lt;div&gt;생존자 : 판자 내리기&lt;/div&gt;&lt;div&gt;살인마 : 판자 부수기&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-2" value="판자&lt;div&gt;생존자 : 판자 내리기&lt;/div&gt;&lt;div&gt;살인마 : 판자 부수기&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="60" y="400" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-3" target="HwlPlYfOWSaUj1gYbrh8-1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=none;strokeColor=#FFFFFF;fontColor=default;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-3" target="HwlPlYfOWSaUj1gYbrh8-1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-3" value="발전기&lt;div&gt;생존자 : 발전기 수리&lt;/div&gt;&lt;div&gt;살인마 : 발전기 파괴공작&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-3" value="발전기&lt;div&gt;생존자 : 발전기 수리&lt;/div&gt;&lt;div&gt;살인마 : 발전기 파괴공작&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="204" y="400" width="140" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-4" target="HwlPlYfOWSaUj1gYbrh8-1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=none;strokeColor=#FFFFFF;fontColor=default;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-4" target="HwlPlYfOWSaUj1gYbrh8-1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-4" value="갈고리&lt;div&gt;생존자 : 구출&lt;/div&gt;&lt;div&gt;살인마 : 생존자 걸기&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-4" value="갈고리&lt;div&gt;생존자 : 구출&lt;/div&gt;&lt;div&gt;살인마 : 생존자 걸기&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="365" y="400" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-5" target="HwlPlYfOWSaUj1gYbrh8-1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;labelBackgroundColor=none;strokeColor=#FFFFFF;fontColor=default;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-5" target="HwlPlYfOWSaUj1gYbrh8-1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-5" value="창틀" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-5" value="창틀" style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="510" y="400" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-13" value="플레이어블 캐릭터" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-13" value="플레이어블 캐릭터" style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="300" y="100" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-15" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeWidth=1;endSize=6;startSize=16;sourcePerimeterSpacing=0;" edge="1" parent="1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-15" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeWidth=1;endSize=6;startSize=16;sourcePerimeterSpacing=0;labelBackgroundColor=none;strokeColor=#FFFFFF;fontColor=default;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="359.76" y="170" as="sourcePoint" />
             <mxPoint x="359.76" y="230" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-16" value="상호작용" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HwlPlYfOWSaUj1gYbrh8-15">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-16" value="상호작용" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="HwlPlYfOWSaUj1gYbrh8-15">
           <mxGeometry x="-0.3667" y="4" relative="1" as="geometry">
             <mxPoint x="-4" y="4" as="offset" />
           </mxGeometry>
