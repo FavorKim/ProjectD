@@ -85,12 +85,12 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-31" value="정보 변경에 따른&lt;div&gt;UI 상태 변경&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="213.00258300203052" y="540.0042712474619" as="geometry">
+          <mxGeometry x="266.0025830020305" y="535.0042712474619" as="geometry">
             <mxPoint x="-28" y="118" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-32" value="변경된 UI 상태 반영" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="482.0025830020305" y="483.00427124746193" as="geometry">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-32" value="변경된 UI&amp;nbsp;&lt;div&gt;상태 반영&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="388.0025830020305" y="514.0042712474619" as="geometry">
             <mxPoint x="-28" y="118" as="offset" />
           </mxGeometry>
         </mxCell>
