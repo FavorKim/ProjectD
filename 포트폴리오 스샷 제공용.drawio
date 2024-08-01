@@ -80,7 +80,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-26" value="&lt;div&gt;&amp;nbsp;이벤트 핸들러&lt;div&gt;구독&lt;/div&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="374.0025830020305" y="716.0042712474619" as="geometry">
+          <mxGeometry x="375.0025830020305" y="706.0042712474619" as="geometry">
             <mxPoint x="-28" y="118" as="offset" />
           </mxGeometry>
         </mxCell>
@@ -105,8 +105,8 @@
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-35" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeColor=#FFFFFF;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="303" y="807" as="sourcePoint" />
-            <mxPoint x="405" y="807" as="targetPoint" />
+            <mxPoint x="304" y="797" as="sourcePoint" />
+            <mxPoint x="406" y="797" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
