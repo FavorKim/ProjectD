@@ -290,7 +290,7 @@
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-127" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#23445D;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-123" target="HwlPlYfOWSaUj1gYbrh8-122">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-123" value="생존자 추격 및&lt;div&gt;발전기 수리&lt;/div&gt;" style="whiteSpace=wrap;html=1;fillColor=#182E3E;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-123" value="생존자 추격 후 희생 혹은&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;발전기 수리 후 탈출&lt;/span&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;fillColor=#182E3E;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="675.5" y="1545" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-131" value="NO" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;labelBackgroundColor=none;" vertex="1" connectable="0" parent="1">
