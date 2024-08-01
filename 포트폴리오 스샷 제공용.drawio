@@ -31,18 +31,32 @@
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-5" value="창틀" style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="510" y="400" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-13" value="플레이어블 캐릭터" style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
-          <mxGeometry x="300" y="100" width="120" height="60" as="geometry" />
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-13" value="생존자" style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="176" y="98" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-15" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeWidth=1;endSize=6;startSize=16;sourcePerimeterSpacing=0;labelBackgroundColor=none;strokeColor=#FFFFFF;fontColor=default;" edge="1" parent="1">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-15" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeWidth=1;endSize=6;startSize=16;sourcePerimeterSpacing=0;labelBackgroundColor=none;strokeColor=#FFFFFF;fontColor=default;" edge="1" parent="1" target="HwlPlYfOWSaUj1gYbrh8-1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="359.76" y="170" as="sourcePoint" />
+            <mxPoint x="235" y="164" as="sourcePoint" />
             <mxPoint x="359.76" y="230" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-16" value="상호작용" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="HwlPlYfOWSaUj1gYbrh8-15">
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-16" value="함수 1&lt;div&gt;호출&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="HwlPlYfOWSaUj1gYbrh8-15">
           <mxGeometry x="-0.3667" y="4" relative="1" as="geometry">
-            <mxPoint x="-4" y="4" as="offset" />
+            <mxPoint x="-15" y="25" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-18" value="살인마" style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="430" y="98" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-19" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeWidth=1;endSize=6;startSize=16;sourcePerimeterSpacing=0;labelBackgroundColor=none;strokeColor=#FFFFFF;fontColor=default;" edge="1" parent="1" target="HwlPlYfOWSaUj1gYbrh8-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="486" y="164" as="sourcePoint" />
+            <mxPoint x="362" y="229" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-20" value="함수 2&amp;nbsp;&lt;div&gt;호출&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="HwlPlYfOWSaUj1gYbrh8-19">
+          <mxGeometry x="-0.3667" y="4" relative="1" as="geometry">
+            <mxPoint x="6" y="21" as="offset" />
           </mxGeometry>
         </mxCell>
       </root>
