@@ -17,17 +17,17 @@ public class Hanger : NetworkBehaviour, IInteractableObject
     public Survivor HangedSurvivor
     {
         get { return hangedSurvivor; }
-        set 
+        set
         {
             if (hangedSurvivor != value)
             {
                 if (hangedSurvivor != null)
                 {
-                    hangedSurvivor.OnSacrificed += RemoveHangedSurvivor;
+                    hangedSurvivor.OnSacrificed -= RemoveHangedSurvivor;
                     hangedSurvivor.OnSacrificed -= DropShackle;
                 }
 
-                hangedSurvivor = value;
+                CmdOnChangedHangedSurvivor(value);
 
                 if (hangedSurvivor != null)
                 {
@@ -39,9 +39,9 @@ public class Hanger : NetworkBehaviour, IInteractableObject
     }
     public Transform GetHangedPos() { return Pos_HangedPos; }
 
-    public void SurvivorInteract() 
+    public void SurvivorInteract()
     {
-        hangedSurvivor.CmdOnResqued();
+        HangedSurvivor.CmdOnResqued();
         CmdOnXrayOn();
     }
 
@@ -75,17 +75,29 @@ public class Hanger : NetworkBehaviour, IInteractableObject
     {
         Xray_silhouette.SetActive(onOff);
     }
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     void CmdOnXrayOn()
     {
         RpcOnXrayOn();
     }
+    [Command(requiresAuthority = false)]
+    void CmdOnChangedHangedSurvivor(Survivor value)
+    {
+        RpcOnChangedHangedSurvivor(value);
+    }
+
+
+
     [ClientRpc]
     void RpcOnXrayOn()
     {
         StartCoroutine(CorFlashXRay());
     }
-
+    [ClientRpc]
+    void RpcOnChangedHangedSurvivor(Survivor value)
+    {
+        hangedSurvivor = value;
+    }
     IEnumerator CorFlashXRay()
     {
         TurnOnXray();

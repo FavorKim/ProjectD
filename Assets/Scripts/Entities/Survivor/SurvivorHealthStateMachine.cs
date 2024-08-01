@@ -39,13 +39,6 @@ public class SurvivorHealthStateMachine
         PlayerUIManager.Instance.SetPlayerUIState(owner.PlayerID(), curState.GetStateEnum());
         owner.HealGauge = 0;
     }
-    //public void ChangeState(SurvivorHealthBaseState toChangeState)
-    //{
-    //    curState.Exit();
-    //    curState = toChangeState;
-    //    curState.Enter();
-    //    PlayerUIManager.Instance.SetPlayerUIState(owner.PlayerID(), curState.GetStateEnum());
-    //}
 
     public void Healed()
     {
@@ -64,7 +57,11 @@ public class SurvivorHealthStateMachine
     void GetHit()
     {
         if (curState.GetStateEnum() < HealthStates.Down)
+        {
             ChangeState(curState.GetStateEnum() + 1);
+            owner.IsFreeze = false;
+        }
+
     }
 
 }
@@ -136,7 +133,7 @@ public class Down : SurvivorHealthBaseState
     {
         base.Enter();
         owner.IsBleeding = true;
-        owner.MoveSpeed = 100;
+        owner.MoveSpeed = owner.GetDownSpeed();
         owner.GetAnimator().SetBool("isDown", true);
         owner.GetAnimator().SetTrigger("Down");
     }

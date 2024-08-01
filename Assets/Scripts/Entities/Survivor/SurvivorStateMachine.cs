@@ -85,12 +85,14 @@ public class SurvivorWalk : SurvivorMoveState
 
 public class SurvivorRun : SurvivorMoveState
 {
-    public SurvivorRun(Survivor owner, SurvivorStateMachine state) : base(owner, state) { }
+    public SurvivorRun(Survivor owner, SurvivorStateMachine state) : base(owner, state) 
+    {
+        owner.OnChangedRunSpeed += OnChangedRunSpeed;
+    }
     public override void Enter()
     {
-        owner.MoveSpeed = runSpeed;
+        owner.MoveSpeed = owner.RunSpeed;
         Animator.SetBool("isRun", true);
-        owner.StartCoroutine(owner.CorPrintFoot());
     }
 
     public override void Excute()
@@ -105,8 +107,11 @@ public class SurvivorRun : SurvivorMoveState
     public override void Exit()
     {
         Animator.SetBool("isRun", false);
-        //owner.StopCoroutine(owner.CorPrintFoot());
+    }
 
+    void OnChangedRunSpeed()
+    {
+        owner.MoveSpeed = owner.RunSpeed;
     }
 }
 

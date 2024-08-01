@@ -6,7 +6,7 @@ public class MatchRoom : NetworkBehaviour
 {
     KcpTransport roomPort;
     public KcpTransport GetRoomPort() {  return roomPort; }
-    List<LobbyPlayer> roomMembers = new List<LobbyPlayer>();
+    List<SelectedPerkManager> roomMembers = new List<SelectedPerkManager>();
     public bool CanJoin { get; private set; }
 
     public void InitRoom(KcpTransport port)
@@ -15,7 +15,7 @@ public class MatchRoom : NetworkBehaviour
         CanJoin = true;
     }
 
-    public void AddPlayer(LobbyPlayer player)
+    public void AddPlayer(SelectedPerkManager player)
     {
         roomMembers.Add(player);
     }

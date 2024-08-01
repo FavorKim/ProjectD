@@ -9,9 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6500547094792312445}
-  - component: {fileID: 6500547094792312446}
-  - component: {fileID: -4959485531130323588}
-  - component: {fileID: 8093595343593730551}
+  - component: {fileID: 2469317175657730224}
+  - component: {fileID: -1991448653375097048}
   m_Layer: 0
   m_Name: RoomPlayer
   m_TagString: Untagged
@@ -34,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6500547094792312446
+--- !u!114 &2469317175657730224
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -51,7 +50,7 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
---- !u!114 &-4959485531130323588
+--- !u!114 &-1991448653375097048
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -60,7 +59,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6500547094792312444}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79874ac94d5b1314788ecf0e86bd23fd, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ed3c6cf667e05441aaeed48b0802ea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncDirection: 0
@@ -69,18 +68,3 @@ MonoBehaviour:
   showRoomGUI: 1
   readyToBegin: 0
   index: 0
---- !u!114 &8093595343593730551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6500547094792312444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d79db9d001e5b3c489ae79f550fa2e29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0

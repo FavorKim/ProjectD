@@ -2,7 +2,7 @@ using Mirror;
 
 public class NetworkPoolObject : NetworkBehaviour
 {
-    [Command]
+    [Command(requiresAuthority = false)]
     public void Cmd_SetActive(bool isTrue)
     {
         Rpc_SetActive(isTrue);

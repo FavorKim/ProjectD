@@ -3,7 +3,6 @@ using UnityEngine;
 public class KillerWeapon : MonoBehaviour
 {
     BoxCollider m_col;
-
     private void Start()
     {
         m_col = GetComponent<BoxCollider>();
@@ -15,6 +14,7 @@ public class KillerWeapon : MonoBehaviour
         {
             AttackSurvivor(survivor);
         }
+
     }
 
     void AttackSurvivor(Survivor sur)

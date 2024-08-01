@@ -2,6 +2,7 @@ using Mirror;
 using System;
 using System.Collections;
 using Unity.VisualScripting.FullSerializer;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
         private set
         {
             curGauge = value;
+            anim.SetFloat("Progress", value);
             if (curGauge >= maxGauge)
             {
                 IsCompleted = true;
@@ -33,26 +35,31 @@ public class Generator : NetworkBehaviour, IInteractableObject
     [SerializeField] Slider Slider_Gauge;
     [SerializeField] GameObject Light;
     [SerializeField] GameObject Xray_Silhouette;
-    [SerializeField] GameObject XrayLight;
+    [SerializeField] GameObject XrayWhiteLight;
+    [SerializeField] GameObject XrayRedLight;
     [SerializeField] ParticleSystem VFX_Spark;
     [SerializeField] ParticleSystem VFX_Smoke;
     [SerializeField] ParticleSystem VFX_Steam;
 
+    Animator anim;
+
+    [SerializeField] SkillCheckManager SkillCheckManager;
+
     bool isCompleted = false;
-    public bool IsCompleted 
+    public bool IsCompleted
     {
         get { return isCompleted; }
-        private set 
+        private set
         {
             if (isCompleted != value)
             {
                 isCompleted = value;
-                if(value == true)
+                if (value == true)
                 {
                     CmdOnCompleteHandler();
                 }
             }
-        } 
+        }
     }
     bool isSabotaging;
     public bool IsSabotaging
@@ -76,26 +83,45 @@ public class Generator : NetworkBehaviour, IInteractableObject
         }
     }
 
+
     public override void OnStartServer()
     {
         base.OnStartServer();
         Xray_Silhouette.SetActive(true);
     }
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+    }
+
+    private void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     private void OnEnable()
     {
         OnCompleteHandler += TurnOnLight;
         OnCompleteHandler += CmdXrayOn;
+        OnCompleteHandler += OnComplete_StopSkillCheck;
 
         OnSabotage += DecreaseGauge;
         OnSabotage += PlaySabotageVFX;
 
         OnEndSabotage += StopSabotageVFX;
+
+        SkillCheckManager.GetSkillChecker().OnSkillCheckSuccess += OnSkillCheckSuccess;
+        SkillCheckManager.GetSkillChecker().OnSkillCheckCritical += OnSkillCheckCritical;
+        SkillCheckManager.GetSkillChecker().OnSkillCheckFailed += OnSkillCheckFailed;
     }
 
     private void OnDisable()
     {
+        SkillCheckManager.GetSkillChecker().OnSkillCheckFailed -= OnSkillCheckFailed;
+        SkillCheckManager.GetSkillChecker().OnSkillCheckCritical -= OnSkillCheckCritical;
+        SkillCheckManager.GetSkillChecker().OnSkillCheckSuccess -= OnSkillCheckSuccess;
+
         OnEndSabotage -= StopSabotageVFX;
 
         OnSabotage -= PlaySabotageVFX;
@@ -103,6 +129,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
 
         OnCompleteHandler -= CmdXrayOn;
         OnCompleteHandler -= TurnOnLight;
+        OnCompleteHandler -= OnComplete_StopSkillCheck;
 
         OnCompleteHandler = null;
     }
@@ -112,32 +139,39 @@ public class Generator : NetworkBehaviour, IInteractableObject
         if (IsCompleted)
         {
             Slider_Gauge.gameObject.SetActive(false);
+            SkillCheckManager.IsSkillChecking = false;
+
             return;
         }
 
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Slider_Gauge.gameObject.SetActive(true);
+            SkillCheckManager.IsSkillChecking = true;
         }
 
         if (Input.GetMouseButton(0))
         {
-            Cmd_ProgressGenerator();
+            Cmd_ProgressGenerator(1);
         }
         else
         {
             Slider_Gauge.gameObject.SetActive(false);
+            SkillCheckManager.IsSkillChecking = false;
+            SkillCheckManager.GetSkillChecker().InvokeOnSkillCheckEnd();
         }
     }
-    [Command(requiresAuthority =false)]
-    void Cmd_ProgressGenerator() 
+
+
+    [Command(requiresAuthority = false)]
+    void Cmd_ProgressGenerator(float multi)
     {
-        CurGauge += Time.deltaTime * Multi_Gauge;
-        ProgressGenerator(); 
+        CurGauge += Time.deltaTime * Multi_Gauge * multi;
+        ProgressGenerator(multi);
     }
-    
+
     [ClientRpc]
-    void ProgressGenerator()
+    void ProgressGenerator(float multi)
     {
         IsSabotaging = false;
         //Slider_Gauge.gameObject.SetActive(true);
@@ -145,7 +179,7 @@ public class Generator : NetworkBehaviour, IInteractableObject
         Slider_Gauge.value = CurGauge / maxGauge;
     }
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     public void CmdKillerInteract()
     {
         KillerInteract();
@@ -159,12 +193,16 @@ public class Generator : NetworkBehaviour, IInteractableObject
 
 
 
+
     void SetSteam()
     {
         var emission = VFX_Steam.emission;
         emission.rateOverTime = curGauge * 0.05f;
     }
-
+    void TurnOnLight()
+    {
+        Light.gameObject.SetActive(true);
+    }
 
     void DecreaseGauge()
     {
@@ -175,35 +213,37 @@ public class Generator : NetworkBehaviour, IInteractableObject
         VFX_Spark.Play();
         VFX_Smoke.Play();
     }
-
     void StopSabotageVFX()
     {
         VFX_Spark.Stop();
         VFX_Smoke.Stop();
     }
 
-    
-    void TurnOnLight()
-    {
-        Light.gameObject.SetActive(true);
-    }
+
 
 
     private event Action OnSabotage;
     private event Action OnEndSabotage;
     public event Action OnCompleteHandler;
 
-    [Command(requiresAuthority = false)]    
+    [Command(requiresAuthority = false)]
     private void CmdOnSabotage() { RpcOnSabotage(); }
     [Command(requiresAuthority = false)]
     private void CmdOnEndSabotage() { RpcOnEndSabotage(); }
     [Command(requiresAuthority = false)]
-    private void CmdOnCompleteHandler() {  RpcOnCompleteHandler(); }
-    [Command(requiresAuthority =false)]
+    private void CmdOnCompleteHandler() { RpcOnCompleteHandler(); }
+    [Command(requiresAuthority = false)]
     void CmdXrayOn()
     {
         RpcXrayOn();
     }
+    [Command(requiresAuthority = false)]
+    void CmdRedLightOn()
+    {
+        RpcRedLightOn();
+    }
+
+
 
 
     [ClientRpc]
@@ -211,15 +251,43 @@ public class Generator : NetworkBehaviour, IInteractableObject
     [ClientRpc]
     private void RpcOnEndSabotage() { OnEndSabotage.Invoke(); StopCoroutine(CorSabotage()); }
     [ClientRpc]
-    private void RpcOnCompleteHandler() {  OnCompleteHandler.Invoke(); }
+    private void RpcOnCompleteHandler() { OnCompleteHandler.Invoke(); }
     [ClientRpc]
     void RpcXrayOn()
     {
-        StartCoroutine(CorShowXray());
+        StartCoroutine(CorShowWhiteXray());
     }
+    [ClientRpc]
+    void RpcRedLightOn()
+    {
+        StartCoroutine(CorShowRedXray());
+    }
+
+
     void Hook_OnChangedProgress(float old, float recent)
     {
         CurGauge = recent;
+    }
+
+
+    void OnSkillCheckSuccess()
+    {
+        Cmd_ProgressGenerator(20);
+    }
+    void OnSkillCheckCritical()
+    {
+        Cmd_ProgressGenerator(100);
+    }
+    void OnSkillCheckFailed()
+    {
+        RpcRedLightOn();
+        Cmd_ProgressGenerator(-70.0f);
+    }
+
+    void OnComplete_StopSkillCheck()
+    {
+        if (isLocalPlayer)
+            SkillCheckManager.gameObject.SetActive(false);
     }
 
     IEnumerator CorSabotage()
@@ -230,12 +298,20 @@ public class Generator : NetworkBehaviour, IInteractableObject
             yield return null;
         }
     }
-    IEnumerator CorShowXray()
+    IEnumerator CorShowWhiteXray()
     {
         Xray_Silhouette.SetActive(true);
-        XrayLight.SetActive(true);
+        XrayWhiteLight.SetActive(true);
         yield return new WaitForSeconds(XrayShowDuration);
         Xray_Silhouette.SetActive(false);
-        XrayLight.SetActive(false);
+        XrayWhiteLight.SetActive(false);
+    }
+    IEnumerator CorShowRedXray()
+    {
+        Xray_Silhouette.SetActive(true);
+        XrayRedLight.SetActive(true);
+        yield return new WaitForSeconds(XrayShowDuration);
+        Xray_Silhouette.SetActive(false);
+        XrayRedLight.SetActive(false);
     }
 }

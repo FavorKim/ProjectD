@@ -11,12 +11,11 @@ GameObject:
   - component: {fileID: 2604780603832176833}
   - component: {fileID: 2604780603831781953}
   - component: {fileID: 2604780603831781954}
-  - component: {fileID: 3909107687517250243}
   - component: {fileID: 960335277}
   - component: {fileID: 736711328809913217}
   m_Layer: 0
   m_Name: Wood_Fence_Gate_01
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -70,19 +69,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellA: 52
   cellB: 39
---- !u!65 &3909107687517250243
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2604780603831815393}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.2557987, y: 1.0603044, z: 2.2268853}
-  m_Center: {x: -0.24910295, y: 0.50506943, z: -1.5251828}
 --- !u!114 &960335277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,7 +115,7 @@ GameObject:
   - component: {fileID: 2706271722537468240}
   m_Layer: 0
   m_Name: Mesh1_Wood_Fence_Gate_Model
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -226,7 +212,7 @@ GameObject:
   - component: {fileID: 1323483142488391323}
   m_Layer: 0
   m_Name: Mesh2_Wood_Fence_Gate_Model
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -330,27 +316,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.69
+      value: 0.387
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.57
+      value: -0.58
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.46797612
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.53028315
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.52851427
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.4695432
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -358,17 +344,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -96.953
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502446075, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -90.191
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3545900645502940635, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
       propertyPath: m_Name
       value: Palete
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4514466517583722522, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
+    - {fileID: 2156309147124805212, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ba46ff24916977b4987f1f0fa41dafe9, type: 3}
 --- !u!4 &77964605912550923 stripped
 Transform:

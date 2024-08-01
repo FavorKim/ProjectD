@@ -18,16 +18,16 @@ public class SelectedPerkViewModel
         }
     }
 
-    private PerkData m_perkSCO;
-    public PerkData PerkSCO
+    private PerkData m_perkData;
+    public PerkData PerkData
     {
-        get { return m_perkSCO; }
+        get { return m_perkData; }
         set
         {
-            if(m_perkSCO != value)
+            if(m_perkData != value)
             {
-                m_perkSCO = value;
-                OnPropChanged(nameof(PerkSCO));
+                m_perkData = value;
+                OnPropChanged(nameof(PerkData));
             }
         }
     }

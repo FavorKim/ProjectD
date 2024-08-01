@@ -1,6 +1,7 @@
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,9 +9,10 @@ public class Lever : NetworkBehaviour, IInteractableObject
 {
     [SerializeField] float m_speed;
     [SerializeField] Animator Animator_Door;
+    [SerializeField] NetworkAnimator netAnim_Door;
     Animator Animator;
-    const float m_maxGauge = 100;
-    float curGauge;
+    const float MAXGAUGE = 100;
+    [SerializeField]float curGauge;
     public float CurrentGauge
     {
         get
@@ -19,15 +21,15 @@ public class Lever : NetworkBehaviour, IInteractableObject
         }
         set
         {
-            if (curGauge >= m_maxGauge)
+            if(curGauge >= MAXGAUGE)
             {
-                OnOpenDoor();
+                CmdOnOpenDoor();
                 return;
             }
-            if (CurrentGauge != value && CurrentGauge < m_maxGauge)
+            if (CurrentGauge != value)
             {
                 curGauge = value;
-                Slider_Gauge.value = CurrentGauge / m_maxGauge;
+                Slider_Gauge.value = curGauge / MAXGAUGE;
             }
         }
     }
@@ -42,21 +44,20 @@ public class Lever : NetworkBehaviour, IInteractableObject
 
     public void SurvivorInteract()
     {
-        if (!IsAvailable && CurrentGauge >= m_maxGauge) 
+        if (!IsAvailable) 
         {
             Slider_Gauge.gameObject.SetActive(false);
             Animator.SetBool("isUsing", false);
-            return; 
+            return;
         }
 
         if (Input.GetMouseButton(0))
         {
-            if (!Slider_Gauge.gameObject.activeSelf)
-                Slider_Gauge.gameObject.SetActive(true);
-            CurrentGauge += Time.deltaTime * m_speed;
+            Slider_Gauge.gameObject.SetActive(true);
+            CmdSetCurGauge(curGauge + Time.deltaTime * m_speed);// CurrentGauge += Time.deltaTime * m_speed;
             Animator.SetBool("isUsing", true);
         }
-        else
+        if(Input.GetMouseButtonUp(0)) 
         {
             Slider_Gauge.gameObject.SetActive(false);
             Animator.SetBool("isUsing", false);
@@ -66,14 +67,38 @@ public class Lever : NetworkBehaviour, IInteractableObject
     {
 
     }
+    [Command(requiresAuthority =false)]
+    void CmdOnOpenDoor()
+    {
+        OnOpenDoor();
+    }
 
+    [ClientRpc]
     void OnOpenDoor()
     {
+        IsAvailable = false;
         OpenDoor();
+    }
+
+    [Command(requiresAuthority =false)]
+    void CmdSetCurGauge(float value)
+    {
+        curGauge = value;
+        RpcSetCurGauge(curGauge);
+    }
+
+    [ClientRpc]
+    void RpcSetCurGauge(float value)
+    {
+        CurrentGauge = value;
     }
 
     void OpenDoor()
     {
         Animator_Door.SetTrigger("Open");
+        netAnim_Door.SetTrigger("Open");
+        Slider_Gauge.gameObject.SetActive(false);
     }
+
+
 }

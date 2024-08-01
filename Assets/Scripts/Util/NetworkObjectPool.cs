@@ -1,50 +1,46 @@
 using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkObjectPool : NetworkBehaviour
 {
-    //private static NetworkObjectPool instance;
-    //public static NetworkObjectPool Instance
-    //{
-    //    get
-    //    {
-    //        return instance;
-    //    }
-    //}
 
-    [SerializeField] NetworkPoolObject ObjectPrefab;
+    [SerializeField] GameObject ObjectPrefab;
     [SerializeField] int PoolSize;
 
-    Queue<NetworkPoolObject> pool = new Queue<NetworkPoolObject>();
+    Queue<GameObject> pool = new Queue<GameObject>();
 
-   
-    
+
+    private void Start()
+    {
+        InitPool();
+    }
 
     public void InitPool()
     {
+        if (pool.Count > 0) return;
+
         for (int i = 0; i < PoolSize; i++)
         {
             var obj = Instantiate(ObjectPrefab, transform);
-            NetworkServer.Spawn(obj.gameObject);
+            
             pool.Enqueue(obj);
-            obj.Cmd_SetActive(false);
+            obj.gameObject.SetActive(false);
         }
     }
 
-    public virtual NetworkPoolObject GetObj()
+    public virtual GameObject GetObj()
     {
         var obj = pool.Dequeue();
-        obj.Cmd_SetActive(true);
+        obj.SetActive(true);
         return obj;
     }
 
-    public virtual void ReturnObj(NetworkPoolObject obj)
+    public virtual void ReturnObj(GameObject obj)
     {
         pool.Enqueue(obj);
-        obj.Cmd_SetActive(false);
+        obj.SetActive(false);
     }
-
-    
 }

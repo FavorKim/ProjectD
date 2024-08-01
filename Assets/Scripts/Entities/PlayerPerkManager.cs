@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class PlayerPerkManager
 {
@@ -12,6 +13,11 @@ public class PlayerPerkManager
 
             if (perk.PerkType == PerkType.Passive)
             {
+                if (perk.PerkName == "SelfCare")
+                {
+                    player.IsSelfCare = true;
+                }
+
                 switch (perk.EffectTarget)
                 {
                     case HandleValue.HealSpeed:
@@ -28,8 +34,9 @@ public class PlayerPerkManager
                 switch (perk.PerkName)
                 {
                     case "Sprint":
-                        var dest = new Sprint(perk.ValuePercentage, perk.CoolTime, perk.Duration, player);
-                        player.SetExhaustPerk(dest);
+                        var dest = player.gameObject.AddComponent<Sprint>();
+                        dest.Init(perk.ValuePercentage, perk.CoolTime, perk.Duration, player.GetComponent<Survivor>(), PerkType.Exhaust);
+                        StatusHUDManager.Instance.CreateStatusHUD(dest);
                         break;
                 }
             }

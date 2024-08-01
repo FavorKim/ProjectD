@@ -12,17 +12,21 @@ public class SelectedPerkView : MonoBehaviour
 
     private SelectedPerkViewModel vm;
 
+    private void Awake()
+    {
+        PerkSettingModel.Instance.selectedPerkList.Add(new SelectedPerk(perk.perk, index));
+    }
+
     private void OnEnable()
     {
         if (vm == null)
         {
             vm = new();
+            vm.index = this.index;
             vm.PropertyChanged += OnPropChanged;
             vm.RegisterOnEnable();
-            vm.index = this.index;
         }
-        PerkSettingModel.Instance.selectedPerkList.Add(new SelectedPerk(perk.perk, index));
-        if(index == 0)
+        if (index == 0)
         {
             PerkSettingModel.Instance.SelectPerk(this.index);
         }
@@ -34,7 +38,6 @@ public class SelectedPerkView : MonoBehaviour
             vm.UnRegisterOnDisable();
             vm.PropertyChanged -= OnPropChanged;
             vm = null;
-
         }
     }
 
@@ -51,8 +54,8 @@ public class SelectedPerkView : MonoBehaviour
                 SetMarkerActive(vm.IsSelected);
                 break;
 
-            case nameof(vm.PerkSCO):
-                perk.Init(vm.PerkSCO);
+            case nameof(vm.PerkData):
+                perk.Init(vm.PerkData);
                 break;
         }
     }
