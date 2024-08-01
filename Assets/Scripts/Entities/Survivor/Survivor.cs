@@ -932,6 +932,7 @@ public class Survivor : PlayableCharacter
             {
                 healer.Animator.SetTrigger("Heal");
                 healer.netAnim.SetTrigger("Heal");
+                dest.Animator.SetBool("BeingHealed", true);
             }
 
             dest.Slider_HealGauge.gameObject.SetActive(true);
@@ -944,12 +945,14 @@ public class Survivor : PlayableCharacter
         }
         if (Input.GetMouseButtonUp(mouseIndex))
         {
+            dest.Animator.SetBool("BeingHealed", false);
             dest.CmdOnStopHeal();
             healer.CmdOnStopHeal();
             if(dest == healer)
             {
                 m_healDest = null;
             }
+
         }
     }
 
