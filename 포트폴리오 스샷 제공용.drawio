@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36" version="24.7.6">
   <diagram name="페이지-1" id="o0APWfUMKUU7ITL8NAqE">
-    <mxGraphModel dx="1647" dy="642" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="#000000" math="0" shadow="0">
+    <mxGraphModel dx="1269" dy="447" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="#000000" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -342,14 +342,14 @@
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-151" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeColor=#23445D;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="78" y="2428" as="sourcePoint" />
-            <mxPoint x="141" y="2165" as="targetPoint" />
+            <mxPoint x="141" y="2132" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="78" y="2165" />
+              <mxPoint x="78" y="2132" />
             </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-152" value="Command" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#FFFFFF;labelBackgroundColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="40" y="2286" width="73" height="26" as="geometry" />
+          <mxGeometry x="40" y="2274" width="73" height="26" as="geometry" />
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-153" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeColor=#23445D;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -378,9 +378,6 @@
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-157" value="ClientRpc" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="165" y="2314" width="70" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="HwlPlYfOWSaUj1gYbrh8-158" value="&lt;div&gt;&amp;lt;Server Side&amp;gt;&lt;/div&gt;&lt;div&gt;게임 로직 관련 처리&lt;/div&gt;&lt;div&gt;(GameManager)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
-          <mxGeometry x="146" y="2135" width="120" height="60" as="geometry" />
-        </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-159" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeColor=#23445D;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="204" y="2199" as="sourcePoint" />
@@ -389,6 +386,18 @@
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-163" value="상태 변화!" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="-7" y="2422" width="73" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-166" value="&lt;div&gt;&amp;lt;Server Side&amp;gt;&lt;/div&gt;&lt;div&gt;게임 로직 관련 처리&lt;/div&gt;&lt;div&gt;(GameManager)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
+          <mxGeometry x="177" y="2132" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-165" value="&lt;div&gt;&amp;lt;Server Side&amp;gt;&lt;/div&gt;&lt;div&gt;게임 로직 관련 처리&lt;/div&gt;&lt;div&gt;(GameManager)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
+          <mxGeometry x="167" y="2122" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-164" value="&lt;div&gt;&amp;lt;Server Side&amp;gt;&lt;/div&gt;&lt;div&gt;게임 로직 관련 처리&lt;/div&gt;&lt;div&gt;(GameManager)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
+          <mxGeometry x="157" y="2112" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-158" value="&lt;div&gt;&amp;lt;Server Side&amp;gt;&lt;/div&gt;&lt;div&gt;게임 로직 관련 처리&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
+          <mxGeometry x="147" y="2102" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
