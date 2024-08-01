@@ -406,7 +406,7 @@
           <mxGeometry x="27" y="2724" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-169" value="이동 상태 머신" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
-          <mxGeometry x="245" y="2724" width="120" height="60" as="geometry" />
+          <mxGeometry x="255.75" y="2724" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-173" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;strokeColor=#23445D;endArrow=circlePlus;endFill=0;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-168" target="HwlPlYfOWSaUj1gYbrh8-167">
           <mxGeometry relative="1" as="geometry">
@@ -420,7 +420,7 @@
             <mxPoint x="97" y="2734" as="sourcePoint" />
             <mxPoint x="218" y="2629" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="305" y="2635" />
+              <mxPoint x="316" y="2635" />
             </Array>
           </mxGeometry>
         </mxCell>
