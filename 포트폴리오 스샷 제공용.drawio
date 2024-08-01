@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36" version="24.7.6">
   <diagram name="페이지-1" id="o0APWfUMKUU7ITL8NAqE">
-    <mxGraphModel dx="690" dy="737" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#000000" math="0" shadow="0">
+    <mxGraphModel dx="1434" dy="738" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#000000" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -57,6 +57,56 @@
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-20" value="함수 2&amp;nbsp;&lt;div&gt;호출&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="HwlPlYfOWSaUj1gYbrh8-19">
           <mxGeometry x="-0.3667" y="4" relative="1" as="geometry">
             <mxPoint x="6" y="21" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-21" value="Model" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="305" y="554" width="82" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-22" value="View" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="401" y="708" width="82" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-23" value="ViewModel" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="182" y="708" width="82" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-24" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="284" y="748.5" as="sourcePoint" />
+            <mxPoint x="375" y="748.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-25" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeColor=#FFFFFF;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-21" target="HwlPlYfOWSaUj1gYbrh8-23">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="289" y="620" as="sourcePoint" />
+            <mxPoint x="237" y="690" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="226" y="595" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-27" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeColor=#FFFFFF;strokeWidth=1;fontSize=16;spacing=11;spacingRight=5;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="281" y="713" as="sourcePoint" />
+            <mxPoint x="329" y="645" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-29" value="정보 변경 시&lt;div&gt;이벤트 호출&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="253.00258300203052" y="478.00427124746193" as="geometry">
+            <mxPoint x="-28" y="118" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-26" value="&lt;div&gt;&amp;nbsp;이벤트 핸들러&lt;div&gt;구독&lt;/div&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="338.0025830020305" y="562.0042712474619" as="geometry">
+            <mxPoint x="-28" y="118" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-31" value="정보 변경에 따른&lt;div&gt;UI 상태 변경&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="356.0025830020305" y="659.0042712474619" as="geometry">
+            <mxPoint x="-28" y="118" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-32" value="변경된 UI 상태 반영" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#000000;fontColor=#FFFFFF;" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="527.0025830020305" y="648.0042712474619" as="geometry">
+            <mxPoint x="-28" y="118" as="offset" />
           </mxGeometry>
         </mxCell>
       </root>
