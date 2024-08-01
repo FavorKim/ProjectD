@@ -14,6 +14,9 @@ public class ClearSurvivor : MonoBehaviour
 
     void Start()
     {
+        anim.SetBool("isRun", true);
+        anim.SetBool("isWalk", true);
+
         Panel.DOFade(1, 0.5f).OnComplete(() =>
         {
             Panel.DOFade(0, 2.5f);
@@ -21,18 +24,16 @@ public class ClearSurvivor : MonoBehaviour
             Text_Result.gameObject.SetActive(true);
             Panel_ButtonHolder.SetActive(true);
 
-            anim.SetBool("isRun", true);
-            anim.SetBool("isWalk", true);
         });
 
     }
 
     public void SetResultText(GameResult result)
     {
-        if (result > GameResult.Sacrificed) 
+        if (result > GameResult.Sacrificed)
         {
             Text_Result.text = "Àß¸øµÈ °á°ú";
-            return; 
+            return;
         }
         Text_Result.text = result == GameResult.Escape ? "Å»Ãâ" : "Èñ»ýµÊ";
     }

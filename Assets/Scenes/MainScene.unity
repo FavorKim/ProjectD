@@ -1988,6 +1988,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2768605591706076463, guid: f36ed1c31d4170a48a4aa84939cfa24e, type: 3}
+      propertyPath: discovery
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2768605591706076463, guid: f36ed1c31d4170a48a4aa84939cfa24e, type: 3}
       propertyPath: onlineScene
       value: Assets/Scenes/LobbyScene.unity
       objectReference: {fileID: 0}
@@ -1997,7 +2001,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2768605591706076463, guid: f36ed1c31d4170a48a4aa84939cfa24e, type: 3}
       propertyPath: networkAddress
-      value: 192.168.0.72
+      value: localhost
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f36ed1c31d4170a48a4aa84939cfa24e, type: 3}

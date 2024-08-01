@@ -12,6 +12,8 @@ public class ClearKiller : MonoBehaviour
 
     void Start()
     {
+        anim.SetBool("isMoving", true);
+        anim.SetFloat("inputY", 1);
 
         Panel_Fade.DOFade(1, 0.5f).OnComplete(() =>
         {
@@ -21,8 +23,6 @@ public class ClearKiller : MonoBehaviour
             Panel_ButtonHolder.SetActive(true);
         });
 
-        anim.SetBool("isMoving", true);
-        anim.SetFloat("inputY", 1);
     }
 
     public void SetResultText(GameResult result)
