@@ -327,17 +327,25 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-147" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;strokeColor=#23445D;" edge="1" parent="1" source="HwlPlYfOWSaUj1gYbrh8-142">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="142.5652173913045" y="2399.739130434783" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-142" value="클라이언트" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
-          <mxGeometry x="82.5" y="2438" width="80" height="80" as="geometry" />
+          <mxGeometry x="38.25" y="2439" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-143" value="클라이언트" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
-          <mxGeometry x="170.5" y="2438" width="80" height="80" as="geometry" />
+          <mxGeometry x="126.25" y="2439" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-144" value="클라이언트" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
-          <mxGeometry x="255.5" y="2438" width="80" height="80" as="geometry" />
+          <mxGeometry x="211.25" y="2439" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="HwlPlYfOWSaUj1gYbrh8-145" value="호스트" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
           <mxGeometry x="169" y="2342" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="HwlPlYfOWSaUj1gYbrh8-146" value="클라이언트" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#FFFFFF;fontColor=#FFFFFF;fillColor=#182E3E;" vertex="1" parent="1">
+          <mxGeometry x="295.75" y="2439" width="80" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
