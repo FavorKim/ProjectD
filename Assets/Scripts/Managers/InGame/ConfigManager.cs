@@ -17,18 +17,18 @@ public class ConfigManager : SingletonMono<ConfigManager>
     [SerializeField] AudioMixer audioMixer;
     [SerializeField] GameObject SettingPopup;
 
-    private bool isWindowed;
-    private bool IsWindowed
+    private bool isFullScreen = true;
+    private bool IsFullScreen
     {
         get
         {
-            return isWindowed;
+            return isFullScreen;
         }
         set
         {
-            if (isWindowed != value)
+            if (isFullScreen != value)
             {
-                isWindowed = value;
+                isFullScreen = value;
                 SetScreenConfig();
             }
         }
@@ -87,7 +87,7 @@ public class ConfigManager : SingletonMono<ConfigManager>
 
     public void OnClick_SetFullScreenMode()
     {
-        IsWindowed = !isWindowed;
+        IsFullScreen = !isFullScreen;
     }
     
 
@@ -96,15 +96,15 @@ public class ConfigManager : SingletonMono<ConfigManager>
         switch (CurrentResolution) 
         {
             case Resolution.FHD:
-                Screen.SetResolution(1920, 1080, IsWindowed);
+                Screen.SetResolution(1920, 1080, IsFullScreen);
                 break;
 
             case Resolution.HD:
-                Screen.SetResolution(1280, 720, IsWindowed);
+                Screen.SetResolution(1280, 720, IsFullScreen);
                 break;
 
             case Resolution.NHD:
-                Screen.SetResolution(640, 360, IsWindowed);
+                Screen.SetResolution(640, 360, IsFullScreen);
                 break;
         }
     }
