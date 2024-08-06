@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,8 +12,8 @@ public class Perk : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     [SerializeField] GameObject Panel_Description;
 
-    [SerializeField] Text Text_Description;
-    [SerializeField] Text Text_Name;
+    [SerializeField] TMP_Text Text_Name;
+    [SerializeField] TMP_Text Text_Description;
 
     public void OnPointerEnter(PointerEventData data)
     {

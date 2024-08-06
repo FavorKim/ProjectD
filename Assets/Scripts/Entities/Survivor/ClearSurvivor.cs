@@ -1,13 +1,11 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ClearSurvivor : MonoBehaviour
 {
     [SerializeField] Animator anim;
-    [SerializeField] Text Text_Result;
+    [SerializeField] TMP_Text Text_Result;
     [SerializeField] GameObject Outfit;
     [SerializeField] CanvasGroup Panel;
     [SerializeField] GameObject Panel_ButtonHolder;

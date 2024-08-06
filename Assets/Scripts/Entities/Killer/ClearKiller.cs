@@ -1,11 +1,13 @@
 using UnityEngine.UI;
 using UnityEngine;
 using DG.Tweening;
+using TMPro;
+
 
 public class ClearKiller : MonoBehaviour
 {
     [SerializeField] Animator anim;
-    [SerializeField] Text Text_Result;
+    [SerializeField] TMP_Text Text_Result;
     [SerializeField] CanvasGroup Panel_Fade;
     [SerializeField] GameObject OutFit;
     [SerializeField] GameObject Panel_ButtonHolder;
