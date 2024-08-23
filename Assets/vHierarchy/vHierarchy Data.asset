@@ -17,6 +17,7 @@ MonoBehaviour:
     - 2ca98489250807246a5f03d13d94c839
     - ad3e5f2cb4d33634fb4c5ecd01ae4b5e
     - bccc7293f7d33ae43a74c9629b4c8a0b
+    - 8177291a955d115458ec45541c14a146
     values:
     - goDatas_byGlobalId:
         keys:
@@ -84,3 +85,6 @@ MonoBehaviour:
         values:
         - colorIndex: 2
           iconNameOrGuid: AvatarMask On Icon
+    - goDatas_byGlobalId:
+        keys: []
+        values: []

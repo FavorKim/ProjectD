@@ -304,8 +304,8 @@ public class Survivor : PlayableCharacter
             if (m_healthStateMachine.GetCurState() != HealthStates.Down)
                 m_StateMachine.StateUpdate();
 
-            HealOtherSurvivor();
-            SelfCare();
+                HealOtherSurvivor();
+                SelfCare();
         }
     }
 
@@ -417,7 +417,7 @@ public class Survivor : PlayableCharacter
         OnChangedState(newState);
     }
 
-    [Command(requiresAuthority =false)]
+    [Command(requiresAuthority = false)]
     void CmdSetSurvivorHealGauge(Survivor dest, float value)
     {
         RpcOnSetSurvivorHealGauge(dest, value);
@@ -720,7 +720,7 @@ public class Survivor : PlayableCharacter
     public event Action OnSacrificed;
     public event Action OnChangedRunSpeed;
     public event Action OnEscapedFromKiller;
-    
+
 
     // µÈ∑»¿ª ∂ß
     void OnBeingHeld_SetState(KillerBase killer)
@@ -863,12 +863,12 @@ public class Survivor : PlayableCharacter
     }
     void OnHealSkillCheckCritical()
     {
-        if(m_healDest!=null)
+        if (m_healDest != null)
             CmdSetSurvivorHealGauge(m_healDest, m_healDest.HealGauge + 0.1f);
     }
     void OnHealSkillCheckFailed()
     {
-        if (m_healDest != null) 
+        if (m_healDest != null)
             CmdSetSurvivorHealGauge(m_healDest, m_healDest.HealGauge - 0.1f);
     }
 
@@ -906,13 +906,21 @@ public class Survivor : PlayableCharacter
         {
             HealSurvivor(this, this, 1);
         }
+        else if(Input.GetMouseButton(1))
+            CmdOnStopHeal();
     }
 
     void HealSurvivor(Survivor dest, Survivor healer, int mouseIndex)
     {
         if (dest.m_healthStateMachine.GetCurState() == HealthStates.Healthy && Input.GetMouseButton(mouseIndex))
         {
-            healer.StopHeal();
+            dest.Animator.SetBool("BeingHealed", false);
+            dest.CmdOnStopHeal();
+            healer.CmdOnStopHeal();
+            if (dest == healer)
+            {
+                m_healDest = null;
+            }
             return;
         }
         if (Input.GetMouseButtonDown(mouseIndex))
@@ -948,11 +956,10 @@ public class Survivor : PlayableCharacter
             dest.Animator.SetBool("BeingHealed", false);
             dest.CmdOnStopHeal();
             healer.CmdOnStopHeal();
-            if(dest == healer)
+            if (dest == healer)
             {
                 m_healDest = null;
             }
-
         }
     }
 

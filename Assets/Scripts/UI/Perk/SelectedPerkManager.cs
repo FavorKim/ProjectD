@@ -22,8 +22,13 @@ public class SelectedPerkManager : SingletonNetwork<SelectedPerkManager>
         }
     }
 
-    private void OnApplicationQuit()
+    public void ResetPerkList()
     {
         perkList = null;
+    }
+
+    private void OnApplicationQuit()
+    {
+        ResetPerkList();
     }
 }

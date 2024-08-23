@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class LobbySetting : NetworkBehaviour
 {
-    [SerializeField] GameObject KillerCam;
-    [SerializeField] GameObject SurvivorCam;
-
+    private void Start()
+    {
+        SelectedPerkManager.Instance.ResetPerkList();
+    }
 }

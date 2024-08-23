@@ -26418,10 +26418,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 4126635664791897613}
-  Text_Result: {fileID: 0}
+  Text_Result: {fileID: 4206106710425808810}
   Outfit: {fileID: 4126635664801297499}
   Panel: {fileID: 1700963784366688948}
-  Panel_ButtonHolder: {fileID: 0}
+  Panel_ButtonHolder: {fileID: 3278348963900160011}
 --- !u!1 &8401782575326801510
 GameObject:
   m_ObjectHideFlags: 0
