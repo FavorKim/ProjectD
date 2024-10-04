@@ -459,7 +459,7 @@ public class Survivor : PlayableCharacter
     {
         m_healthStateMachine.ChangeState(HealthStates.Injured);
         IsFreeze = false;
-        m_CharacterController.Move(transform.up * -10f);
+        //m_CharacterController.Move(transform.up * -10f);
         Animator.SetTrigger(Animator.StringToHash("Resqued"));
         netAnim.SetTrigger("Resqued");
     }

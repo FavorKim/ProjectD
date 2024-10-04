@@ -105,7 +105,7 @@ MonoBehaviour:
   EscapeSkillCheckManager: {fileID: 566522584940255919}
   HealSkillCheckManager: {fileID: 6548223925741692791}
   m_invincibleTime: 2
-  m_corruptTime: 120
+  m_corruptTime: 10
   DebugOnly_CorruptMulti: 1
   m_healGauge: 0
   m_healSpeed: 0
