@@ -274,7 +274,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
         StartCoroutine(CorJumpFence());
     }
 
-    public void OnInteractWithGenerator(Generator generator)
+    private void OnInteractWithGenerator(Generator generator)
     {
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space))
@@ -287,7 +287,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
             }
         }
     }
-    public void OnInteractWithJumpFence(JumpFence jumpFence)
+    private void OnInteractWithJumpFence(JumpFence jumpFence)
     {
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space) && !IsFreeze)
@@ -297,7 +297,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
             //StartCoroutine(CorFreezeWhileSec(1.0f));
         }
     }
-    public void OnInteractWithPalete(Palete palete)
+    private void OnInteractWithPalete(Palete palete)
     {
         if (palete.IsAttack && isStunable)
         {
@@ -321,7 +321,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
         }
     }
 
-    public void OnInteractWithHanger(Hanger hanger)
+    private void OnInteractWithHanger(Hanger hanger)
     {
         if (!isLocalPlayer || HoldSurvivor == null || IsFreeze) return;
 
