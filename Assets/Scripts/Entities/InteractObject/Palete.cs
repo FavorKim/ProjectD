@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Palete : NetworkBehaviour, IInteractableObject
+public class Palete : NetworkBehaviour, IKillerInteractable, ISurvivorInteractable
 {
     [SerializeField] GameObject VFX_GibletPref;
     Animator m_anim;

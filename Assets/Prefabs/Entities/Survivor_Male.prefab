@@ -95,7 +95,6 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  m_moveSpeed: 1
   Animator: {fileID: 4700450406186153302}
   Slider_HealGauge: {fileID: 5361748711346271347}
   Slider_EscapeGauge: {fileID: 8325834977747589400}
@@ -104,6 +103,7 @@ MonoBehaviour:
   Prefab_SurvivorTrack: {fileID: 8335291862723811247, guid: ae710e97df9ca0b44951a0f534991145, type: 3}
   EscapeSkillCheckManager: {fileID: 566522584940255919}
   HealSkillCheckManager: {fileID: 6548223925741692791}
+  moveSpeed: 150
   m_invincibleTime: 2
   m_corruptTime: 120
   DebugOnly_CorruptMulti: 1

@@ -8,7 +8,7 @@ public abstract class StatusPerk : MonoBehaviour
 {
     
 
-    public PlayableCharacter m_owner;
+    //public PlayableCharacter m_owner;
     public PerkType PerkType;
 
     protected float m_maxCoolTime;
@@ -50,20 +50,18 @@ public abstract class StatusPerk : MonoBehaviour
     protected abstract bool Condition();
 
 
-    public virtual void Init(float cool, float duration, PlayableCharacter owner, PerkType type)
+    public virtual void Init(float cool, float duration, PerkType type)
     {
         m_maxCoolTime = cool;
         m_duration = duration;
-        m_owner = owner;
         m_curCoolTime = m_maxCoolTime;
         PerkType = type;
     }
 
-    public virtual void Init(float value, float cool, float duration, PlayableCharacter owner, PerkType type)
+    public virtual void Init(float value, float cool, float duration, PerkType type)
     {
         m_maxCoolTime = cool;
         m_duration = duration;
-        m_owner = owner;
         m_curCoolTime = m_maxCoolTime;
         PerkType = type;
     }

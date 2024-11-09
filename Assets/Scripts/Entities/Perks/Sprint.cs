@@ -6,7 +6,7 @@ public class Sprint : StatusPerk
 {
     protected float m_moveSpeed;
 
-    private new Survivor m_owner;
+    private Survivor m_owner;
 
     private void Start()
     {

@@ -5,7 +5,7 @@ using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Lever : NetworkBehaviour, IInteractableObject
+public class Lever : NetworkBehaviour, ISurvivorInteractable
 {
     [SerializeField] float m_speed;
     [SerializeField] Animator Animator_Door;
@@ -63,10 +63,7 @@ public class Lever : NetworkBehaviour, IInteractableObject
             Animator.SetBool("isUsing", false);
         }
     }
-    public void KillerInteract()
-    {
 
-    }
     [Command(requiresAuthority =false)]
     void CmdOnOpenDoor()
     {

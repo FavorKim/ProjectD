@@ -234,7 +234,6 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  m_moveSpeed: 440
   m_AttackCollider: {fileID: 3569902607194640352}
   m_holdSurvivor: {fileID: 0}
   Pos_HoldSurvivor: {fileID: 1879315202619207773}
@@ -248,6 +247,7 @@ MonoBehaviour:
   m_attackSpeed: 0
   isStunable: 1
   isStun: 0
+  moveSpeed: 200
 --- !u!114 &1879315202919675952
 MonoBehaviour:
   m_ObjectHideFlags: 0

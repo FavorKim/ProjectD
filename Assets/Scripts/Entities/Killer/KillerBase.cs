@@ -7,8 +7,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class KillerBase : PlayableCharacter
+public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
 {
+    public IKillerInteractable KillerInteractableObject
+    {
+        get;
+        set;
+    }
+
     CharacterController m_controller;
     Animator Animator;
     NetworkAnimator netAnim;
@@ -130,6 +136,19 @@ public class KillerBase : PlayableCharacter
     [SerializeField] bool isStunable = true;
     [SerializeField]bool isStun = false;
 
+    public float MoveSpeed 
+    {
+        get
+        {
+            return moveSpeed;
+        }
+        set
+        {
+            if(moveSpeed != value)
+            moveSpeed = value;
+        }
+    }
+    [SerializeField] float moveSpeed;
     public bool IsAttacking
     {
         get { return isAttacking; }
@@ -194,11 +213,11 @@ public class KillerBase : PlayableCharacter
     }
 
     // Update is called once per frame
-    protected override void Update()
+    protected void Update()
     {
         if (isLocalPlayer)
         {
-            base.Update();
+            Interact();
             KillerMove();
             KillerAttack();
             Look();
@@ -255,7 +274,7 @@ public class KillerBase : PlayableCharacter
         StartCoroutine(CorJumpFence());
     }
 
-    public override void Interact(Generator generator)
+    public void OnInteractWithGenerator(Generator generator)
     {
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space))
@@ -265,11 +284,10 @@ public class KillerBase : PlayableCharacter
                 Animator.SetTrigger("Break");
                 netAnim.SetTrigger("Break");
                 StartCoroutine(CorFreezeWhileSec(1.0f / BreakSpeed));
-                generator.KillerInteract();
             }
         }
     }
-    public override void Interact(JumpFence jumpFence)
+    public void OnInteractWithJumpFence(JumpFence jumpFence)
     {
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space) && !IsFreeze)
@@ -279,7 +297,7 @@ public class KillerBase : PlayableCharacter
             //StartCoroutine(CorFreezeWhileSec(1.0f));
         }
     }
-    public override void Interact(Palete palete)
+    public void OnInteractWithPalete(Palete palete)
     {
         if (palete.IsAttack && isStunable)
         {
@@ -295,7 +313,6 @@ public class KillerBase : PlayableCharacter
                 StartCoroutine(CorFreezeWhileSec(1.5f / BreakSpeed));
                 Animator.SetTrigger("Break");
                 netAnim.SetTrigger("Break");
-                palete.KillerInteract();
             }
             else
             {
@@ -304,7 +321,7 @@ public class KillerBase : PlayableCharacter
         }
     }
 
-    public override void Interact(Hanger hanger)
+    public void OnInteractWithHanger(Hanger hanger)
     {
         if (!isLocalPlayer || HoldSurvivor == null || IsFreeze) return;
 
@@ -314,16 +331,35 @@ public class KillerBase : PlayableCharacter
             SetAnimator_HangOrHold();
             hanger.HangedSurvivor = HoldSurvivor;
             HoldSurvivor.BeingHanged(hanger);
-            hanger.KillerInteract();
             HoldSurvivor = null;
             StartCoroutine(CorFreezeWhileSec(0.8f));
         }
     }
-    public override void Interact(Lever lever)
+    
+    void Interact()
     {
-
+        OnKillerInteract(KillerInteractableObject);
+        
     }
 
+    public void OnKillerInteract(IKillerInteractable obj)
+    {
+        switch (obj)
+        {
+            case Generator:
+                OnInteractWithGenerator(obj as Generator);
+                break;
+            case JumpFence:
+                OnInteractWithJumpFence(obj as JumpFence);
+                break;
+            case Hanger:
+                OnInteractWithHanger(obj as Hanger);
+                break;
+            case Palete:
+                OnInteractWithPalete(obj as Palete);
+                break;
+        }
+    }
 
 
     IEnumerator CorAttackCool()
@@ -380,12 +416,12 @@ public class KillerBase : PlayableCharacter
         m_AttackCollider.enabled = false;
     }
 
-    protected override void OnTriggerEnter(Collider collision)
+    protected void OnTriggerEnter(Collider collision)
     {
-        base.OnTriggerEnter(collision);
-
-        
-
+        if(collision.TryGetComponent(out IKillerInteractable obj))
+        {
+            KillerInteractableObject = obj;
+        }
         //var survivor = collision.GetComponent<Survivor>();
         if (collision.TryGetComponent(out Survivor survivor))
         {
@@ -393,6 +429,13 @@ public class KillerBase : PlayableCharacter
             {
                 IsAttacking = false;
             }
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.TryGetComponent(out IKillerInteractable obj))
+        {
+            KillerInteractableObject = null;
         }
     }
 

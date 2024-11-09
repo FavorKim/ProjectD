@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 
-public class Survivor : PlayableCharacter
+public class Survivor : NetworkBehaviour, IMoveable, ISurvivorInteractor
 {
     #region Class
     CharacterController m_CharacterController;
@@ -33,6 +33,7 @@ public class Survivor : PlayableCharacter
     [SerializeField] SkillCheckManager EscapeSkillCheckManager;
     [SerializeField] SkillCheckManager HealSkillCheckManager;
 
+    public ISurvivorInteractable SurvivorInteractableObject {  get; set; }
     #endregion
     #region Vector
     Vector3 MoveDir;
@@ -40,6 +41,17 @@ public class Survivor : PlayableCharacter
     public Vector3 HeldPosition { get; private set; }
     #endregion
     #region Float
+    public float MoveSpeed
+    {
+        get { return moveSpeed; }
+        set
+        {
+            if(moveSpeed != value)
+            moveSpeed = value;
+        }
+    }
+    [SerializeField] float moveSpeed;
+
     [SerializeField] float m_invincibleTime;
 
     private float walkSpeed = 226.0f;
@@ -293,9 +305,8 @@ public class Survivor : PlayableCharacter
         HealSkillCheckManager.RegisterOnSkillFailed(OnHealSkillCheckFailed);
     }
 
-    protected override void Update()
+    protected void Update()
     {
-        base.Update();
         if (isLocalPlayer)
         {
             PlayerMove();
@@ -304,8 +315,9 @@ public class Survivor : PlayableCharacter
             if (m_healthStateMachine.GetCurState() != HealthStates.Down)
                 m_StateMachine.StateUpdate();
 
-                HealOtherSurvivor();
-                SelfCare();
+            HealOtherSurvivor();
+            SelfCare();
+            OnInteract();
         }
     }
 
@@ -508,7 +520,7 @@ public class Survivor : PlayableCharacter
 
 
     #region Interact
-    public override void Interact(Generator generator)
+    private void Interact(Generator generator)
     {
         if (!isLocalPlayer) return;
         if (m_healthStateMachine.GetCurState() > HealthStates.Injured) return;
@@ -540,7 +552,7 @@ public class Survivor : PlayableCharacter
         }
         generator.SurvivorInteract();
     }
-    public override void Interact(Palete palete)
+    private void Interact(Palete palete)
     {
         if (!isLocalPlayer || IsFreeze) return;
         if (Input.GetKeyDown(KeyCode.E))
@@ -563,7 +575,7 @@ public class Survivor : PlayableCharacter
             }
         }
     }
-    public override void Interact(JumpFence fence)
+    private void Interact(JumpFence fence)
     {
         if (!isLocalPlayer || IsFreeze) return;
         if (Input.GetKeyDown(KeyCode.E))
@@ -573,7 +585,7 @@ public class Survivor : PlayableCharacter
         }
         // 창틀 뛰어넘기
     }
-    public override void Interact(Hanger hanger)
+    private void Interact(Hanger hanger)
     {
         if (!isLocalPlayer) return;
         if (Input.GetMouseButtonDown(0))
@@ -585,7 +597,7 @@ public class Survivor : PlayableCharacter
             }
         }
     }
-    public override void Interact(Lever lever)
+    private void Interact(Lever lever)
     {
         if (!isLocalPlayer) return;
         if (!lever.IsAvailable)
@@ -609,6 +621,33 @@ public class Survivor : PlayableCharacter
             IsFreeze = false;
         }
         lever.SurvivorInteract();
+    }
+
+    public void OnSurvivorInteract(ISurvivorInteractable obj)
+    {
+        switch (obj)
+        {
+            case Generator:
+                Interact(obj as Generator);
+                break;
+            case Lever:
+                Interact(obj as Lever);
+                break;
+            case Palete:
+                Interact(obj as Palete);
+                break;
+            case Hanger:
+                Interact(obj as Hanger);
+                break;
+            case JumpFence:
+                Interact(obj as JumpFence);
+                break;
+        }
+    }
+
+    private void OnInteract()
+    {
+        OnSurvivorInteract(SurvivorInteractableObject);
     }
     #endregion
 
@@ -906,7 +945,7 @@ public class Survivor : PlayableCharacter
         {
             HealSurvivor(this, this, 1);
         }
-        else if(Input.GetMouseButton(1))
+        else if (Input.GetMouseButton(1))
             CmdOnStopHeal();
     }
 
@@ -996,9 +1035,12 @@ public class Survivor : PlayableCharacter
     #endregion
 
 
-    protected override void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
-        base.OnTriggerEnter(other);
+        if(other.TryGetComponent(out ISurvivorInteractable obj))
+        {
+            SurvivorInteractableObject = obj;
+        }
 
         if (other.TryGetComponent(out Survivor survivor))
         {
@@ -1018,9 +1060,10 @@ public class Survivor : PlayableCharacter
             gameObject.SetActive(false);
         }
     }
-    protected override void OnTriggerExit(Collider other)
+    protected void OnTriggerExit(Collider other)
     {
-        base.OnTriggerExit(other);
+        if (other.TryGetComponent(out ISurvivorInteractable obj))
+            obj = null;
         if (other.TryGetComponent(out Survivor survivor) && survivor.gameObject != this.gameObject)
         {
             m_healDest = null;

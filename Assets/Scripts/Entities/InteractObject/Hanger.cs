@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hanger : NetworkBehaviour, IInteractableObject
+public class Hanger : NetworkBehaviour, IKillerInteractable, ISurvivorInteractable
 {
     [SerializeField] Transform Pos_HangedPos;
     [SerializeField] GameObject Shackle;

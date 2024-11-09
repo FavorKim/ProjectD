@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Generator : NetworkBehaviour, IInteractableObject
+public class Generator : NetworkBehaviour, IKillerInteractable, ISurvivorInteractable
 {
     [SyncVar(hook = nameof(Hook_OnChangedProgress))]
     private float curGauge;

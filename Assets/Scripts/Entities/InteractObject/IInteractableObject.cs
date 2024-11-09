@@ -1,8 +1,11 @@
 
-public interface IInteractableObject
+
+public interface IKillerInteractable
 {
-    void SurvivorInteract();
     void KillerInteract();
 }
 
-
+public interface ISurvivorInteractable
+{
+    void SurvivorInteract();
+}
