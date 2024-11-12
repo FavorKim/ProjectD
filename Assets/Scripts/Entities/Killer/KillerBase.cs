@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
+public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
 {
     public IKillerInteractable KillerInteractableObject
     {
@@ -274,7 +274,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
         StartCoroutine(CorJumpFence());
     }
 
-    private void OnInteractWithGenerator(Generator generator)
+    public void OnKillerVisitWithGenerator(Generator generator)
     {
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space))
@@ -287,7 +287,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
             }
         }
     }
-    private void OnInteractWithJumpFence(JumpFence jumpFence)
+    public void OnKillerVisitWithJumpFence(JumpFence jumpFence)
     {
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space) && !IsFreeze)
@@ -297,7 +297,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
             //StartCoroutine(CorFreezeWhileSec(1.0f));
         }
     }
-    private void OnInteractWithPalete(Palete palete)
+    public void OnKillerVisitWithPalete(Palete palete)
     {
         if (palete.IsAttack && isStunable)
         {
@@ -321,7 +321,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
         }
     }
 
-    private void OnInteractWithHanger(Hanger hanger)
+    public void OnKillerVisitWithHanger(Hanger hanger)
     {
         if (!isLocalPlayer || HoldSurvivor == null || IsFreeze) return;
 
@@ -338,11 +338,11 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
     
     void Interact()
     {
-        OnKillerInteract(KillerInteractableObject);
-        
+        if (KillerInteractableObject != null)
+            KillerInteractableObject.KillerInteract(this);
     }
-
-    public void OnKillerInteract(IKillerInteractable obj)
+    /*
+    public void OnKillerVisit(IKillerInteractable obj)
     {
         switch (obj)
         {
@@ -360,6 +360,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerInteractor
                 break;
         }
     }
+    */
 
 
     IEnumerator CorAttackCool()

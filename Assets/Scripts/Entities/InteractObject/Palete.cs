@@ -19,8 +19,14 @@ public class Palete : NetworkBehaviour, IKillerInteractable, ISurvivorInteractab
         netAnim = GetComponent<NetworkAnimator>();
     }
 
+    public void SurvivorInteract(ISurvivorVisitor survivor)
+    {
+        CmdOnUsed();
+        survivor.OnSurvivorVisitWithPalete(this);
+        
+    }
     [Command(requiresAuthority =false)]
-    public void SurvivorInteract()
+    void CmdOnUsed()
     {
         RpcOnUsed();
     }
@@ -35,11 +41,14 @@ public class Palete : NetworkBehaviour, IKillerInteractable, ISurvivorInteractab
         }
     }
 
-    public void KillerInteract()
+    public void KillerInteract(IKillerVisitor killer)
     {
-        if(isUsed)
-        m_anim.SetTrigger("Break");
-        netAnim.SetTrigger("Break");
+        if (isUsed)
+        {
+            m_anim.SetTrigger("Break");
+            netAnim.SetTrigger("Break");
+            killer.OnKillerVisitWithPalete(this);
+        }
     }
 
     [Command(requiresAuthority =false)]

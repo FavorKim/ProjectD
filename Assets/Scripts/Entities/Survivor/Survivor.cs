@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 
-public class Survivor : NetworkBehaviour, IMoveable, ISurvivorInteractor
+public class Survivor : NetworkBehaviour, IMoveable, ISurvivorVisitor
 {
     #region Class
     CharacterController m_CharacterController;
@@ -520,7 +520,7 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorInteractor
 
 
     #region Interact
-    private void Interact(Generator generator)
+    public void OnSurvivorVisitWithGenerator(Generator generator)
     {
         if (!isLocalPlayer) return;
         if (m_healthStateMachine.GetCurState() > HealthStates.Injured) return;
@@ -550,9 +550,8 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorInteractor
             //generator.UnRegisterOnGeneratorFailed(OnGeneratorFailed);
             isFreeze = false;
         }
-        generator.SurvivorInteract();
     }
-    private void Interact(Palete palete)
+    public void OnSurvivorVisitWithPalete(Palete palete)
     {
         if (!isLocalPlayer || IsFreeze) return;
         if (Input.GetKeyDown(KeyCode.E))
@@ -563,7 +562,6 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorInteractor
                 Animator.SetTrigger("UsePallete");
                 netAnim.SetTrigger("UsePallete");
                 StartCoroutine(CorFreeze(0.3f));
-                palete.SurvivorInteract();
             }
             else
             {
@@ -571,11 +569,10 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorInteractor
                 var center = palete.transform.position + palete.transform.right * -1.0f;
 
                 OnJumpFence(center);
-                //palete.SurvivorInteract();
             }
         }
     }
-    private void Interact(JumpFence fence)
+    public void OnSurvivorVisitWithJumpFence(JumpFence fence)
     {
         if (!isLocalPlayer || IsFreeze) return;
         if (Input.GetKeyDown(KeyCode.E))
@@ -585,19 +582,18 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorInteractor
         }
         // 창틀 뛰어넘기
     }
-    private void Interact(Hanger hanger)
+    public void OnSurvivorVisitWithHanger(Hanger hanger)
     {
         if (!isLocalPlayer) return;
         if (Input.GetMouseButtonDown(0))
         {
             if (hanger.HangedSurvivor != null && hanger.HangedSurvivor.gameObject != this.gameObject)
             {
-                hanger.SurvivorInteract();
                 StartCoroutine(CorFreeze(0.5f));
             }
         }
     }
-    private void Interact(Lever lever)
+    public void OnSurvivorVisitWithLever(Lever lever)
     {
         if (!isLocalPlayer) return;
         if (!lever.IsAvailable)
@@ -620,34 +616,13 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorInteractor
             netAnim.SetTrigger("PullOver");
             IsFreeze = false;
         }
-        lever.SurvivorInteract();
     }
 
-    public void OnSurvivorInteract(ISurvivorInteractable obj)
-    {
-        switch (obj)
-        {
-            case Generator:
-                Interact(obj as Generator);
-                break;
-            case Lever:
-                Interact(obj as Lever);
-                break;
-            case Palete:
-                Interact(obj as Palete);
-                break;
-            case Hanger:
-                Interact(obj as Hanger);
-                break;
-            case JumpFence:
-                Interact(obj as JumpFence);
-                break;
-        }
-    }
 
     private void OnInteract()
     {
-        OnSurvivorInteract(SurvivorInteractableObject);
+        if (SurvivorInteractableObject != null)
+            SurvivorInteractableObject.SurvivorInteract(this);
     }
     #endregion
 

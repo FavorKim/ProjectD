@@ -1,14 +1,19 @@
-using Mirror;
 
-
-public interface IKillerInteractor
+public interface IKillerVisitor
 {
     IKillerInteractable KillerInteractableObject { get; set; }
-    void OnKillerInteract(IKillerInteractable obj);
-   
+    void OnKillerVisitWithJumpFence(JumpFence fence);
+    void OnKillerVisitWithHanger(Hanger hanger);
+    void OnKillerVisitWithPalete(Palete palete);
+    void OnKillerVisitWithGenerator(Generator palete);
 }
-public interface ISurvivorInteractor
+   
+public interface ISurvivorVisitor
 {
     ISurvivorInteractable SurvivorInteractableObject { get; set; }
-    void OnSurvivorInteract(ISurvivorInteractable obj);
+    void OnSurvivorVisitWithJumpFence(JumpFence fence);
+    void OnSurvivorVisitWithHanger(Hanger hanger);
+    void OnSurvivorVisitWithPalete(Palete palete);
+    void OnSurvivorVisitWithGenerator(Generator palete);
+    void OnSurvivorVisitWithLever(Lever lever);
 }

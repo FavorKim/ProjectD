@@ -134,7 +134,7 @@ public class Generator : NetworkBehaviour, IKillerInteractable, ISurvivorInterac
         OnCompleteHandler = null;
     }
 
-    public void SurvivorInteract()
+    public void SurvivorInteract(ISurvivorVisitor survivor)
     {
         if (IsCompleted)
         {
@@ -160,8 +160,13 @@ public class Generator : NetworkBehaviour, IKillerInteractable, ISurvivorInterac
             SkillCheckManager.IsSkillChecking = false;
             SkillCheckManager.GetSkillChecker().InvokeOnSkillCheckEnd();
         }
+        survivor.OnSurvivorVisitWithGenerator(this);
     }
-
+    public void KillerInteract(IKillerVisitor killer)
+    {
+        CmdKillerInteract();
+        killer.OnKillerVisitWithGenerator(this);
+    }
 
     [Command(requiresAuthority = false)]
     void Cmd_ProgressGenerator(float multi)

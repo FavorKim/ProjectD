@@ -39,15 +39,17 @@ public class Hanger : NetworkBehaviour, IKillerInteractable, ISurvivorInteractab
     }
     public Transform GetHangedPos() { return Pos_HangedPos; }
 
-    public void SurvivorInteract()
+    public void SurvivorInteract(ISurvivorVisitor survivor)
     {
         HangedSurvivor.CmdOnResqued();
         CmdOnXrayOn();
+        survivor.OnSurvivorVisitWithHanger(this);
     }
 
-    public void KillerInteract()
+    public void KillerInteract(IKillerVisitor killer)
     {
         CmdOnXrayOn();
+        killer.OnKillerVisitWithHanger(this);
     }
 
     public void DropShackle()

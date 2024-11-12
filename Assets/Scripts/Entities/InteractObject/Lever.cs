@@ -42,7 +42,7 @@ public class Lever : NetworkBehaviour, ISurvivorInteractable
 
     public bool IsAvailable { get; set; }
 
-    public void SurvivorInteract()
+    public void SurvivorInteract(ISurvivorVisitor survivor)
     {
         if (!IsAvailable) 
         {
@@ -62,6 +62,7 @@ public class Lever : NetworkBehaviour, ISurvivorInteractable
             Slider_Gauge.gameObject.SetActive(false);
             Animator.SetBool("isUsing", false);
         }
+        survivor.OnSurvivorVisitWithLever(this);
     }
 
     [Command(requiresAuthority =false)]

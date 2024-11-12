@@ -2,10 +2,10 @@
 
 public interface IKillerInteractable
 {
-    void KillerInteract();
+    void KillerInteract(IKillerVisitor killer);
 }
 
 public interface ISurvivorInteractable
 {
-    void SurvivorInteract();
+    void SurvivorInteract(ISurvivorVisitor survivor);
 }
