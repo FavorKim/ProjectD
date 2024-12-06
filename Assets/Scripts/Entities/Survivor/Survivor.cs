@@ -33,7 +33,7 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorVisitor
     [SerializeField] SkillCheckManager EscapeSkillCheckManager;
     [SerializeField] SkillCheckManager HealSkillCheckManager;
 
-    public ISurvivorInteractable SurvivorInteractableObject {  get; set; }
+    public ISurvivorInteractable SurvivorInteractableObject { get; set; }
     #endregion
     #region Vector
     Vector3 MoveDir;
@@ -317,7 +317,8 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorVisitor
 
             HealOtherSurvivor();
             SelfCare();
-            OnInteract();
+
+            OnSurvivorInteract(SurvivorInteractableObject);
         }
     }
 
@@ -520,7 +521,7 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorVisitor
 
 
     #region Interact
-    public void OnSurvivorVisitWithGenerator(Generator generator)
+    public void OnSurvivorVisitWith(Generator generator)
     {
         if (!isLocalPlayer) return;
         if (m_healthStateMachine.GetCurState() > HealthStates.Injured) return;
@@ -551,7 +552,7 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorVisitor
             isFreeze = false;
         }
     }
-    public void OnSurvivorVisitWithPalete(Palete palete)
+    public void OnSurvivorVisitWith(Palete palete)
     {
         if (!isLocalPlayer || IsFreeze) return;
         if (Input.GetKeyDown(KeyCode.E))
@@ -572,7 +573,7 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorVisitor
             }
         }
     }
-    public void OnSurvivorVisitWithJumpFence(JumpFence fence)
+    public void OnSurvivorVisitWith(JumpFence fence)
     {
         if (!isLocalPlayer || IsFreeze) return;
         if (Input.GetKeyDown(KeyCode.E))
@@ -582,7 +583,7 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorVisitor
         }
         // 창틀 뛰어넘기
     }
-    public void OnSurvivorVisitWithHanger(Hanger hanger)
+    public void OnSurvivorVisitWith(Hanger hanger)
     {
         if (!isLocalPlayer) return;
         if (Input.GetMouseButtonDown(0))
@@ -593,7 +594,7 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorVisitor
             }
         }
     }
-    public void OnSurvivorVisitWithLever(Lever lever)
+    public void OnSurvivorVisitWith(Lever lever)
     {
         if (!isLocalPlayer) return;
         if (!lever.IsAvailable)
@@ -619,10 +620,9 @@ public class Survivor : NetworkBehaviour, IMoveable, ISurvivorVisitor
     }
 
 
-    private void OnInteract()
+    public void OnSurvivorInteract(ISurvivorInteractable obj)
     {
-        if (SurvivorInteractableObject != null)
-            SurvivorInteractableObject.SurvivorInteract(this);
+        obj?.SurvivorInteract(this);
     }
     #endregion
 

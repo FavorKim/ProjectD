@@ -22,7 +22,7 @@ public class Palete : NetworkBehaviour, IKillerInteractable, ISurvivorInteractab
     public void SurvivorInteract(ISurvivorVisitor survivor)
     {
         CmdOnUsed();
-        survivor.OnSurvivorVisitWithPalete(this);
+        survivor.OnSurvivorVisitWith(this);
         
     }
     [Command(requiresAuthority =false)]
@@ -47,7 +47,7 @@ public class Palete : NetworkBehaviour, IKillerInteractable, ISurvivorInteractab
         {
             m_anim.SetTrigger("Break");
             netAnim.SetTrigger("Break");
-            killer.OnKillerVisitWithPalete(this);
+            killer.OnKillerVisitWith(this);
         }
     }
 

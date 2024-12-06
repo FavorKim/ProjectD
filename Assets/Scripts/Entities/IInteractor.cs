@@ -2,18 +2,22 @@
 public interface IKillerVisitor
 {
     IKillerInteractable KillerInteractableObject { get; set; }
-    void OnKillerVisitWithJumpFence(JumpFence fence);
-    void OnKillerVisitWithHanger(Hanger hanger);
-    void OnKillerVisitWithPalete(Palete palete);
-    void OnKillerVisitWithGenerator(Generator palete);
+    void OnKillerInteract(IKillerInteractable obj);
+    
+    void OnKillerVisitWith(JumpFence fence);
+    void OnKillerVisitWith(Hanger hanger);
+    void OnKillerVisitWith(Palete palete);
+    void OnKillerVisitWith(Generator palete);
 }
    
 public interface ISurvivorVisitor
 {
     ISurvivorInteractable SurvivorInteractableObject { get; set; }
-    void OnSurvivorVisitWithJumpFence(JumpFence fence);
-    void OnSurvivorVisitWithHanger(Hanger hanger);
-    void OnSurvivorVisitWithPalete(Palete palete);
-    void OnSurvivorVisitWithGenerator(Generator palete);
-    void OnSurvivorVisitWithLever(Lever lever);
+    void OnSurvivorInteract(ISurvivorInteractable obj);
+    
+    void OnSurvivorVisitWith(JumpFence fence);
+    void OnSurvivorVisitWith(Hanger hanger);
+    void OnSurvivorVisitWith(Palete palete);
+    void OnSurvivorVisitWith(Generator palete);
+    void OnSurvivorVisitWith(Lever lever);
 }

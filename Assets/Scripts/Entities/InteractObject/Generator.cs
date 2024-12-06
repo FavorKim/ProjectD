@@ -160,12 +160,12 @@ public class Generator : NetworkBehaviour, IKillerInteractable, ISurvivorInterac
             SkillCheckManager.IsSkillChecking = false;
             SkillCheckManager.GetSkillChecker().InvokeOnSkillCheckEnd();
         }
-        survivor.OnSurvivorVisitWithGenerator(this);
+        survivor.OnSurvivorVisitWith(this);
     }
     public void KillerInteract(IKillerVisitor killer)
     {
         CmdKillerInteract();
-        killer.OnKillerVisitWithGenerator(this);
+        killer.OnKillerVisitWith(this);
     }
 
     [Command(requiresAuthority = false)]

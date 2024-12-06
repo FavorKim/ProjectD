@@ -134,9 +134,9 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
     bool isAttacking = false;
     bool canAttack = true;
     [SerializeField] bool isStunable = true;
-    [SerializeField]bool isStun = false;
+    [SerializeField] bool isStun = false;
 
-    public float MoveSpeed 
+    public float MoveSpeed
     {
         get
         {
@@ -144,8 +144,8 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
         }
         set
         {
-            if(moveSpeed != value)
-            moveSpeed = value;
+            if (moveSpeed != value)
+                moveSpeed = value;
         }
     }
     [SerializeField] float moveSpeed;
@@ -217,7 +217,8 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
     {
         if (isLocalPlayer)
         {
-            Interact();
+            
+            OnKillerInteract(KillerInteractableObject);
             KillerMove();
             KillerAttack();
             Look();
@@ -274,7 +275,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
         StartCoroutine(CorJumpFence());
     }
 
-    public void OnKillerVisitWithGenerator(Generator generator)
+    public void OnKillerVisitWith(Generator generator)
     {
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space))
@@ -287,7 +288,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
             }
         }
     }
-    public void OnKillerVisitWithJumpFence(JumpFence jumpFence)
+    public void OnKillerVisitWith(JumpFence jumpFence)
     {
         if (!isLocalPlayer) return;
         if (Input.GetKeyDown(KeyCode.Space) && !IsFreeze)
@@ -297,7 +298,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
             //StartCoroutine(CorFreezeWhileSec(1.0f));
         }
     }
-    public void OnKillerVisitWithPalete(Palete palete)
+    public void OnKillerVisitWith(Palete palete)
     {
         if (palete.IsAttack && isStunable)
         {
@@ -321,7 +322,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
         }
     }
 
-    public void OnKillerVisitWithHanger(Hanger hanger)
+    public void OnKillerVisitWith(Hanger hanger)
     {
         if (!isLocalPlayer || HoldSurvivor == null || IsFreeze) return;
 
@@ -335,11 +336,10 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
             StartCoroutine(CorFreezeWhileSec(0.8f));
         }
     }
-    
-    void Interact()
+
+    public void OnKillerInteract(IKillerInteractable obj)
     {
-        if (KillerInteractableObject != null)
-            KillerInteractableObject.KillerInteract(this);
+        obj?.KillerInteract(this);
     }
     /*
     public void OnKillerVisit(IKillerInteractable obj)
@@ -419,7 +419,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
 
     protected void OnTriggerEnter(Collider collision)
     {
-        if(collision.TryGetComponent(out IKillerInteractable obj))
+        if (collision.TryGetComponent(out IKillerInteractable obj))
         {
             KillerInteractableObject = obj;
         }
@@ -484,7 +484,7 @@ public class KillerBase : NetworkBehaviour, IMoveable, IKillerVisitor
         RpcOnStunCall();
     }
     [ClientRpc]
-    public void RpcOnStunCall() 
+    public void RpcOnStunCall()
     {
         if (isStunable)
             OnStun();

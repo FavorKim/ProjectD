@@ -5,11 +5,11 @@ public class JumpFence : MonoBehaviour, IKillerInteractable, ISurvivorInteractab
 {
     public void SurvivorInteract(ISurvivorVisitor survivor) 
     {
-        survivor.OnSurvivorVisitWithJumpFence(this);
+        survivor.OnSurvivorVisitWith(this);
     }
     public void KillerInteract(IKillerVisitor killer) 
     {
-        killer.OnKillerVisitWithJumpFence(this);
+        killer.OnKillerVisitWith(this);
     }
 }
 

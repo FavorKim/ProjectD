@@ -62,7 +62,7 @@ public class Lever : NetworkBehaviour, ISurvivorInteractable
             Slider_Gauge.gameObject.SetActive(false);
             Animator.SetBool("isUsing", false);
         }
-        survivor.OnSurvivorVisitWithLever(this);
+        survivor.OnSurvivorVisitWith(this);
     }
 
     [Command(requiresAuthority =false)]

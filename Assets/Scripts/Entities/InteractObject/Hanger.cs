@@ -43,13 +43,13 @@ public class Hanger : NetworkBehaviour, IKillerInteractable, ISurvivorInteractab
     {
         HangedSurvivor.CmdOnResqued();
         CmdOnXrayOn();
-        survivor.OnSurvivorVisitWithHanger(this);
+        survivor.OnSurvivorVisitWith(this);
     }
 
     public void KillerInteract(IKillerVisitor killer)
     {
         CmdOnXrayOn();
-        killer.OnKillerVisitWithHanger(this);
+        killer.OnKillerVisitWith(this);
     }
 
     public void DropShackle()
